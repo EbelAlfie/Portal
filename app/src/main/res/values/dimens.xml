@@ -2,4 +2,5 @@
 <resources>
   <dimen name="spacing_10">10dp</dimen>
   <dimen name="image_24">24dp</dimen>
+  <dimen name="size_8">8dp</dimen>
 </resources>
