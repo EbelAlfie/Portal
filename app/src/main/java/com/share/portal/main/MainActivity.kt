@@ -1,16 +1,25 @@
 package com.share.portal.main
 
 import android.view.LayoutInflater
-import androidx.activity.result.ActivityResult
 import com.share.portal.base.ProgenitorActivity
 import com.share.portal.databinding.ActivityMainBinding
+import javax.inject.Inject
 
 class MainActivity : ProgenitorActivity<ActivityMainBinding>() {
-    override fun setViewActions() {}
+
+    @Inject
+    lateinit var viewModel: MainViewModel
 
     override fun initBinding(layoutInflater: LayoutInflater): ActivityMainBinding =
         ActivityMainBinding.inflate(layoutInflater)
+    override fun onCreated() {
+        applicationComponent.inject(this)
 
-    override fun manageResult(result: ActivityResult) {}
+        setupViews()
+    }
+
+    private fun setupViews() {
+
+    }
 
 }
