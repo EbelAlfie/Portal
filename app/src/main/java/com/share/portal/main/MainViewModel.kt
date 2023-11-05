@@ -1,4 +1,4 @@
-package com.share.portal.viewmodels
+package com.share.portal.main
 
 import androidx.lifecycle.ViewModel
 

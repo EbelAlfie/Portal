@@ -1,4 +1,4 @@
-package com.share.portal
+package com.share.portal.main
 
 import android.view.LayoutInflater
 import androidx.activity.result.ActivityResult
