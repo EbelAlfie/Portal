@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Deeplink tester</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_string">Deeplink test</string>
+    <string name="test_now">Test now</string>
+</resources>
