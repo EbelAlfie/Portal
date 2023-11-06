@@ -24,7 +24,7 @@ class FileAdapter(private val context: Context): RecyclerView.Adapter<FileViewHo
     mListener = listener
   }
 
-  private val diffUtil = AsyncListDiffer<FileEntity>(this, diffCallback)
+  private val diffUtil = AsyncListDiffer(this, diffCallback)
 
   fun setItems(items: List<FileEntity>) =
     diffUtil.submitList(items)

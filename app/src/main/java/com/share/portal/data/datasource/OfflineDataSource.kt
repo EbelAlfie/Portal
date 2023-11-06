@@ -1,7 +1,7 @@
 package com.share.portal.data.datasource
 
-import com.share.portal.data.models.FileModel
+import com.share.portal.domain.models.FileEntity
 
 interface OfflineDataSource {
-  fun getAllExternalFiles(): List<FileModel>
+  fun getAllExternalFiles(): List<FileEntity>
 }

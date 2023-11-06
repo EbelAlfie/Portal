@@ -1,21 +1,20 @@
 package com.share.portal.data.datasource
 
+import android.os.Environment
 import android.util.Log
-import com.share.portal.data.models.FileModel
-import java.io.File
+import com.share.portal.domain.models.FileEntity
 import javax.inject.Inject
 
 class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
-  override fun getAllExternalFiles(): List<FileModel> {
-    val root = File.listRoots()
-    root.forEach {
-      it.listFiles()?.forEach {
-        Log.d("GGGG", it.path)
-      }
+  override fun getAllExternalFiles(): List<FileEntity> {
+    val root = Environment.getExternalStorageDirectory()
+    Log.d("FILES", root.path)
+    root.listFiles()?.forEach {
+      Log.d("FILES", it.path)
     }
 
-    return listOf(
-      FileModel("HEllo", "Exe")
-    )
+    return root.listFiles()?.map {
+      FileEntity(it.nameWithoutExtension, it.extension)
+    } ?: listOf()
   }
 }
