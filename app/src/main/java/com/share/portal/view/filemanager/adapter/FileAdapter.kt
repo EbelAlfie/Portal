@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.domain.models.FileEntity
 
-class FileAdapter(): RecyclerView.Adapter<FileViewHolder>() {
+class FileAdapter(private val context: Context): RecyclerView.Adapter<FileViewHolder>() {
   private var mListener: FileListener? = null
 
   private val diffCallback = object: DiffUtil.ItemCallback<FileEntity>() {
