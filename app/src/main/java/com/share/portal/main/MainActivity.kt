@@ -14,7 +14,6 @@ class MainActivity : ProgenitorActivity<ActivityMainBinding>() {
         ActivityMainBinding.inflate(layoutInflater)
     override fun onCreated() {
         applicationComponent.inject(this)
-
         setupViews()
     }
 

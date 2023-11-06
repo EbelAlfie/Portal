@@ -2,16 +2,19 @@ package com.share.portal.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.share.portal.App
 import com.share.portal.inject.ApplicationComponent
+import com.share.portal.utils.ToastBuilder
+import javax.inject.Inject
 
 abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
     private lateinit var binding: V
-    private lateinit var toast: Toast
+
+    @Inject
+    private lateinit var toast: ToastBuilder
 
     protected lateinit var applicationComponent: ApplicationComponent
 
@@ -25,9 +28,8 @@ abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
         initComponent()
     }
 
-    protected fun initComponent() {
+    private fun initComponent() {
         initViews()
-        toast = Toast(this)
         onCreated()
     }
 
@@ -36,11 +38,7 @@ abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
         setContentView(binding.root)
     }
 
-    protected open fun showToast(msg: String) {
-        toast.setText(msg)
-        toast.duration = Toast.LENGTH_SHORT
-        toast.show()
-    }
+    protected open fun showToast(msg: String) = toast.show(msg)
 
     abstract fun onCreated()
 
