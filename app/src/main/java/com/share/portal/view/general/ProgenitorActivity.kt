@@ -1,6 +1,7 @@
 package com.share.portal.view.general
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +17,9 @@ abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
         ToastBuilder(this)
     }
 
-    protected lateinit var applicationComponent: ApplicationComponent
+    protected val applicationComponent: ApplicationComponent by lazy {
+        (application as App).getAppComponent()
+    }
 
     protected var activityLauncher = registerForActivityResult (
         ActivityResultContracts.StartActivityForResult()
@@ -24,7 +27,6 @@ abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        applicationComponent = (application as App).getAppComponent()
         initComponent()
     }
 
@@ -38,7 +40,10 @@ abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
         setContentView(binding.root)
     }
 
-    protected open fun showToast(msg: String) = toast.show(msg)
+    protected open fun showToast(
+        msg: String,
+        gravity: Int = Gravity.CENTER
+    ) = toast.show(msg, gravity)
 
     abstract fun onCreated()
 

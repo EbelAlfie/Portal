@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.databinding.ActivityMainBinding
 import com.share.portal.view.filemanager.adapter.FileAdapter
+import com.share.portal.view.filemanager.adapter.FileAdapter.FileListener
 import com.share.portal.view.general.PermissionActivity
 import javax.inject.Inject
 
@@ -34,6 +35,11 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   }
 
   private fun setupViews() {
+    adapter.setFileListener ( object: FileListener {
+      override fun onFileClicked(fileName: String) {
+        showToast(fileName)
+      }
+    })
     binding.run {
       rvFiles.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
       rvFiles.adapter = adapter

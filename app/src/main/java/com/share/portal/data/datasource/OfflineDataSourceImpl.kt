@@ -11,7 +11,6 @@ class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
     root.forEach {
       it.listFiles()?.forEach {
         Log.d("GGGG", it.path)
-        Log.d("GGGG", it.parent)
       }
     }
 

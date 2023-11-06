@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.domain.models.FileEntity
 
-class FileAdapter(private val context: Context): RecyclerView.Adapter<FileViewHolder>() {
+class FileAdapter(): RecyclerView.Adapter<FileViewHolder>() {
+  private var mListener: FileListener? = null
 
   private val diffCallback = object: DiffUtil.ItemCallback<FileEntity>() {
     override fun areItemsTheSame(oldItem: FileEntity, newItem: FileEntity) =
@@ -17,6 +18,10 @@ class FileAdapter(private val context: Context): RecyclerView.Adapter<FileViewHo
 
     override fun areContentsTheSame(oldItem: FileEntity, newItem: FileEntity) =
       oldItem == newItem
+  }
+
+  fun setFileListener (listener: FileListener) {
+    mListener = listener
   }
 
   private val diffUtil = AsyncListDiffer<FileEntity>(this, diffCallback)
@@ -31,10 +36,10 @@ class FileAdapter(private val context: Context): RecyclerView.Adapter<FileViewHo
     diffUtil.currentList.size
 
   override fun onBindViewHolder(holder: FileViewHolder, position: Int) {
-    holder.bindData(diffUtil.currentList[position])
+    holder.bindData(diffUtil.currentList[position], mListener)
   }
 
   interface FileListener {
-    fun onFileClicked()
+    fun onFileClicked(fileName: String)
   }
 }
