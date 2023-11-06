@@ -8,10 +8,9 @@ import androidx.viewbinding.ViewBinding
 import com.share.portal.App
 import com.share.portal.inject.ApplicationComponent
 import com.share.portal.utils.ToastBuilder
-import javax.inject.Inject
 
 abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
-    private lateinit var binding: V
+    lateinit var binding: V
 
     private val toast: ToastBuilder by lazy {
         ToastBuilder(this)

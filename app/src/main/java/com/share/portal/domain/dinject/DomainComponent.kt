@@ -1,16 +1,16 @@
 package com.share.portal.domain.dinject
 
 import com.share.portal.data.dinject.DataComponent
+import com.share.portal.domain.dinject.dmodules.UseCaseModule
 import dagger.Component
-import javax.inject.Singleton
 
-@Singleton
 @Component(
-  modules = [
-    UseCaseModule::class
-  ],
-  dependencies = [
-    DataComponent::class
-  ]
+  modules = [UseCaseModule::class],
+  dependencies = [DataComponent::class]
 )
-interface DomainComponent {}
+interface DomainComponent {
+  @Component.Factory
+  interface Factory {
+    fun create(dataComponent: DataComponent): DomainComponent
+  }
+}

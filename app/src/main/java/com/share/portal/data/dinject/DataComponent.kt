@@ -1,13 +1,19 @@
 package com.share.portal.data.dinject
 
+import com.share.portal.data.dinject.dmodules.DataSourceModule
+import com.share.portal.data.dinject.dmodules.RepositoryModule
 import dagger.Component
-import javax.inject.Singleton
 
-@Singleton
 @Component(
   modules = [
     DataSourceModule::class,
     RepositoryModule::class
   ]
 )
-interface DataComponent {}
+interface DataComponent {
+
+  @Component.Factory
+  interface Factory {
+    fun create (): DataComponent
+  }
+}

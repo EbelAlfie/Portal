@@ -1,4 +1,4 @@
-package com.share.portal.domain.dinject
+package com.share.portal.domain.dinject.dmodules
 
 import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.usecase.FileUseCase
@@ -8,5 +8,5 @@ import dagger.Module
 @Module
 interface UseCaseModule {
   @Binds
-  fun provideFileUseCase(useCase: FileUseCase): FileUseCaseImpl
+  fun provideFileUseCase(useCase: FileUseCaseImpl): FileUseCase
 }
