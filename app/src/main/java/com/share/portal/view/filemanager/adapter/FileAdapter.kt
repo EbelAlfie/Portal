@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.domain.models.FileEntity
+import com.share.portal.view.filemanager.model.FileExtension
 
 class FileAdapter(private val context: Context): RecyclerView.Adapter<FileViewHolder>() {
   private var mListener: FileListener? = null
@@ -32,6 +33,14 @@ class FileAdapter(private val context: Context): RecyclerView.Adapter<FileViewHo
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder =
     FileViewHolder(ItemFileBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
+  override fun getItemViewType(position: Int): Int {
+    return when (diffUtil.currentList[position].extension) {
+      FileExtension.IMG -> {}
+      FileExtension.AUDIO -> {}
+      FileExtension.FOLDER -> {}
+      else -> {}
+    }
+  }
   override fun getItemCount(): Int =
     diffUtil.currentList.size
 

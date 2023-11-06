@@ -1,6 +1,8 @@
 package com.share.portal.view.filemanager.model
 
 import android.os.Parcelable
+import androidx.annotation.DrawableRes
+import com.share.portal.R
 import com.share.portal.domain.models.FileEntity
 import com.share.portal.view.filemanager.model.FileExtension.Companion.convertExtension
 import kotlinx.parcelize.Parcelize
@@ -30,12 +32,16 @@ data class FileData(
 
 }
 
-enum class FileExtension(extension: String) {
-  EXE(".exe");
+enum class FileExtension(@DrawableRes icon: Int) {
+  IMG(R.drawable.ic_image),
+  AUDIO(R.drawable.ic_audio),
+  FOLDER(R.drawable.ic_folder);
 
   companion object {
     fun convertExtension(ext: String): FileExtension {
+      return when (ext) {
 
+      }
     }
   }
 }

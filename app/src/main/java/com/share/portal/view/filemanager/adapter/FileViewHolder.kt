@@ -10,7 +10,7 @@ class FileViewHolder(private val binding: ItemFileBinding):
   RecyclerView.ViewHolder(binding.root) {
     fun bindData(data: FileEntity, mListener: FileListener?) {
       binding.apply {
-        icIcon.setImageResource(R.drawable.baseline_folder_24)
+        icIcon.setImageResource(R.drawable.ic_folder)
         tvFilename.text = data.fileName
         root.setOnClickListener {
           mListener?.onFileClicked(data.fileName)
