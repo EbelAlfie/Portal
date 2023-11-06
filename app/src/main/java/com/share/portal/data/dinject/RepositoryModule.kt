@@ -1,5 +1,6 @@
 package com.share.portal.data.dinject
 
+import com.share.portal.data.FileRepositoryImpl
 import com.share.portal.data.datasource.OfflineDataSource
 import com.share.portal.data.repository.FileRepository
 import dagger.Binds
@@ -10,5 +11,5 @@ import dagger.Module
 )
 interface RepositoryModule {
   @Binds
-  fun provideFileRepository(repo: FileRepository): FileRepository
+  fun provideFileRepository(repo: FileRepository): FileRepositoryImpl
 }

@@ -1,4 +1,6 @@
-package com.share.portal.data.repository
+package com.share.portal
+
+import com.share.portal.data.repository.FileRepository
 
 class FileRepositoryImpl: FileRepository {
   override fun getAllExternalFiles() {
