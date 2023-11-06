@@ -1,4 +1,4 @@
-package com.share.portal.base
+package com.share.portal.view.general
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,8 +6,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.share.portal.App
-import com.share.portal.inject.ApplicationComponent
-import com.share.portal.utils.ToastBuilder
+import com.share.portal.view.dinject.ApplicationComponent
+import com.share.portal.view.utils.ToastBuilder
 
 abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
     lateinit var binding: V
@@ -18,9 +18,9 @@ abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
 
     protected lateinit var applicationComponent: ApplicationComponent
 
-    protected var activityLauncher = registerForActivityResult(
+    protected var activityLauncher = registerForActivityResult (
         ActivityResultContracts.StartActivityForResult()
-    ) {result ->  }
+    ) { result -> }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

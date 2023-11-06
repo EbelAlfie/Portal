@@ -1,8 +1,8 @@
-package com.share.portal.inject
+package com.share.portal.view.dinject
 
 import com.share.portal.domain.dinject.DomainComponent
-import com.share.portal.inject.dmodules.ViewModelModule
-import com.share.portal.main.MainActivity
+import com.share.portal.view.dinject.dmodules.ViewModelModule
+import com.share.portal.view.filemanager.MainActivity
 import dagger.Component
 import javax.inject.Singleton
 

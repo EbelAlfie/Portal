@@ -1,4 +1,4 @@
-package com.share.portal.main
+package com.share.portal.view.filemanager
 
 import androidx.lifecycle.ViewModel
 import com.share.portal.domain.FileUseCaseImpl

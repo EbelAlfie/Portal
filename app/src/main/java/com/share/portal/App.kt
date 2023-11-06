@@ -5,8 +5,8 @@ import com.share.portal.data.dinject.DaggerDataComponent
 import com.share.portal.data.dinject.DataComponent
 import com.share.portal.domain.dinject.DaggerDomainComponent
 import com.share.portal.domain.dinject.DomainComponent
-import com.share.portal.inject.ApplicationComponent
-import com.share.portal.inject.DaggerApplicationComponent
+import com.share.portal.view.dinject.ApplicationComponent
+import com.share.portal.view.dinject.DaggerApplicationComponent
 
 class App: Application() {
   fun getAppComponent(): ApplicationComponent =

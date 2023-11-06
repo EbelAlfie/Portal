@@ -10,8 +10,8 @@ class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
     val root = File.listRoots()
     root.forEach {
       it.listFiles()?.forEach {
-        Log.d("TAGSS", it.name)
-        Log.d("TAGSS", it.path)
+        Log.d("GGGG", it.path)
+        Log.d("GGGG", it.parent)
       }
     }
 

@@ -1,4 +1,4 @@
-package com.share.portal.utils
+package com.share.portal.view.utils
 
 import android.content.Context
 import android.view.Gravity

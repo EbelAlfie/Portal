@@ -1,4 +1,4 @@
-package com.share.portal.main.adapter
+package com.share.portal.view.filemanager.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.R

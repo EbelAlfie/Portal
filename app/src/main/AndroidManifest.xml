@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="CoarseFineLocation">
 
+    <!--File managements-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage"/>
+
     <uses-permission
         android:required="true"
         android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -33,7 +39,7 @@
         tools:targetApi="s">
 
         <activity
-            android:name=".main.MainActivity"
+            android:name=".view.filemanager.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

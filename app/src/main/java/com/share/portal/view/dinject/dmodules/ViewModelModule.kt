@@ -1,7 +1,7 @@
-package com.share.portal.inject.dmodules
+package com.share.portal.view.dinject.dmodules
 
 import androidx.lifecycle.ViewModel
-import com.share.portal.main.MainViewModel
+import com.share.portal.view.filemanager.MainViewModel
 import dagger.Binds
 import dagger.Module
 

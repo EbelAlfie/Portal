@@ -1,4 +1,4 @@
-package com.share.portal.main.adapter
+package com.share.portal.view.filemanager.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -25,7 +25,7 @@ class FileAdapter(private val context: Context): RecyclerView.Adapter<FileViewHo
     diffUtil.submitList(items)
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder =
-    FileViewHolder(ItemFileBinding.inflate(LayoutInflater.from(parent.context)))
+    FileViewHolder(ItemFileBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
   override fun getItemCount(): Int =
     diffUtil.currentList.size
