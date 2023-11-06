@@ -13,8 +13,9 @@ import javax.inject.Inject
 abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
     private lateinit var binding: V
 
-    @Inject
-    private lateinit var toast: ToastBuilder
+    private val toast: ToastBuilder by lazy {
+        ToastBuilder(this)
+    }
 
     protected lateinit var applicationComponent: ApplicationComponent
 
