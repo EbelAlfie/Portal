@@ -9,6 +9,12 @@ class MainViewModel @Inject constructor(
   private val fileUseCase: FileUseCaseImpl
 ): ViewModel() {
 
+  private var rootPath: String = ""
+
+  fun setRootPath(newRoot: String) {
+    rootPath = newRoot
+  }
+
   fun getAllFiles() : List<File> =
-    fileUseCase.getAllExternalFiles()
+    fileUseCase.getAllExternalFiles(rootPath)
 }

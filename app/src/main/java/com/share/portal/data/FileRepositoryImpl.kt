@@ -8,8 +8,8 @@ import javax.inject.Inject
 class FileRepositoryImpl @Inject constructor(private val dataSource: OfflineDataSourceImpl)
   : FileRepository {
 
-  override fun getAllExternalFiles(): List<File> {
-    return dataSource.getAllExternalFiles()
+  override fun getAllExternalFiles(rootPath: String): List<File> {
+    return dataSource.getAllExternalFiles(rootPath)
   }
 
 }

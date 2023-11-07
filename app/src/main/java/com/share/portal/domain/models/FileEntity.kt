@@ -13,14 +13,16 @@ data class FileEntity(
   val isDirectory: Boolean
 ): Parcelable {
   companion object {
-    fun store(it: File): FileEntity {
-      return FileEntity(
-        fileName = it.name,
-        extension = it.extension,
-        path = it.path,
-        size = it.totalSpace, //bytes
-        isDirectory = it.isDirectory
-      )
+    fun store(files: List<File>?): List<FileEntity> {
+      return files?.map {
+        FileEntity (
+          fileName = it.name,
+          extension = it.extension,
+          path = it.path,
+          size = it.totalSpace, //bytes
+          isDirectory = it.isDirectory
+        )
+      } ?: listOf()
     }
   }
 }
