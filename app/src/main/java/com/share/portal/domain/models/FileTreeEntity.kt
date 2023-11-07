@@ -9,6 +9,7 @@ data class ParentFile (
   companion object {
     fun createParent(parentFile: File?): ParentFile {
       return ParentFile(
+        fileName = parentFile?.name ?: "...",
         path = parentFile?.path ?: ""
       )
     }

@@ -10,7 +10,7 @@ class FileViewHolder(private val binding: ItemFileBinding):
 
   fun bindData(data: FileData, mListener: FileListener?) {
     binding.apply {
-      icIcon.setImageResource(data.extension.icon)
+      if (!data.isParent) icIcon.setImageResource(data.extension.icon)
       tvFilename.text = data.fileName
       root.setOnClickListener {
         mListener?.onFileClicked(data.path)

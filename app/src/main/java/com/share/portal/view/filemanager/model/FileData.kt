@@ -5,8 +5,8 @@ import androidx.annotation.DrawableRes
 import com.share.portal.R
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.model.FileExtension.Companion.convertExtension
+import com.share.portal.view.filemanager.model.FileExtension.FOLDER
 import kotlinx.parcelize.Parcelize
-import java.io.File
 
 @Parcelize
 data class FileData(
@@ -14,20 +14,37 @@ data class FileData(
   val extension: FileExtension,
   val path: String,
   val size: Long,
-  val isDirectory: Boolean,
+  val isParent: Boolean,
 ): Parcelable {
 
   companion object {
-    fun store(files: FileTreeEntity): List<FileData> {
-      return files.child.map {
-        FileData(
-          fileName = it.name,
-          extension = convertExtension(it.extension),
-          path = it.path,
-          size = it.totalSpace, //bytes
-          isDirectory = it.isDirectory,
-        )
-      }
+    fun store(files: FileTreeEntity): MutableList<FileData> {
+      val fileList = mutableListOf<FileData>()
+
+      fileList.add(generateParentData(files.root.path, files.root.fileName))
+      fileList.addAll(
+        files.child.map {
+          FileData(
+            fileName = it.name,
+            extension = convertExtension(it.extension),
+            path = it.path,
+            size = it.totalSpace, //bytes
+            isParent = false,
+          )
+        }
+      )
+
+      return fileList
+    }
+
+    private fun generateParentData(path: String, name: String): FileData {
+      return FileData(
+        fileName = name,
+        extension = FOLDER,
+        path = path,
+        size = 0L, //bytes
+        isParent = true,
+      )
     }
   }
 

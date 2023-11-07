@@ -1,6 +1,7 @@
 package com.share.portal.data.datasource
 
 import android.os.Environment
+import com.share.portal.domain.models.FileParam
 import com.share.portal.domain.models.FileTreeEntity
 import java.io.File
 import javax.inject.Inject
@@ -9,7 +10,7 @@ class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
 
   override fun getAllExternalFiles(rootPath: String): FileTreeEntity {
     return try {
-      val rootFile = if (rootPath.isBlank())
+      val rootFile = if (rootPath == FileParam.EXTERNAL.rootName)
         Environment.getExternalStorageDirectory()
       else File(rootPath)
 
