@@ -5,6 +5,7 @@ import java.io.File
 import javax.inject.Inject
 
 class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
+
   override fun getAllExternalFiles(rootPath: String): List<File> {
     return try {
       val parent = if (rootPath.isBlank())
