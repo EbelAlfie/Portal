@@ -2,7 +2,7 @@ package com.share.portal.view.filemanager
 
 import androidx.lifecycle.ViewModel
 import com.share.portal.domain.FileUseCaseImpl
-import java.io.File
+import com.share.portal.domain.models.FileTreeEntity
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -15,6 +15,6 @@ class MainViewModel @Inject constructor(
     rootPath = newRoot
   }
 
-  fun getAllFiles() : List<File> =
+  fun getAllFiles(): FileTreeEntity =
     fileUseCase.getAllExternalFiles(rootPath)
 }

@@ -1,7 +1,7 @@
 package com.share.portal.domain.usecase
 
-import java.io.File
+import com.share.portal.domain.models.FileTreeEntity
 
 interface FileUseCase {
-  fun getAllExternalFiles(rootPath: String = ""): List<File>
+  fun getAllExternalFiles(rootPath: String = ""): FileTreeEntity
 }

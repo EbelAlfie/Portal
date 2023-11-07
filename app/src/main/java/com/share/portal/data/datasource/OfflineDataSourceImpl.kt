@@ -1,24 +1,30 @@
 package com.share.portal.data.datasource
 
 import android.os.Environment
+import com.share.portal.domain.models.FileTreeEntity
 import java.io.File
 import javax.inject.Inject
 
 class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
 
-  override fun getAllExternalFiles(rootPath: String): List<File> {
+  override fun getAllExternalFiles(rootPath: String): FileTreeEntity {
     return try {
-      val parent = if (rootPath.isBlank())
+      val rootFile = if (rootPath.isBlank())
         Environment.getExternalStorageDirectory()
       else File(rootPath)
 
-      val files = mutableListOf(parent)
-      parent.listFiles()?.let { files.addAll(it) }
-      files
+      FileTreeEntity.createFileTree (
+        root = rootFile.parentFile,
+        current = rootFile?.path,
+        child = rootFile.listFiles()?.toList() ?: listOf()
+      )
     } catch (e: Exception) { /*future*/
-      listOf()
+      FileTreeEntity.createFileTree (
+        root = null,
+        current = null,
+        child = listOf()
+      )
     }
-
   }
 
 }

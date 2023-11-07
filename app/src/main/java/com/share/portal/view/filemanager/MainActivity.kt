@@ -2,6 +2,7 @@ package com.share.portal.view.filemanager
 
 import android.Manifest
 import android.view.LayoutInflater
+import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.databinding.ActivityMainBinding
 import com.share.portal.view.filemanager.adapter.FileAdapter
@@ -15,7 +16,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   @Inject
   lateinit var viewModel: MainViewModel
 
-  private val adapter: FileAdapter by lazy { FileAdapter(this) }
+  private val fileAdapter: FileAdapter by lazy { FileAdapter() }
 
   override fun getPermissions(): List<String> =
     listOf(
@@ -29,12 +30,23 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   override fun onCreated() {
     super.onCreated()
     applicationComponent.inject(this)
+    registerBackPress()
     setupViews()
     loadData()
   }
 
+  private fun registerBackPress() {
+    onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+      override fun handleOnBackPressed() = onBackButtonPressed()
+    })
+  }
+
+  private fun onBackButtonPressed() {
+
+  }
+
   private fun setupViews() {
-    adapter.setFileListener ( object: FileListener {
+    fileAdapter.setFileListener ( object: FileListener {
       override fun onFileClicked(filePath: String) {
         viewModel.setRootPath(filePath)
         loadData()
@@ -42,13 +54,13 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
       }
     })
 
-    binding.run {
-      rvFiles.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
-      rvFiles.adapter = adapter
+    binding.rvFiles.run {
+      layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+      adapter = fileAdapter
     }
   }
 
   private fun loadData() {
-    adapter.setItems(FileData.store(viewModel.getAllFiles()))
+    fileAdapter.update(FileData.store(viewModel.getAllFiles()))
   }
 }

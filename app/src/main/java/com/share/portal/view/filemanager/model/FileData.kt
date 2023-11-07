@@ -19,7 +19,7 @@ data class FileData(
 
   companion object {
     fun store(files: List<File>): List<FileData> {
-      return files.map{
+      return files.map {
         FileData(
           fileName = it.name,
           extension = convertExtension(it.extension),
@@ -50,24 +50,5 @@ enum class FileExtension(@DrawableRes val icon: Int) {
       }
     }
 
-//    fun File.isImage() {
-//
-//    }
-//
-//    fun File.isFolder() {
-//
-//    }
-//
-//    fun File.isAudio() {
-//
-//    }
-//
-//    fun File.isDoc() {
-//
-//    }
-//
-//    fun File.isVideo() {
-//
-//    }
   }
 }

@@ -29,7 +29,7 @@ abstract class PermissionActivity<V: ViewBinding>: ProgenitorActivity<V>() {
     checkPermissions()
   }
 
-  private fun checkPermissions() = permissionLauncher.launch(getPermissions().toTypedArray())
+  fun checkPermissions() = permissionLauncher.launch(getPermissions().toTypedArray())
 
   interface PermissionListener {
     fun onDenied(permission: String)
