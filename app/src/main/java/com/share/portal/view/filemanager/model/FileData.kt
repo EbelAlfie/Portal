@@ -3,6 +3,7 @@ package com.share.portal.view.filemanager.model
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import com.share.portal.R
+import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.model.FileExtension.Companion.convertExtension
 import kotlinx.parcelize.Parcelize
 import java.io.File
@@ -14,19 +15,17 @@ data class FileData(
   val path: String,
   val size: Long,
   val isDirectory: Boolean,
-  val isParent: Boolean
 ): Parcelable {
 
   companion object {
-    fun store(files: List<File>): List<FileData> {
-      return files.map {
+    fun store(files: FileTreeEntity): List<FileData> {
+      return files.child.map {
         FileData(
           fileName = it.name,
           extension = convertExtension(it.extension),
           path = it.path,
           size = it.totalSpace, //bytes
           isDirectory = it.isDirectory,
-          isParent = true
         )
       }
     }
