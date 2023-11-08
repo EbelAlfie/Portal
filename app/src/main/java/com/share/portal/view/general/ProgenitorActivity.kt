@@ -3,7 +3,6 @@ package com.share.portal.view.general
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.share.portal.App
@@ -20,10 +19,6 @@ abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
     protected val applicationComponent: ApplicationComponent by lazy {
         (application as App).getAppComponent()
     }
-
-    protected var activityLauncher = registerForActivityResult (
-        ActivityResultContracts.StartActivityForResult()
-    ) { result -> }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

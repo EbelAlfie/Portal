@@ -29,7 +29,19 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     ActivityMainBinding.inflate(layoutInflater)
 
   override fun onCreated() {
-    super.onCreated()
+    setPermissionListener(object: PermissionListener {
+      override fun onGranted() {
+        setupActivity()
+      }
+      override fun onDenied(permission: String) {
+        showToast("Permission $permission must be enabled!")
+        finish()
+      }
+    })
+    checkPermissions()
+  }
+
+  private fun setupActivity() {
     applicationComponent.inject(this)
     registerBackPress()
     setupViews()
@@ -48,6 +60,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   }
 
   private fun setupViews() {
+    setupToolbar()
     fileAdapter.setFileListener ( object: FileListener {
       override fun onFileClicked(filePath: String) {
         viewModel.setRootPath(filePath)
@@ -59,6 +72,13 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     binding.rvFiles.run {
       layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
       adapter = fileAdapter
+    }
+  }
+
+  private fun setupToolbar() {
+    binding.toolbar.apply {
+      icBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
+      icFile.setOnClickListener {  }
     }
   }
 
