@@ -21,12 +21,11 @@ class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
         child = rootFile.listFiles()?.toList() ?: listOf()
       )
 
-      ResponseModel(
+      ResponseModel (
         data = file
       )
     } catch (e: Exception) { /*future*/
-      ResponseModel(
-        data = null,
+      ResponseModel (
         error = Throwable(e.message)
       )
     }

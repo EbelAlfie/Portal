@@ -15,8 +15,9 @@
   <dimen name="line_50">50dp</dimen>
   <dimen name="line_2">2dp</dimen>
 
-  <dimen name="text_20">20sp</dimen>
   <dimen name="text_10">10sp</dimen>
+  <dimen name="text_20">20sp</dimen>
+  <dimen name="text_30">30sp</dimen>
 
   <dimen name="zero">0dp</dimen>
 </resources>

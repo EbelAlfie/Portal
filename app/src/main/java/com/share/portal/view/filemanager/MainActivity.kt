@@ -6,13 +6,17 @@ import android.os.Build.VERSION_CODES
 import android.os.SystemClock
 import android.view.LayoutInflater
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.share.portal.R
 import com.share.portal.databinding.ActivityMainBinding
+import com.share.portal.databinding.BottomsheetWarningBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.adapter.FileAdapter
 import com.share.portal.view.filemanager.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.model.FileData
 import com.share.portal.view.general.PermissionActivity
+import com.share.portal.view.utils.BottomSheetPopUp
 import com.share.portal.view.wifisharing.WifiSharingActivity
 import javax.inject.Inject
 
@@ -34,13 +38,12 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
 
   override fun onCreated() {
     setPermissionListener(object: PermissionListener {
-      override fun onGranted() {
+      override fun onGranted() =
         setupActivity()
-      }
-      override fun onDenied(permission: String) {
-        showToast("Permission $permission must be enabled!")
-        finish()
-      }
+      override fun onDenied(permission: String) =
+        showPermissionDeniedDialog(permission)
+      override fun onDeniedPermanently(permission: String) =
+        showPermissionDeniedDialog(permission)
     })
     checkPermissions()
   }

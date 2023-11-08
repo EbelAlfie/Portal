@@ -5,7 +5,7 @@
   </style>
 
   <style name="textview_big" parent="textview_general_white">
-    <item name="android:textSize">@dimen/text_20</item>
+    <item name="android:textSize">@dimen/text_30</item>
   </style>
 
   <style name="textview_header" parent="textview_big">
@@ -13,7 +13,7 @@
   </style>
 
   <style name="textview_medium" parent="textview_general_white">
-    <item name="android:textSize">@dimen/text_10</item>
+    <item name="android:textSize">@dimen/text_20</item>
   </style>
 
 </resources>

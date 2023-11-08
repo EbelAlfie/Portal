@@ -15,6 +15,11 @@ class BottomSheetPopUp: BottomSheetDialogFragment() {
   private var title: String = ""
   private var content: CharSequence = ""
   private var img: Int = 0
+  private var onDismiss: (() -> Unit)? = null
+
+  fun addOnDismissListener(callback: () -> Unit) {
+    onDismiss = callback
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -48,6 +53,7 @@ class BottomSheetPopUp: BottomSheetDialogFragment() {
 
   override fun onDismiss(dialog: DialogInterface) {
     super.onDismiss(dialog)
+    onDismiss?.invoke()
   }
 
   companion object {
@@ -61,6 +67,7 @@ class BottomSheetPopUp: BottomSheetDialogFragment() {
       @DrawableRes image: Int,
       title: String,
       content: CharSequence,
+      onDismiss: (() -> Unit)? = null
     ) {
       val dialog = BottomSheetPopUp()
       val bundle = Bundle().apply {
@@ -69,6 +76,7 @@ class BottomSheetPopUp: BottomSheetDialogFragment() {
         putCharSequence(DIALOG_DESC, content)
       }
       dialog.arguments = bundle
+      dialog.addOnDismissListener { onDismiss?.invoke() }
 
       fragmentManager.findFragmentByTag(DIALOG_TAG)?.let {
         (it as BottomSheetDialogFragment).dismiss()

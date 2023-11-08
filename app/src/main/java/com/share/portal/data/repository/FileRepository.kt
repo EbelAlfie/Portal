@@ -4,5 +4,5 @@ import com.share.portal.data.models.ResponseModel
 import com.share.portal.domain.models.FileTreeEntity
 
 interface FileRepository {
-  fun getAllExternalFiles(rootPath: String = ""): ResponseModel<FileTreeEntity>
+  fun getAllExternalFiles(rootPath: String = ""): FileTreeEntity
 }

@@ -19,9 +19,15 @@ class MainViewModel @Inject constructor(
     rootPath = newRoot
   }
 
-  fun getAllFiles(onSuccess: (FileTreeEntity) -> Unit, onFailed: (Throwable) -> Unit) {
-    val data = fileUseCase.getAllExternalFiles(rootPath)
-    if (data.data != null) onSuccess.invoke(data.data)
-    if (data.error != null) onFailed.invoke(data.error)
+  fun getAllFiles(
+    onSuccess: (FileTreeEntity) -> Unit,
+    onFailed: (Throwable) -> Unit
+  ) {
+    try {
+      val data = fileUseCase.getAllExternalFiles(rootPath)
+      onSuccess.invoke(data)
+    } catch (error: Exception) {
+      onFailed.invoke(error)
+    }
   }
 }

@@ -10,6 +10,7 @@ import com.share.portal.view.general.PermissionActivity
 import com.share.portal.view.general.ProgenitorActivity
 import com.share.portal.view.utils.BottomSheetPopUp
 import com.share.portal.view.utils.PermissionUtils
+import java.lang.System.exit
 
 class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
   override fun initBinding(layoutInflater: LayoutInflater): ActivityWifiSharingBinding =
@@ -20,12 +21,30 @@ class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
 
   override fun onCreated() {
     //bottomsheet, register sebagai service, scan devices
-    BottomSheetPopUp.newDialog(
-      fragmentManager = supportFragmentManager,
-      image = R.drawable.ic_document,
-      title = getString(),
-      content = getString()
-    )
+    setPermissionListener(object: PermissionListener {
+      override fun onGranted() {
+        setupActivity()
+      }
+      override fun onDenied(permission: String) {
+        BottomSheetPopUp.newDialog (
+          fragmentManager = supportFragmentManager,
+          image = R.drawable.ic_document,
+          title = getString(R.string.warning_wifi_sharing_title),
+          content = getString(R.string.warning_wifi_sharing_content),
+          onDismiss = ::exitActivity
+        )
+      }
+    })
+    checkPermissions()
+  }
+
+  private fun setupActivity() {
+    showToast("YEYY")
+  }
+
+  private fun exitActivity() {
+    finish()
+    overridePendingTransition(R.anim.stay, R.anim.slide_down)
   }
 
   companion object {
