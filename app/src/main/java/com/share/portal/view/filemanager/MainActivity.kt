@@ -58,10 +58,11 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
  private fun showPermissionDeniedDialog(permission: String) {
     BottomSheetPopUp.newDialog(
       supportFragmentManager,
+      this,
       R.drawable.ic_folder,
       getString(R.string.warning_general_title),
       getString(R.string.warning_general_content),
-      onDismiss = { finish() }
+      onDismiss = { }
     )
   }
 

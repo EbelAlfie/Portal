@@ -12,8 +12,9 @@
   <dimen name="size_2">2dp</dimen>
   <dimen name="size_8">8dp</dimen>
 
-  <dimen name="line_50">50dp</dimen>
   <dimen name="line_2">2dp</dimen>
+  <dimen name="line_50">50dp</dimen>
+  <dimen name="line_30">30dp</dimen>
 
   <dimen name="text_10">10sp</dimen>
   <dimen name="text_20">20sp</dimen>

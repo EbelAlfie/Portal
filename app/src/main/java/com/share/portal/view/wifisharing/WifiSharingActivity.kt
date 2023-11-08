@@ -3,16 +3,19 @@ package com.share.portal.view.wifisharing
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
+import androidx.lifecycle.ViewModel
 import com.share.portal.R
 import com.share.portal.databinding.ActivityWifiSharingBinding
-import com.share.portal.view.filemanager.MainActivity
 import com.share.portal.view.general.PermissionActivity
-import com.share.portal.view.general.ProgenitorActivity
 import com.share.portal.view.utils.BottomSheetPopUp
 import com.share.portal.view.utils.PermissionUtils
-import java.lang.System.exit
+import javax.inject.Inject
 
 class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
+
+  @Inject
+  lateinit var viewModel: WifiSharingViewmodel
+
   override fun initBinding(layoutInflater: LayoutInflater): ActivityWifiSharingBinding =
     ActivityWifiSharingBinding.inflate(layoutInflater)
 
@@ -20,7 +23,6 @@ class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
     PermissionUtils.getWifiSharingPermission()
 
   override fun onCreated() {
-    //bottomsheet, register sebagai service, scan devices
     setPermissionListener(object: PermissionListener {
       override fun onGranted() =
         setupActivity()
@@ -33,7 +35,19 @@ class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
   }
 
   private fun setupActivity() {
-    showToast("YEYY")
+    applicationComponent.inject(this)
+    registerWifi()
+    setupView()
+  }
+
+  private fun registerWifi() {
+
+  }
+
+  private fun setupView() {
+    binding.apply {
+
+    }
   }
 
   private fun exitActivity() {
@@ -44,6 +58,7 @@ class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
   private fun showPermissionDeniedDialog(permission: String) {
     BottomSheetPopUp.newDialog(
       supportFragmentManager,
+      this,
       R.drawable.ic_folder,
       getString(R.string.warning_general_title),
       getString(R.string.warning_general_content),
@@ -55,7 +70,6 @@ class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
     fun navigate(from: Context): Intent {
       return Intent(from, WifiSharingActivity::class.java)
     }
-
   }
 
 }

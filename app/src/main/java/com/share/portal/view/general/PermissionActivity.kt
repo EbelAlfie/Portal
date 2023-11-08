@@ -1,26 +1,20 @@
 package com.share.portal.view.general
 
-import android.Manifest.permission
-import android.content.pm.PackageManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.viewbinding.ViewBinding
-import com.share.portal.R
-import com.share.portal.view.utils.BottomSheetPopUp
 
 abstract class PermissionActivity<V: ViewBinding>: ProgenitorActivity<V>() {
   private var mListener: PermissionListener? = null
-
   private val permissionLauncher = registerForActivityResult(
     ActivityResultContracts.RequestMultiplePermissions()
-  ) { result ->
-    result.onEachIndexed { index, permission ->
+  ) { permissions ->
+    permissions.onEachIndexed { index, permission ->
       when (permission.value) {
         false -> handleDeniedPermission(permission.key)
-        true -> if (index == result.size - 1) mListener?.onGranted()
+        true -> if (index == permissions.size - 1) mListener?.onGranted()
       }
     }
-
   }
 
   private fun handleDeniedPermission(permission: String) {
