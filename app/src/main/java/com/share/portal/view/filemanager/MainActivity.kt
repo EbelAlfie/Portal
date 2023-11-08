@@ -1,16 +1,11 @@
 package com.share.portal.view.filemanager
 
 import android.Manifest
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
-import android.os.SystemClock
 import android.view.LayoutInflater
 import androidx.activity.OnBackPressedCallback
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.R
 import com.share.portal.databinding.ActivityMainBinding
-import com.share.portal.databinding.BottomsheetWarningBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.adapter.FileAdapter
 import com.share.portal.view.filemanager.adapter.FileAdapter.FileListener
@@ -62,7 +57,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
       R.drawable.ic_folder,
       getString(R.string.warning_general_title),
       getString(R.string.warning_general_content),
-      onDismiss = { }
+      onDismiss = ::finish
     )
   }
 

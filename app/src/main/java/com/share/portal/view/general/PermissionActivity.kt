@@ -11,7 +11,10 @@ abstract class PermissionActivity<V: ViewBinding>: ProgenitorActivity<V>() {
   ) { permissions ->
     permissions.onEachIndexed { index, permission ->
       when (permission.value) {
-        false -> handleDeniedPermission(permission.key)
+        false ->  {
+          handleDeniedPermission(permission.key)
+          return@registerForActivityResult
+        }
         true -> if (index == permissions.size - 1) mListener?.onGranted()
       }
     }

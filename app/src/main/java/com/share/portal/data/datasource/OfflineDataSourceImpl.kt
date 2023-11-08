@@ -11,7 +11,7 @@ class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
 
   override fun getAllExternalFiles(rootPath: String): ResponseModel<FileTreeEntity> {
     return try {
-      val rootFile = if (rootPath == FileParam.EXTERNAL.rootName)
+      val rootFile = if (rootPath == FileParam.EXTERNAL.rootName || rootPath.isBlank())
         Environment.getExternalStorageDirectory()
       else File(rootPath)
 
