@@ -1,6 +1,9 @@
 package com.share.portal.view.filemanager
 
 import android.Manifest
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
+import android.os.SystemClock
 import android.view.LayoutInflater
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,6 +13,7 @@ import com.share.portal.view.filemanager.adapter.FileAdapter
 import com.share.portal.view.filemanager.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.model.FileData
 import com.share.portal.view.general.PermissionActivity
+import com.share.portal.view.wifisharing.WifiSharingActivity
 import javax.inject.Inject
 
 class MainActivity : PermissionActivity<ActivityMainBinding>() {
@@ -78,7 +82,9 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   private fun setupToolbar() {
     binding.toolbar.apply {
       icBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-      icFile.setOnClickListener {  }
+      icFile.setOnClickListener {
+        startActivity(WifiSharingActivity.navigate(this@MainActivity))
+      }
     }
   }
 
