@@ -18,12 +18,14 @@ data class FileData(
 ): Parcelable {
 
   companion object {
-    fun store(files: FileTreeEntity): MutableList<FileData> {
+    fun store(fileTree: FileTreeEntity): MutableList<FileData> {
       val fileList = mutableListOf<FileData>()
 
-      fileList.add(generateParentData(files.root.path, files.root.fileName))
+      fileTree.root?.let {
+        fileList.add(generateParentData(it.path, it.fileName))
+      }
       fileList.addAll(
-        files.child.map {
+        fileTree.child.map {
           FileData(
             fileName = it.name,
             extension = convertExtension(it.extension),

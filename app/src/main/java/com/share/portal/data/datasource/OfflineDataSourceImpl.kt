@@ -1,6 +1,7 @@
 package com.share.portal.data.datasource
 
 import android.os.Environment
+import com.share.portal.data.models.ResponseModel
 import com.share.portal.domain.models.FileParam
 import com.share.portal.domain.models.FileTreeEntity
 import java.io.File
@@ -8,22 +9,25 @@ import javax.inject.Inject
 
 class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
 
-  override fun getAllExternalFiles(rootPath: String): FileTreeEntity {
+  override fun getAllExternalFiles(rootPath: String): ResponseModel<FileTreeEntity> {
     return try {
       val rootFile = if (rootPath == FileParam.EXTERNAL.rootName)
         Environment.getExternalStorageDirectory()
       else File(rootPath)
 
-      FileTreeEntity.createFileTree (
-        root = rootFile.parentFile,
+      val file = FileTreeEntity.createFileTree (
+        root = if (rootPath == FileParam.EXTERNAL.rootName) null else rootFile.parentFile,
         current = rootFile?.path,
         child = rootFile.listFiles()?.toList() ?: listOf()
       )
+
+      ResponseModel(
+        data = file
+      )
     } catch (e: Exception) { /*future*/
-      FileTreeEntity.createFileTree (
-        root = null,
-        current = null,
-        child = listOf()
+      ResponseModel(
+        data = null,
+        error = Throwable(e.message)
       )
     }
   }

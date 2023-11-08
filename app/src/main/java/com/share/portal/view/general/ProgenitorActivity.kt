@@ -41,9 +41,9 @@ abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
     }
 
     protected open fun showToast(
-        msg: String,
+        msg: String?,
         gravity: Int = Gravity.CENTER
-    ) = toast.show(msg, gravity)
+    ) = msg?.let { toast.show(it, gravity) }
 
     abstract fun onCreated()
 

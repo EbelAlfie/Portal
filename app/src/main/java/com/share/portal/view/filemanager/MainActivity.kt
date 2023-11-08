@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.databinding.ActivityMainBinding
+import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.adapter.FileAdapter
 import com.share.portal.view.filemanager.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.model.FileData
@@ -32,7 +33,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     applicationComponent.inject(this)
     registerBackPress()
     setupViews()
-    loadData()
+    getFile()
   }
 
   private fun registerBackPress() {
@@ -42,14 +43,15 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   }
 
   private fun onBackButtonPressed() {
-
+    viewModel.setRootPath(fileAdapter.getParent().path)
+    getFile()
   }
 
   private fun setupViews() {
     fileAdapter.setFileListener ( object: FileListener {
       override fun onFileClicked(filePath: String) {
         viewModel.setRootPath(filePath)
-        loadData()
+        getFile()
         showToast(filePath)
       }
     })
@@ -60,7 +62,14 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     }
   }
 
-  private fun loadData() {
-    fileAdapter.update(FileData.store(viewModel.getAllFiles()))
+  private fun getFile() =
+    viewModel.getAllFiles(::loadData, ::showErrorDialog)
+
+  private fun loadData(data: FileTreeEntity) {
+    fileAdapter.update(FileData.store(data))
+  }
+
+  private fun showErrorDialog(throwable: Throwable) {
+    showToast(throwable.message, )
   }
 }

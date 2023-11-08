@@ -7,17 +7,17 @@ data class ParentFile (
   val path: String
 ) {
   companion object {
-    fun createParent(parentFile: File?): ParentFile {
+    fun createParent(parentFile: File): ParentFile {
       return ParentFile(
-        fileName = parentFile?.name ?: "...",
-        path = parentFile?.path ?: ""
+        fileName = /*parentFile.name*/ "...",
+        path = parentFile.path
       )
     }
   }
 }
 
 data class FileTreeEntity(
-  val root: ParentFile, //create custom file
+  val root: ParentFile?, //create custom file
   val current: String,
   val child: List<File>
 ) {
@@ -28,7 +28,7 @@ data class FileTreeEntity(
       child: List<File>
     ): FileTreeEntity {
       return FileTreeEntity(
-        root = ParentFile.createParent(root),
+        root = root?.let { ParentFile.createParent(it) },
         current = current ?: "",
         child = child
       )
