@@ -1,20 +1,16 @@
 package com.share.portal.view.utils
 
-import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
+import android.content.res.Resources
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.annotation.DrawableRes
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.share.portal.databinding.BottomsheetWarningBinding
 
@@ -24,6 +20,8 @@ class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
   private var content: CharSequence = context.getString(com.share.portal.R.string.warning_general_content)
   private var img: Int = com.share.portal.R.drawable.ic_folder
   private var onDismiss: (() -> Unit)? = null
+
+  private lateinit var binding: BottomsheetWarningBinding
 
   fun addOnDismissListener(callback: () -> Unit) {
     onDismiss = callback
@@ -35,13 +33,16 @@ class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View = BottomsheetWarningBinding.inflate(inflater).root
+  ): View {
+    binding = BottomsheetWarningBinding.inflate(inflater, container, false)
+    return binding.root
+  }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setStyle(DialogFragment.STYLE_NO_FRAME, com.share.portal.R.style.bottom_sheet_dialog)
     loadArguments()
-    setupView(view)
+    setupView()
   }
 
   private fun loadArguments() {
@@ -52,12 +53,15 @@ class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
     }
   }
 
-  private fun setupView(view: View) {
-    BottomsheetWarningBinding.bind(view).run {
-      val dialogFrag = view.parent as View
-      dialogFrag.layoutParams = CoordinatorLayout.LayoutParams(
-        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
-      )
+  private fun setupView() {
+    binding.run {
+      with(root.parent as View) {
+        layoutParams.apply {
+          height = Resources.getSystem().displayMetrics.heightPixels
+          width = ViewGroup.LayoutParams.MATCH_PARENT
+        }
+        BottomSheetBehavior.from(this).state = BottomSheetBehavior.STATE_EXPANDED
+      }
 
       ivLogo.setImageResource(img)
       tvTitle.text = title
