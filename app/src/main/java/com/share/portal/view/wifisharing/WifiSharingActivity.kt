@@ -22,18 +22,12 @@ class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
   override fun onCreated() {
     //bottomsheet, register sebagai service, scan devices
     setPermissionListener(object: PermissionListener {
-      override fun onGranted() {
+      override fun onGranted() =
         setupActivity()
-      }
-      override fun onDenied(permission: String) {
-        BottomSheetPopUp.newDialog (
-          fragmentManager = supportFragmentManager,
-          image = R.drawable.ic_document,
-          title = getString(R.string.warning_wifi_sharing_title),
-          content = getString(R.string.warning_wifi_sharing_content),
-          onDismiss = ::exitActivity
-        )
-      }
+      override fun onDenied(permission: String) =
+        showPermissionDeniedDialog(permission)
+      override fun onDeniedPermanently(permission: String) =
+        showPermissionDeniedDialog(permission)
     })
     checkPermissions()
   }
@@ -45,6 +39,16 @@ class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
   private fun exitActivity() {
     finish()
     overridePendingTransition(R.anim.stay, R.anim.slide_down)
+  }
+
+  private fun showPermissionDeniedDialog(permission: String) {
+    BottomSheetPopUp.newDialog(
+      supportFragmentManager,
+      R.drawable.ic_folder,
+      getString(R.string.warning_general_title),
+      getString(R.string.warning_general_content),
+      onDismiss = ::exitActivity
+    )
   }
 
   companion object {

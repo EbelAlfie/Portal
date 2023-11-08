@@ -55,6 +55,16 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     getFile()
   }
 
+ private fun showPermissionDeniedDialog(permission: String) {
+    BottomSheetPopUp.newDialog(
+      supportFragmentManager,
+      R.drawable.ic_folder,
+      getString(R.string.warning_general_title),
+      getString(R.string.warning_general_content),
+      onDismiss = { finish() }
+    )
+  }
+
   private fun registerBackPress() {
     onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
       override fun handleOnBackPressed() = onBackButtonPressed()

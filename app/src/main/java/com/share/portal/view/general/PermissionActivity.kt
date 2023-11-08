@@ -37,16 +37,6 @@ abstract class PermissionActivity<V: ViewBinding>: ProgenitorActivity<V>() {
     permissionLauncher.launch(getPermissions().toTypedArray())
   }
 
-  fun showPermissionDeniedDialog(permission: String) {
-    BottomSheetPopUp.newDialog(
-      supportFragmentManager,
-      R.drawable.ic_folder,
-      getString(R.string.warning_general_title),
-      getString(R.string.warning_general_content),
-      onDismiss = { finish() }
-    )
-  }
-
   interface PermissionListener {
     fun onGranted()
     fun onDenied(permission: String)
