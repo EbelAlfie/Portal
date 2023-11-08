@@ -9,8 +9,11 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
   private val fileUseCase: FileUseCaseImpl
 ): ViewModel() {
+  private var rootPath: String
 
-  private var rootPath: String = FileParam.EXTERNAL.rootName
+  init {
+    rootPath = FileParam.EXTERNAL.rootName
+  }
 
   fun setRootPath(newRoot: String) {
     rootPath = newRoot
