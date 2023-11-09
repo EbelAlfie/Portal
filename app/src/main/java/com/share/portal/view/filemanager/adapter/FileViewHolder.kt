@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.view.filemanager.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.model.FileData
+import com.share.portal.view.filemanager.model.FileExtension
 
 class FileViewHolder(private val binding: ItemFileBinding):
   RecyclerView.ViewHolder(binding.root) {
@@ -13,7 +14,8 @@ class FileViewHolder(private val binding: ItemFileBinding):
       if (!data.isParent) icIcon.setImageResource(data.extension.icon)
       tvFilename.text = data.fileName
       root.setOnClickListener {
-        mListener?.onFileClicked(data.path)
+        if (data.extension == FileExtension.FOLDER)
+          mListener?.onFileClicked(data.path)
       }
     }
   }

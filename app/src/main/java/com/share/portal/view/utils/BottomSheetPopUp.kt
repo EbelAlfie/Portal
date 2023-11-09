@@ -8,17 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.share.portal.R
 import com.share.portal.databinding.BottomsheetWarningBinding
 
 
 class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
-  private var title: String = context.getString(com.share.portal.R.string.warning_general_title)
-  private var content: CharSequence = context.getString(com.share.portal.R.string.warning_general_content)
-  private var img: Int = com.share.portal.R.drawable.ic_folder
+  private var title: String = context.getString(R.string.warning_general_title)
+  private var content: CharSequence = context.getString(R.string.warning_general_content)
+  private var img: Int = R.drawable.ic_folder
   private var onDismiss: (() -> Unit)? = null
 
   private lateinit var binding: BottomsheetWarningBinding
@@ -40,7 +40,6 @@ class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    setStyle(DialogFragment.STYLE_NO_FRAME, com.share.portal.R.style.bottom_sheet_dialog)
     loadArguments()
     setupView()
   }
@@ -88,20 +87,26 @@ class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
       content: CharSequence,
       onDismiss: (() -> Unit)? = null
     ) {
-      val dialog = BottomSheetPopUp(context)
+
       val bundle = Bundle().apply {
         putInt(DIALOG_IMG, image)
         putString(DIALOG_TITLE, title)
         putCharSequence(DIALOG_DESC, content)
       }
-      dialog.arguments = bundle
-      dialog.addOnDismissListener { onDismiss?.invoke() }
 
-      fragmentManager.findFragmentByTag(DIALOG_TAG)?.let {
-        (it as BottomSheetDialogFragment).dismiss()
+      BottomSheetPopUp(context).also {
+        it.enterTransition = R.anim.slide_up
+        it.exitTransition = R.anim.slide_down
+        it.arguments = bundle
+        it.addOnDismissListener { onDismiss?.invoke() }
+
+        fragmentManager.findFragmentByTag(DIALOG_TAG)?.let {fragment ->
+          (fragment as BottomSheetDialogFragment).dismiss()
+        }
+
+        it.show(fragmentManager, DIALOG_TAG)
       }
-
-      dialog.show(fragmentManager, DIALOG_TAG)
     }
+
   }
 }

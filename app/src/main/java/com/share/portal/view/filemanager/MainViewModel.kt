@@ -12,11 +12,11 @@ class MainViewModel @Inject constructor(
   private var rootPath: String
 
   init {
-    rootPath = FileParam.EXTERNAL.rootName
+    rootPath = FileParam.EXTERNAL.pathName
   }
 
   fun setRootPath(newRoot: String) {
-    rootPath = newRoot
+    rootPath = newRoot.ifBlank { FileParam.EXTERNAL.pathName }
   }
 
   fun getAllFiles(

@@ -68,8 +68,14 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   }
 
   private fun onBackButtonPressed() {
-    viewModel.setRootPath(fileAdapter.getParent().path)
-    getFile()
+    val path = fileAdapter.getParent()
+    path?.let {
+      if (path.isBlank()) finish()
+      viewModel.setRootPath(path)
+      getFile()
+      return
+    }
+    finish()
   }
 
   private fun setupViews() {
@@ -90,15 +96,13 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
 
   private fun setupToolbar() {
     binding.toolbar.apply {
-      icBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
       icFile.setOnClickListener {
         startActivity(WifiSharingActivity.navigate(this@MainActivity))
       }
     }
   }
 
-  private fun getFile() =
-    viewModel.getAllFiles(::loadData, ::showErrorDialog)
+  private fun getFile() = viewModel.getAllFiles(::loadData, ::showErrorDialog)
 
   private fun loadData(data: FileTreeEntity) {
     fileAdapter.update(FileData.store(data))

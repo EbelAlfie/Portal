@@ -17,11 +17,4 @@
     <item name="android:textSize">@dimen/text_20</item>
   </style>
 
-  <style name="bottom_sheet_dialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
-    <item name="android:statusBarColor">@android:color/transparent</item>
-    <item name="android:navigationBarColor">@color/white</item>
-    <item name="android:windowSoftInputMode">adjustResize</item>
-    <item name="android:windowIsFloating">false</item>
-  </style>
-
 </resources>

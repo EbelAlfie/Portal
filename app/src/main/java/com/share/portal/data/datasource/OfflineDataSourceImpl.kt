@@ -11,12 +11,12 @@ class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
 
   override fun getAllExternalFiles(rootPath: String): ResponseModel<FileTreeEntity> {
     return try {
-      val rootFile = if (rootPath == FileParam.EXTERNAL.rootName || rootPath.isBlank())
-        Environment.getExternalStorageDirectory()
+      val rootFile = if (rootPath == FileParam.EXTERNAL.pathName || rootPath.isBlank())
+         Environment.getExternalStorageDirectory()
       else File(rootPath)
 
       val file = FileTreeEntity.createFileTree (
-        root = if (rootPath == FileParam.EXTERNAL.rootName) null else rootFile.parentFile,
+        root = if (rootPath == FileParam.EXTERNAL.pathName) null else rootFile.parentFile,
         current = rootFile?.path,
         child = rootFile.listFiles()?.toList() ?: listOf()
       )

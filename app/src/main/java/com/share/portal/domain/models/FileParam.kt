@@ -1,6 +1,6 @@
 package com.share.portal.domain.models
 
-enum class FileParam(val rootName: String) {
-  EXTERNAL("EXTERNAL"),
+enum class FileParam(val pathName: String) {
+  EXTERNAL("/storage/emulated/0"),
   ROOT("/")
 }

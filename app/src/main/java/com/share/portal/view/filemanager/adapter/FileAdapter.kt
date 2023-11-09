@@ -35,7 +35,7 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
   override fun onBindViewHolder(holder: FileViewHolder, position: Int) =
     holder.bindData(diffUtil.currentList[position], mListener)
 
-  fun getParent(): FileData = diffUtil.currentList[0]
+  fun getParent(): String? = diffUtil.currentList[0]?.path
 
   interface FileListener {
     fun onFileClicked(filePath: String)
