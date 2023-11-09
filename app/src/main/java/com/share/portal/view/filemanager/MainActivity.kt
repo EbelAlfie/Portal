@@ -9,7 +9,9 @@ import com.share.portal.databinding.ActivityMainBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.adapter.FileAdapter
 import com.share.portal.view.filemanager.adapter.FileAdapter.FileListener
+import com.share.portal.view.filemanager.adapter.ParentAdapter
 import com.share.portal.view.filemanager.model.FileData
+import com.share.portal.view.filemanager.model.ParentData
 import com.share.portal.view.general.PermissionActivity
 import com.share.portal.view.utils.BottomSheetPopUp
 import com.share.portal.view.wifisharing.WifiSharingActivity
@@ -21,6 +23,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   lateinit var viewModel: MainViewModel
 
   private val fileAdapter: FileAdapter by lazy { FileAdapter() }
+  private val parentAdapter: ParentAdapter by lazy { ParentAdapter() }
 
   override fun getPermissions(): List<String> =
     listOf(
@@ -88,9 +91,18 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
       }
     })
 
-    binding.rvFiles.run {
-      layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
-      adapter = fileAdapter
+    parentAdapter.setListener {parentPath ->
+      viewModel.setRootPath(parentPath)
+      getFile()
+      showToast(parentPath)
+    }
+
+    binding.run {
+      rvFiles.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+      rvFiles.adapter = fileAdapter
+
+      rvParent.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+      rvParent.adapter = parentAdapter
     }
   }
 
@@ -105,6 +117,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   private fun getFile() = viewModel.getAllFiles(::loadData, ::showErrorDialog)
 
   private fun loadData(data: FileTreeEntity) {
+    parentAdapter.updateList(ParentData.toParentList(data.current))
     fileAdapter.update(FileData.store(data))
   }
 

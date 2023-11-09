@@ -3,13 +3,13 @@ package com.share.portal.domain.models
 import java.io.File
 
 data class ParentFile (
-  val fileName: String = "...",
+  val fileName: String,
   val path: String
 ) {
   companion object {
     fun createParent(parentFile: File): ParentFile {
       return ParentFile(
-        fileName = /*parentFile.name*/ "...",
+        fileName = parentFile.name,
         path = parentFile.path
       )
     }
@@ -17,19 +17,16 @@ data class ParentFile (
 }
 
 data class FileTreeEntity(
-  val root: ParentFile?, //create custom file
-  val current: String,
+  val current: ParentFile,
   val child: List<File>
 ) {
   companion object {
     fun createFileTree(
-      root: File?,
-      current: String?,
+      current: File,
       child: List<File>
     ): FileTreeEntity {
       return FileTreeEntity(
-        root = root?.let { ParentFile.createParent(it) },
-        current = current ?: "",
+        current = ParentFile.createParent(current),
         child = child
       )
     }

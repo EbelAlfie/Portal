@@ -16,8 +16,7 @@ class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
       else File(rootPath)
 
       val file = FileTreeEntity.createFileTree (
-        root = if (rootPath == FileParam.EXTERNAL.pathName) null else rootFile.parentFile,
-        current = rootFile?.path,
+        current = rootFile,
         child = rootFile.listFiles()?.toList() ?: listOf()
       )
 
