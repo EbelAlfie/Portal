@@ -12,6 +12,8 @@
   <dimen name="size_1">1dp</dimen>
   <dimen name="size_2">2dp</dimen>
   <dimen name="size_8">8dp</dimen>
+  <dimen name="size_50">50dp</dimen>
+  <dimen name="size_100">100dp</dimen>
 
   <dimen name="line_2">2dp</dimen>
   <dimen name="line_50">50dp</dimen>

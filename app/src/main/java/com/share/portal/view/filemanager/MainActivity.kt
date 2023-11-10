@@ -24,26 +24,20 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   private val fileAdapter: FileAdapter by lazy { FileAdapter() }
   private val parentAdapter: ParentAdapter by lazy { ParentAdapter() }
 
+  /** Permission exclusives **/
   override fun getPermissions(): List<String> =
     listOf(
       Manifest.permission.WRITE_EXTERNAL_STORAGE,
       Manifest.permission.READ_EXTERNAL_STORAGE
     )
 
-  override fun initBinding(layoutInflater: LayoutInflater): ActivityMainBinding =
-    ActivityMainBinding.inflate(layoutInflater)
+  override fun onPermissionGranted() = setupActivity()
 
-  override fun onCreated() {
-    setPermissionListener(object: PermissionListener {
-      override fun onGranted() =
-        setupActivity()
-      override fun onDenied(permission: String) =
-        showPermissionDeniedDialog(permission)
-      override fun onDeniedPermanently(permission: String) =
-        showPermissionDeniedDialog(permission)
-    })
-    checkPermissions()
-  }
+  override fun onPermissionDenied(permission: String) =
+    showPermissionDeniedDialog(permission)
+
+  override fun onPermissionDeniedPermanently(permission: String) =
+    showPermissionDeniedDialog(permission)
 
   private fun showPermissionDeniedDialog(permission: String) {
     BottomSheetPopUp.newDialog(
@@ -54,6 +48,14 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
       getString(R.string.warning_general_content),
       onDismiss = ::finish
     )
+  }
+
+  /** Activity exclusives **/
+  override fun initBinding(layoutInflater: LayoutInflater): ActivityMainBinding =
+    ActivityMainBinding.inflate(layoutInflater)
+
+  override fun onCreated() {
+    checkPermissions()
   }
 
   private fun setupActivity() {
@@ -74,6 +76,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
       icFile.setOnClickListener {
         startActivity(WifiSharingActivity.navigate(this@MainActivity))
       }
+      tvTitle.text = getString(R.string.portal_label)
     }
   }
 

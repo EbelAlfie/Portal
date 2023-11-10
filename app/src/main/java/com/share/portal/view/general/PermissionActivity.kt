@@ -5,7 +5,6 @@ import androidx.core.app.ActivityCompat
 import androidx.viewbinding.ViewBinding
 
 abstract class PermissionActivity<V: ViewBinding>: ProgenitorActivity<V>() {
-  private var mListener: PermissionListener? = null
   private val permissionLauncher = registerForActivityResult(
     ActivityResultContracts.RequestMultiplePermissions()
   ) { permissions ->
@@ -15,30 +14,25 @@ abstract class PermissionActivity<V: ViewBinding>: ProgenitorActivity<V>() {
           handleDeniedPermission(permission.key)
           return@registerForActivityResult
         }
-        true -> if (index == permissions.size - 1) mListener?.onGranted()
+        true -> if (index == permissions.size - 1) onPermissionGranted()
       }
     }
+    onPermissionGranted()
   }
 
   private fun handleDeniedPermission(permission: String) {
     if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission))
-      mListener?.onDenied(permission)
-    else mListener?.onDeniedPermanently(permission)
-  }
-
-  protected fun setPermissionListener(listener: PermissionListener) {
-    mListener = listener
+      onPermissionDenied(permission)
+    else onPermissionDeniedPermanently(permission)
   }
 
   protected fun checkPermissions() {
     permissionLauncher.launch(getPermissions().toTypedArray())
   }
 
-  interface PermissionListener {
-    fun onGranted()
-    fun onDenied(permission: String)
-    fun onDeniedPermanently(permission: String)
-  }
-
   abstract fun getPermissions(): List<String>
+
+  abstract fun onPermissionGranted()
+  abstract fun onPermissionDenied(permission: String)
+  abstract fun onPermissionDeniedPermanently(permission: String)
 }

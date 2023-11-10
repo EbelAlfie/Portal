@@ -35,20 +35,18 @@ class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
   override fun initBinding(layoutInflater: LayoutInflater): ActivityWifiSharingBinding =
     ActivityWifiSharingBinding.inflate(layoutInflater)
 
+  /** Permission exclusives **/
   override fun getPermissions(): List<String> =
     PermissionUtils.getWifiSharingPermission()
 
-  override fun onCreated() {
-    setPermissionListener(object: PermissionListener {
-      override fun onGranted() =
-        setupActivity()
-      override fun onDenied(permission: String) =
-        showPermissionDeniedDialog(permission)
-      override fun onDeniedPermanently(permission: String) =
-        showPermissionDeniedDialog(permission)
-    })
-    checkPermissions()
-  }
+  override fun onPermissionGranted() =
+    setupActivity()
+  override fun onPermissionDenied(permission: String) =
+    showPermissionDeniedDialog(permission)
+  override fun onPermissionDeniedPermanently(permission: String) =
+    showPermissionDeniedDialog(permission)
+
+  override fun onCreated() = checkPermissions()
 
   private fun setupActivity() {
     applicationComponent.inject(this)
