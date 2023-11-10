@@ -34,6 +34,8 @@ class ParentAdapter: RecyclerView.Adapter<ParentViewHolder>() {
       LayoutInflater.from(parent.context), parent, false
     ))
 
+  fun getCurrentNode(): String = diffUtil.currentList.last().path
+
   override fun getItemCount(): Int = diffUtil.currentList.size
 
   override fun onBindViewHolder(holder: ParentViewHolder, position: Int) {

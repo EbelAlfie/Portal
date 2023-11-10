@@ -78,7 +78,9 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   }
 
   private fun onBackButtonPressed() {
-    finish()
+    val currentRoot = parentAdapter.getCurrentNode().substringBefore("/")
+    if (currentRoot.isNotBlank()) traverseFile(currentRoot)
+    else finish()
   }
 
   private fun setupViews() {
