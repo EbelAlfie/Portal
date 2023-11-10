@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemFileBinding
+import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.model.FileData
 
 class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
@@ -18,13 +19,13 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
       oldItem == newItem
   }
 
+  private val diffUtil = AsyncListDiffer(this, diffCallback)
+
   fun setFileListener (listener: FileListener) {
     mListener = listener
   }
 
-  private val diffUtil = AsyncListDiffer(this, diffCallback)
-
-  fun update(items: List<FileData>) = diffUtil.submitList(items)
+  fun update(items: FileTreeEntity) = diffUtil.submitList(FileData.store(items))
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder =
     FileViewHolder(ItemFileBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -35,9 +36,8 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
   override fun onBindViewHolder(holder: FileViewHolder, position: Int) =
     holder.bindData(diffUtil.currentList[position], mListener)
 
-  fun getParent(): String? = diffUtil.currentList[0]?.path
-
   interface FileListener {
     fun onFileClicked(filePath: String)
+    fun onFileHold(view: ItemFileBinding)
   }
 }

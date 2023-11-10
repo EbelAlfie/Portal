@@ -2,6 +2,7 @@ package com.share.portal.view.wifisharing
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.wifi.p2p.WifiP2pManager
 import android.view.LayoutInflater
 import com.share.portal.R
@@ -10,12 +11,15 @@ import com.share.portal.view.general.PermissionActivity
 import com.share.portal.view.utils.BottomSheetPopUp
 import com.share.portal.view.utils.PermissionUtils
 import com.share.portal.view.wifisharing.broadcastreceiver.WifiBroadcastReceiver
-import javax.inject.Inject
 
 class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
 
-  @Inject
-  lateinit var viewModel: WifiSharingViewmodel
+  val intentFilter = IntentFilter().apply {
+    addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
+    addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION)
+    addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)
+    addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
+  }
 
   private val wifiP2PManager: WifiP2pManager by lazy(LazyThreadSafetyMode.NONE) {
     getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager
@@ -71,7 +75,7 @@ class WifiSharingActivity: PermissionActivity<ActivityWifiSharingBinding>(){
   private fun registerWifi() {
     registerReceiver(
       wifiBroadcastReceiver,
-      viewModel.getIntentFilter()
+      intentFilter
     )
   }
   private fun unregisterWifi() {

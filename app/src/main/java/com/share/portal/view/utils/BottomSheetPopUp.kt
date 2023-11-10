@@ -27,8 +27,6 @@ class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
     onDismiss = callback
   }
 
-  override fun getTheme(): Int = android.R.style.Theme_Light_Panel
-
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
@@ -96,7 +94,6 @@ class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
 
       BottomSheetPopUp(context).also {
         it.enterTransition = R.anim.slide_up
-        it.exitTransition = R.anim.slide_down
         it.arguments = bundle
         it.addOnDismissListener { onDismiss?.invoke() }
 

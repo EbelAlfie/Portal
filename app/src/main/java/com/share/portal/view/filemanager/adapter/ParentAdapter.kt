@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemParentFileBinding
+import com.share.portal.domain.models.ParentFile
 import com.share.portal.view.filemanager.model.ParentData
 
 class ParentAdapter: RecyclerView.Adapter<ParentViewHolder>() {
@@ -15,7 +16,7 @@ class ParentAdapter: RecyclerView.Adapter<ParentViewHolder>() {
     override fun areItemsTheSame(oldItem: ParentData, newItem: ParentData): Boolean =
       oldItem.path == newItem.path
     override fun areContentsTheSame(oldItem: ParentData, newItem: ParentData): Boolean =
-      oldItem.path == newItem.path
+      oldItem == newItem
   }
 
   private val diffUtil = AsyncListDiffer(this, diffCallback)
@@ -24,8 +25,8 @@ class ParentAdapter: RecyclerView.Adapter<ParentViewHolder>() {
     mListener = listener
   }
 
-  fun updateList(newList: List<ParentData>) {
-    diffUtil.submitList(newList)
+  fun update(item: ParentFile) {
+    diffUtil.submitList(ParentData.toParentDataList(item))
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ParentViewHolder =

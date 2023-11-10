@@ -6,12 +6,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.R
 import com.share.portal.databinding.ActivityMainBinding
+import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.adapter.FileAdapter
 import com.share.portal.view.filemanager.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.adapter.ParentAdapter
-import com.share.portal.view.filemanager.model.FileData
-import com.share.portal.view.filemanager.model.ParentData
 import com.share.portal.view.general.PermissionActivity
 import com.share.portal.view.utils.BottomSheetPopUp
 import com.share.portal.view.wifisharing.WifiSharingActivity
@@ -46,14 +45,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     checkPermissions()
   }
 
-  private fun setupActivity() {
-    applicationComponent.inject(this)
-    registerBackPress()
-    setupViews()
-    getFile()
-  }
-
- private fun showPermissionDeniedDialog(permission: String) {
+  private fun showPermissionDeniedDialog(permission: String) {
     BottomSheetPopUp.newDialog(
       supportFragmentManager,
       this,
@@ -64,46 +56,17 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     )
   }
 
+  private fun setupActivity() {
+    applicationComponent.inject(this)
+    registerBackPress()
+    setupViews()
+    getFile()
+  }
+
   private fun registerBackPress() {
     onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
       override fun handleOnBackPressed() = onBackButtonPressed()
     })
-  }
-
-  private fun onBackButtonPressed() {
-    val path = fileAdapter.getParent()
-    path?.let {
-      if (path.isBlank()) finish()
-      viewModel.setRootPath(path)
-      getFile()
-      return
-    }
-    finish()
-  }
-
-  private fun setupViews() {
-    setupToolbar()
-    fileAdapter.setFileListener ( object: FileListener {
-      override fun onFileClicked(filePath: String) {
-        viewModel.setRootPath(filePath)
-        getFile()
-        showToast(filePath)
-      }
-    })
-
-    parentAdapter.setListener {parentPath ->
-      viewModel.setRootPath(parentPath)
-      getFile()
-      showToast(parentPath)
-    }
-
-    binding.run {
-      rvFiles.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
-      rvFiles.adapter = fileAdapter
-
-      rvParent.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
-      rvParent.adapter = parentAdapter
-    }
   }
 
   private fun setupToolbar() {
@@ -114,14 +77,40 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     }
   }
 
+  private fun onBackButtonPressed() {
+    finish()
+  }
+
+  private fun setupViews() {
+    setupToolbar()
+    fileAdapter.setFileListener (object: FileListener {
+      override fun onFileClicked(filePath: String) = traverseFile(filePath)
+      override fun onFileHold(view: ItemFileBinding) {}
+    })
+    parentAdapter.setListener(::traverseFile)
+
+    binding.run {
+      rvFiles.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+      rvFiles.adapter = fileAdapter
+
+      rvParent.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+      rvParent.adapter = parentAdapter
+    }
+  }
+
   private fun getFile() = viewModel.getAllFiles(::loadData, ::showErrorDialog)
+  private fun traverseFile(filePath: String) {
+    viewModel.setRootPath(filePath)
+    getFile()
+    showToast(filePath)
+  }
 
   private fun loadData(data: FileTreeEntity) {
-    parentAdapter.updateList(ParentData.toParentList(data.current))
-    fileAdapter.update(FileData.store(data))
+    parentAdapter.update(data.current)
+    fileAdapter.update(data)
   }
 
   private fun showErrorDialog(throwable: Throwable) {
-    showToast(throwable.message, )
+    showToast(throwable.message)
   }
 }

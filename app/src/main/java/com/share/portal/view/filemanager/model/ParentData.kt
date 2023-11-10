@@ -3,13 +3,24 @@ package com.share.portal.view.filemanager.model
 import com.share.portal.domain.models.ParentFile
 
 data class ParentData(
-  val fileName: String,
+  val name: String,
   val path: String,
 ) {
   companion object {
-    fun toParentList(parent: ParentFile): List<ParentData> {
-      return buildList {
-        parent.fileName.substringBeforeLast("/")
+    fun toParentDataList(parent: ParentFile): List<ParentData> {
+      return parent.loopParent('/')
+    }
+
+    private fun ParentFile.loopParent(delimiter: Char): List<ParentData> {
+      val size = path.count { it == delimiter }
+      var root = path
+      return List(size) {
+        root = root.substringAfter(delimiter, "")
+        val name = root.substringBefore(delimiter)
+        ParentData(
+          name = name.ifBlank { delimiter.toString() },
+          path = "${path.substringBefore(name)}$name"
+        )
       }
     }
   }

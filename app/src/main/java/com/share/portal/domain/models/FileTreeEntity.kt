@@ -3,13 +3,11 @@ package com.share.portal.domain.models
 import java.io.File
 
 data class ParentFile (
-  val fileName: String,
   val path: String
 ) {
   companion object {
     fun createParent(parentFile: File): ParentFile {
       return ParentFile(
-        fileName = parentFile.name,
         path = parentFile.path
       )
     }

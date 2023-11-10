@@ -8,7 +8,7 @@ class ParentViewHolder(private val binding: ItemParentFileBinding)
   : RecyclerView.ViewHolder(binding.root) {
     fun bind(parent: ParentData, listener: ((String) -> Unit)?) {
       binding.apply {
-        tvParentName.text = parent.fileName
+        tvParentName.text = parent.name
         root.setOnClickListener {
           listener?.invoke(parent.path)
         }
