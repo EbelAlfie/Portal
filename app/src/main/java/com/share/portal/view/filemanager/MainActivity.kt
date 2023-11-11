@@ -62,7 +62,16 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     applicationComponent.inject(this)
     registerBackPress()
     setupViews()
-    getFile()
+    registerObservers()
+  }
+
+  private fun registerObservers() {
+    viewModel.fileData().observe(this) {
+      loadData(it)
+    }
+    viewModel.errorFile().observe(this) {
+      showErrorDialog(it)
+    }
   }
 
   private fun registerBackPress() {
@@ -81,7 +90,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
   }
 
   private fun onBackButtonPressed() {
-    val currentRoot = parentAdapter.getCurrentNode().substringBefore("/")
+    val currentRoot = parentAdapter.getCurrentNode().substringBeforeLast("/")
     if (currentRoot.isNotBlank()) traverseFile(currentRoot)
     else finish()
   }
@@ -103,7 +112,8 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     }
   }
 
-  private fun getFile() = viewModel.getAllFiles(::loadData, ::showErrorDialog)
+  private fun getFile() = viewModel.getAllFiles()
+
   private fun traverseFile(filePath: String) {
     viewModel.setRootPath(filePath)
     getFile()

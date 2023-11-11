@@ -1,5 +1,7 @@
 package com.share.portal.view.filemanager
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.models.FileParam
@@ -11,6 +13,12 @@ class MainViewModel @Inject constructor(
 ): ViewModel() {
   private var rootPath: String
 
+  private val _fileData = MutableLiveData<FileTreeEntity>()
+  fun fileData(): LiveData<FileTreeEntity> = _fileData
+
+  private val _errorFile = MutableLiveData<Exception>()
+  fun errorFile(): LiveData<Exception> = _errorFile
+
   init {
     rootPath = FileParam.EXTERNAL.pathName
   }
@@ -19,15 +27,12 @@ class MainViewModel @Inject constructor(
     rootPath = newRoot.ifBlank { FileParam.EXTERNAL.pathName }
   }
 
-  fun getAllFiles(
-    onSuccess: (FileTreeEntity) -> Unit,
-    onFailed: (Throwable) -> Unit
-  ) {
+  fun getAllFiles() {
     try {
       val data = fileUseCase.getAllExternalFiles(rootPath)
-      onSuccess.invoke(data)
+      _fileData.postValue(data)
     } catch (error: Exception) {
-      onFailed.invoke(error)
+      _errorFile.postValue(error)
     }
   }
 }
