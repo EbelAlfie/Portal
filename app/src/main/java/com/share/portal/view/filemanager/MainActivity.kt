@@ -1,35 +1,54 @@
 package com.share.portal.view.filemanager
 
 import android.Manifest
+import android.content.IntentFilter
+import android.net.wifi.p2p.WifiP2pManager
 import android.view.LayoutInflater
 import androidx.activity.OnBackPressedCallback
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.R
 import com.share.portal.databinding.ActivityMainBinding
-import com.share.portal.databinding.ItemFileBinding
-import com.share.portal.domain.models.FileTreeEntity
-import com.share.portal.view.filemanager.adapter.FileAdapter
-import com.share.portal.view.filemanager.adapter.FileAdapter.FileListener
-import com.share.portal.view.filemanager.adapter.ParentAdapter
+import com.share.portal.view.filemanager.adapter.PageEnum
+import com.share.portal.view.filemanager.adapter.ViewPagerAdapter
+import com.share.portal.view.filemanager.wifisharing.broadcastreceiver.WifiBroadcastReceiver
 import com.share.portal.view.general.PermissionActivity
 import com.share.portal.view.utils.BottomSheetPopUp
-import com.share.portal.view.wifisharing.WifiSharingActivity
+import com.share.portal.view.utils.PermissionUtils
 import javax.inject.Inject
 
-class MainActivity : PermissionActivity<ActivityMainBinding>() {
+class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
 
   @Inject
   lateinit var viewModel: MainViewModel
 
-  private val fileAdapter: FileAdapter by lazy { FileAdapter() }
-  private val parentAdapter: ParentAdapter by lazy { ParentAdapter() }
+  override val intentFilter: IntentFilter
+    get() = IntentFilter().apply {
+    addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
+    addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION)
+    addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)
+    addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
+  }
+
+  private val adapter: ViewPagerAdapter by lazy {
+    ViewPagerAdapter(supportFragmentManager, lifecycle)
+  }
+
+  private val wifiP2PManager: WifiP2pManager by lazy(LazyThreadSafetyMode.NONE) {
+    getSystemService(WIFI_P2P_SERVICE) as WifiP2pManager
+  }
+
+  private val wifiBroadcastReceiver: WifiBroadcastReceiver by lazy {
+    WifiBroadcastReceiver(
+      wifiP2PManager,
+      wifiP2PManager.initialize(this, mainLooper, null)
+    )
+  }
 
   /** Permission exclusives **/
   override fun getPermissions(): List<String> =
     listOf(
       Manifest.permission.WRITE_EXTERNAL_STORAGE,
-      Manifest.permission.READ_EXTERNAL_STORAGE
-    )
+      Manifest.permission.READ_EXTERNAL_STORAGE,
+    ) + PermissionUtils.getWifiSharingPermission()
 
   override fun onPermissionGranted() = setupActivity()
 
@@ -62,17 +81,8 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     applicationComponent.inject(this)
     registerBackPress()
     setupViews()
-    registerObservers()
   }
 
-  private fun registerObservers() {
-    viewModel.fileData().observe(this) {
-      loadData(it)
-    }
-    viewModel.errorFile().observe(this) {
-      showErrorDialog(it)
-    }
-  }
 
   private fun registerBackPress() {
     onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
@@ -80,52 +90,31 @@ class MainActivity : PermissionActivity<ActivityMainBinding>() {
     })
   }
 
+  private fun onBackButtonPressed() {}
+
   private fun setupToolbar() {
     binding.toolbar.apply {
       icFile.setOnClickListener {
-        startActivity(WifiSharingActivity.navigate(this@MainActivity))
+        binding.vpContainer.currentItem = PageEnum.FILE_SHARING.ordinal
       }
       tvTitle.text = getString(R.string.portal_label)
     }
   }
 
-  private fun onBackButtonPressed() {
-    val currentRoot = parentAdapter.getCurrentNode().substringBeforeLast("/")
-    if (currentRoot.isNotBlank()) traverseFile(currentRoot)
-    else finish()
-  }
-
   private fun setupViews() {
     setupToolbar()
-    fileAdapter.setFileListener (object: FileListener {
-      override fun onFileClicked(filePath: String) = traverseFile(filePath)
-      override fun onFileHold(view: ItemFileBinding) {}
-    })
-    parentAdapter.setListener(::traverseFile)
-
     binding.run {
-      rvFiles.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
-      rvFiles.adapter = fileAdapter
-
-      rvParent.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
-      rvParent.adapter = parentAdapter
+      vpContainer.adapter = adapter
     }
   }
 
-  private fun getFile() = viewModel.getAllFiles()
-
-  private fun traverseFile(filePath: String) {
-    viewModel.setRootPath(filePath)
-    getFile()
-    showToast(filePath)
+  override fun registerWifi() {
+    registerReceiver(
+      wifiBroadcastReceiver, intentFilter,
+    )
   }
 
-  private fun loadData(data: FileTreeEntity) {
-    parentAdapter.update(data.current)
-    fileAdapter.update(data)
-  }
-
-  private fun showErrorDialog(throwable: Throwable) {
-    showToast(throwable.message)
+  override fun unregisterWifi() {
+    unregisterReceiver(wifiBroadcastReceiver)
   }
 }

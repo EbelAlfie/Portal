@@ -1,8 +1,8 @@
-package com.share.portal.view.filemanager.adapter
+package com.share.portal.view.filemanager.fileexplorer.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemParentFileBinding
-import com.share.portal.view.filemanager.model.ParentData
+import com.share.portal.view.filemanager.fileexplorer.model.ParentData
 
 class ParentViewHolder(private val binding: ItemParentFileBinding)
   : RecyclerView.ViewHolder(binding.root) {

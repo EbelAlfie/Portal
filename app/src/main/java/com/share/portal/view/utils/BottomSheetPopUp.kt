@@ -57,12 +57,18 @@ class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
           height = Resources.getSystem().displayMetrics.heightPixels
           width = ViewGroup.LayoutParams.MATCH_PARENT
         }
-        BottomSheetBehavior.from(this).state = BottomSheetBehavior.STATE_EXPANDED
+        configureBehavior(this)
       }
 
       ivLogo.setImageResource(img)
       tvTitle.text = title
       tvContent.text = content
+    }
+  }
+
+  private fun configureBehavior(view: View) {
+    BottomSheetBehavior.from(view).run {
+      state = BottomSheetBehavior.STATE_EXPANDED
     }
   }
 

@@ -1,4 +1,4 @@
-package com.share.portal.view.wifisharing
+package com.share.portal.view.filemanager.wifisharing
 
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject

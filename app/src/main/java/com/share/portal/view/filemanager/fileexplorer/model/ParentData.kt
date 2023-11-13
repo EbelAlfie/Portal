@@ -1,4 +1,4 @@
-package com.share.portal.view.filemanager.model
+package com.share.portal.view.filemanager.fileexplorer.model
 
 import com.share.portal.domain.models.ParentFile
 

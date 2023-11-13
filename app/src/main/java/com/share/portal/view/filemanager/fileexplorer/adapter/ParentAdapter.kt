@@ -1,4 +1,4 @@
-package com.share.portal.view.filemanager.adapter
+package com.share.portal.view.filemanager.fileexplorer.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemParentFileBinding
 import com.share.portal.domain.models.ParentFile
-import com.share.portal.view.filemanager.model.ParentData
+import com.share.portal.view.filemanager.fileexplorer.model.ParentData
 
 class ParentAdapter: RecyclerView.Adapter<ParentViewHolder>() {
   private var mListener: ((String) -> Unit)? = null

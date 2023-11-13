@@ -1,4 +1,4 @@
-package com.share.portal.view.wifisharing.broadcastreceiver
+package com.share.portal.view.filemanager.wifisharing.broadcastreceiver
 
 import android.content.BroadcastReceiver
 import android.content.Context

@@ -1,10 +1,10 @@
-package com.share.portal.view.filemanager.model
+package com.share.portal.view.filemanager.fileexplorer.model
 
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import com.share.portal.R
 import com.share.portal.domain.models.FileTreeEntity
-import com.share.portal.view.filemanager.model.FileExtension.Companion.convertExtension
+import com.share.portal.view.filemanager.fileexplorer.model.FileExtension.Companion.convertExtension
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
