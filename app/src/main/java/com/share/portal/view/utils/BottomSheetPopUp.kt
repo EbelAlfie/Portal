@@ -18,7 +18,7 @@ import com.share.portal.databinding.BottomsheetWarningBinding
 class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
   private var title: String = context.getString(R.string.warning_general_title)
   private var content: CharSequence = context.getString(R.string.warning_general_content)
-  private var img: Int = R.drawable.ic_folder
+  private var img: Int = R.drawable.general_error
   private var onDismiss: (() -> Unit)? = null
 
   private lateinit var binding: BottomsheetWarningBinding
@@ -86,9 +86,9 @@ class BottomSheetPopUp(context: Context): BottomSheetDialogFragment() {
     fun newDialog(
       fragmentManager: FragmentManager,
       context: Context,
-      @DrawableRes image: Int,
-      title: String,
-      content: CharSequence,
+      @DrawableRes image: Int = R.drawable.general_error,
+      title: String?,
+      content: CharSequence?,
       onDismiss: (() -> Unit)? = null
     ) {
 

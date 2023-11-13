@@ -60,11 +60,10 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
 
   private fun showPermissionDeniedDialog(permission: String) {
     BottomSheetPopUp.newDialog(
-      supportFragmentManager,
-      this,
-      R.drawable.ic_folder,
-      getString(R.string.warning_general_title),
-      getString(R.string.warning_general_content),
+      fragmentManager = supportFragmentManager,
+      context = this,
+      title = getString(R.string.warning_general_title),
+      content = getString(R.string.warning_general_content),
       onDismiss = ::finish
     )
   }
