@@ -88,7 +88,12 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
   private fun setupActivity() {
     applicationComponent.inject(this)
     registerBackPress()
+    configureWifiService()
     setupViews()
+  }
+
+  private fun configureWifiService() {
+    wifiBroadcastReceiver
   }
 
   private fun registerBackPress() {
@@ -110,7 +115,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
     binding.run {
       vpContainer.adapter = adapter
       configureTab()
-      TabLayoutMediator(toolbar.pseudoTab, vpContainer) {_, _ ->}
+      TabLayoutMediator(toolbar.pseudoTab, vpContainer) {_, _ -> }
       vpContainer.registerOnPageChangeCallback(object: OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
           super.onPageSelected(position)

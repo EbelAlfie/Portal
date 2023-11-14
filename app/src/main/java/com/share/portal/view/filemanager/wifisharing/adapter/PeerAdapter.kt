@@ -10,6 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemPeerBinding
 
 class PeerAdapter: RecyclerView.Adapter<PeerViewHolder>() {
+  private var mListener: PeerItemListener? = null
+  interface PeerItemListener {
+    fun onPeerClicked(peer: WifiP2pDevice)
+  }
 
   private val diffCallback = object: DiffUtil.ItemCallback<WifiP2pDevice>() {
     override fun areItemsTheSame(oldItem: WifiP2pDevice, newItem: WifiP2pDevice): Boolean =
@@ -21,6 +25,9 @@ class PeerAdapter: RecyclerView.Adapter<PeerViewHolder>() {
   }
   private val diffUtil = AsyncListDiffer(this, diffCallback)
 
+  fun setPeerListener(listener: PeerItemListener) {
+    mListener = listener
+  }
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeerViewHolder =
     PeerViewHolder(ItemPeerBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
