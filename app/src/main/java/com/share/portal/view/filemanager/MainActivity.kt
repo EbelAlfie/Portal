@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.setPadding
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.Tab
@@ -131,6 +132,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
               FILE_SHARING -> R.drawable.ic_file_sharing
             }
           )
+          setPadding(20)
           imageTintList = getColorStateList(R.color.white)
           background = AppCompatResources
             .getDrawable(this@MainActivity, R.drawable.bg_toolbar_icon)
