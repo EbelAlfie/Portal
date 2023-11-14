@@ -1,6 +1,7 @@
 package com.share.portal.view.filemanager.wifisharing.adapter
 
 import android.net.wifi.p2p.WifiP2pDevice
+import android.net.wifi.p2p.WifiP2pDeviceList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -27,6 +28,10 @@ class PeerAdapter: RecyclerView.Adapter<PeerViewHolder>() {
 
   override fun onBindViewHolder(holder: PeerViewHolder, position: Int) {
     holder.bindData(diffUtil.currentList[position])
+  }
+
+  fun submitPeers(data: WifiP2pDeviceList) {
+    diffUtil.submitList(data.deviceList.toList())
   }
 
 }
