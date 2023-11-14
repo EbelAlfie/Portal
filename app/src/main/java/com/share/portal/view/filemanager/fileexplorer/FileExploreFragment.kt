@@ -32,10 +32,10 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
   }
 
   private fun registerBackPress() { //TODO optimise
-    (requireActivity() as MainActivity)
-      .onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
-      override fun handleOnBackPressed() = onBackButtonPressed()
-    })
+    (requireActivity() as MainActivity).onBackPressedDispatcher
+      .addCallback(this, object: OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() = onBackButtonPressed()
+      })
   }
 
   private fun onBackButtonPressed() {

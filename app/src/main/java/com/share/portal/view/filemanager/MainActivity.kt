@@ -116,4 +116,8 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
   override fun unregisterWifi() {
     unregisterReceiver(wifiBroadcastReceiver)
   }
+
+  fun provideP2pManager(): WifiP2pManager {
+    return wifiP2PManager
+  }
 }
