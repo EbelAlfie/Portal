@@ -33,9 +33,11 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
     (requireActivity() as MainActivity).provideP2pService().apply {
       setConnectListener(object: WifiP2pManager.ActionListener {
         override fun onSuccess() {
+          showToast("Sukses")
+
           //success, establish file transfer expand the list to look at their files
         }
-        override fun onFailure(p0: Int) = showToast("Failed to connect to peer $p0")
+        override fun onFailure(reason: Int) = showError(reason)
       })
       setPeerListener {
         peerAdapter.submitPeers(it)
@@ -43,6 +45,15 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
       discoverPeers()
     }
 
+  }
+
+  private fun showError(reason: Int) {
+    when (reason) {
+      WifiP2pManager.ERROR -> showToast("Error")
+      WifiP2pManager.P2P_UNSUPPORTED -> showToast("Unsupport P2P")
+      WifiP2pManager.BUSY -> showToast("Busy")
+      else -> showToast("Error")
+    }
   }
 
   private fun registerBackPress() {

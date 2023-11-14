@@ -34,7 +34,7 @@ class PeerAdapter: RecyclerView.Adapter<PeerViewHolder>() {
   override fun getItemCount(): Int = diffUtil.currentList.size
 
   override fun onBindViewHolder(holder: PeerViewHolder, position: Int) {
-    holder.bindData(diffUtil.currentList[position])
+    holder.bindData(diffUtil.currentList[position], mListener)
   }
 
   fun submitPeers(data: WifiP2pDeviceList) {
