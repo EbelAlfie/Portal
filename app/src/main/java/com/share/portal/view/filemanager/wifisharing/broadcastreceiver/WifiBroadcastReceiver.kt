@@ -47,13 +47,9 @@ class WifiBroadcastReceiver(
     }
   }
 
-  private fun getPeerList() {
-    p2pManager.requestPeers(channel, peerListListener)
-  }
+  private fun getPeerList() = p2pManager.requestPeers(channel, peerListListener)
 
-  fun discoverPeers() {
-    p2pManager.discoverPeers(channel, connectListener)
-  }
+  fun discoverPeers() = p2pManager.discoverPeers(channel, connectListener)
 
   fun requestConnection(peer: WifiP2pDevice) {
     val config = WifiP2pConfig()

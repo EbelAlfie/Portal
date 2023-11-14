@@ -155,6 +155,16 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
     }
   }
 
+  override fun onResume() {
+    super.onResume()
+    registerWifi()
+  }
+
+  override fun onPause() {
+    super.onPause()
+    unregisterWifi()
+  }
+
   override fun registerWifi() {
     registerReceiver(
       wifiBroadcastReceiver, intentFilter,

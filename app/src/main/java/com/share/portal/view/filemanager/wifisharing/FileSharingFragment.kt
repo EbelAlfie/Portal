@@ -79,12 +79,12 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
 
   override fun onResume() {
     super.onResume()
-    getWifiPerantara()?.registerWifi()
+    //getWifiPerantara()?.registerWifi()
   }
 
   override fun onPause() {
     super.onPause()
-    getWifiPerantara()?.unregisterWifi()
+    //getWifiPerantara()?.unregisterWifi()
   }
 
   private fun getWifiPerantara(): WifiPerantara? =
