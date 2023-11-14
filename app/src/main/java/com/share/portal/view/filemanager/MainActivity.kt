@@ -4,10 +4,18 @@ import android.Manifest
 import android.content.IntentFilter
 import android.net.wifi.p2p.WifiP2pManager
 import android.view.LayoutInflater
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.Tab
+import com.google.android.material.tabs.TabLayoutMediator
 import com.share.portal.R
 import com.share.portal.databinding.ActivityMainBinding
 import com.share.portal.view.filemanager.adapter.PageEnum
+import com.share.portal.view.filemanager.adapter.PageEnum.FILE_EXPLORER
+import com.share.portal.view.filemanager.adapter.PageEnum.FILE_SHARING
 import com.share.portal.view.filemanager.adapter.ViewPagerAdapter
 import com.share.portal.view.filemanager.wifisharing.broadcastreceiver.WifiBroadcastReceiver
 import com.share.portal.view.general.PermissionActivity
@@ -82,7 +90,6 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
     setupViews()
   }
 
-
   private fun registerBackPress() {
     onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
       override fun handleOnBackPressed() = onBackButtonPressed()
@@ -93,9 +100,6 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
 
   private fun setupToolbar() {
     binding.toolbar.apply {
-      icFile.setOnClickListener {
-        binding.vpContainer.currentItem = PageEnum.FILE_SHARING.ordinal
-      }
       tvTitle.text = getString(R.string.portal_label)
     }
   }
@@ -104,6 +108,43 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
     setupToolbar()
     binding.run {
       vpContainer.adapter = adapter
+      configureTab()
+      TabLayoutMediator(toolbar.pseudoTab, vpContainer) {_, _ ->}
+      vpContainer.registerOnPageChangeCallback(object: OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+          super.onPageSelected(position)
+          binding.toolbar.pseudoTab.getTabAt(position)?.select()
+        }
+      })
+    }
+  }
+
+  private fun configureTab() {
+    binding.toolbar.pseudoTab.apply {
+      PageEnum.values().forEach { enum ->
+        val tab = newTab()
+
+        tab.customView = ImageView(this@MainActivity).apply {
+          setImageResource(
+            when (enum) {
+              FILE_EXPLORER -> R.drawable.ic_folder
+              FILE_SHARING -> R.drawable.ic_file_sharing
+            }
+          )
+          imageTintList = getColorStateList(R.color.white)
+          background = AppCompatResources
+            .getDrawable(this@MainActivity, R.drawable.bg_toolbar_icon)
+        }
+        addTab(tab)
+      }
+
+      addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
+        override fun onTabSelected(tab: Tab) {
+          binding.vpContainer.currentItem = tab.position
+        }
+        override fun onTabUnselected(tab: Tab) {}
+        override fun onTabReselected(tab: Tab) {}
+      })
     }
   }
 

@@ -20,7 +20,6 @@ class WifiBroadcastReceiver(
     peerListListener = listener
   }
 
-
   override fun onReceive(context: Context, intent: Intent) {
     val action: String = intent.action ?: return
     when (action) {

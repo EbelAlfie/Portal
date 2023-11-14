@@ -1,6 +1,5 @@
 package com.share.portal.view.filemanager.wifisharing
 
-import android.util.Log
 import android.view.LayoutInflater
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,7 +28,6 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
 
   private fun getPeers() {
     (requireActivity() as MainActivity).provideP2pService().setPeerListener {
-      Log.d("BRITNEY PEERS", it.deviceList.toString())
       peerAdapter.submitPeers(it)
     }
   }

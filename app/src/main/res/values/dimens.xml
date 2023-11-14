@@ -23,5 +23,7 @@
   <dimen name="text_20">20sp</dimen>
   <dimen name="text_30">30sp</dimen>
 
+  <dimen name="corner_50">50dp</dimen>
+
   <dimen name="zero">0dp</dimen>
 </resources>

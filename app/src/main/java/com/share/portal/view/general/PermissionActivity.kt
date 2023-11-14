@@ -14,7 +14,7 @@ abstract class PermissionActivity<V: ViewBinding>: ProgenitorActivity<V>() {
           handleDeniedPermission(permission.key)
           return@registerForActivityResult
         }
-        true -> if (index == permissions.size - 1) onPermissionGranted()
+        true -> if (index == permissions.size) onPermissionGranted()
       }
     }
     onPermissionGranted()

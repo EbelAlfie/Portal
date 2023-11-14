@@ -22,13 +22,14 @@
         style="@style/textview_header"
         tools:text="Portal"/>
 
-    <ImageView
-        android:id="@+id/ic_file"
-        android:layout_width="wrap_content"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/pseudo_tab"
         android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:layout_gravity="end"
-        android:src="@drawable/ic_file_sharing"
-        app:tint="@color/white"
-        tools:ignore="contentDescription"/>
+        app:tabIndicatorHeight="@dimen/zero"
+        app:tabIndicator="@null"
+        app:tabRippleColor="@null"/>
+
 
 </Toolbar>
