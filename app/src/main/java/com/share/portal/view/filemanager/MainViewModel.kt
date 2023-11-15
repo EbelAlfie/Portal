@@ -9,7 +9,7 @@ class MainViewModel @Inject constructor(
   private val useCase: FileUseCaseImpl
 ): ViewModel() {
 
-  fun connectWithClient(host: String, port: Int) {
+  fun connectWSClient(host: String, port: Int) {
     useCase.connectWithClient(InetSocketAddress(host, port))
   }
 

@@ -36,26 +36,19 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
         setPeerConnectionListener(object: PeerConnectionListener {
           override fun onConnectionSuccess(device: WifiP2pDevice) {
             showToast("connect success $device")
-            provideViewModel().connectWithClient(device.deviceAddress, 0)
+            provideViewModel().connectWSClient(device.deviceAddress, 0)
           }
           override fun onConnectionFailed(statusCode: Int) = showError(statusCode)
         })
+
         setPeerListener {
           peerAdapter.submitPeers(it)
         }
+
         discoverPeers()
       }
     }
 
-  }
-
-  private fun showError(reason: Int) {
-    when (reason) {
-      WifiP2pManager.ERROR -> showToast("Error")
-      WifiP2pManager.P2P_UNSUPPORTED -> showToast("Unsupport P2P")
-      WifiP2pManager.BUSY -> showToast("Busy")
-      else -> showToast("Error")
-    }
   }
 
   private fun registerBackPress() {
@@ -87,6 +80,15 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
   override fun onPause() {
     super.onPause()
     //getWifiPerantara()?.unregisterWifi()
+  }
+
+  private fun showError(reason: Int) {
+    when (reason) {
+      WifiP2pManager.ERROR -> showToast("Error")
+      WifiP2pManager.P2P_UNSUPPORTED -> showToast("Unsupport P2P")
+      WifiP2pManager.BUSY -> showToast("Busy")
+      else -> showToast("Error")
+    }
   }
 
   private fun getWifiPerantara(): WifiPerantara? = requireActivity() as? WifiPerantara
