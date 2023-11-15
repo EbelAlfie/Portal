@@ -8,8 +8,8 @@ import androidx.viewpager2.widget.ViewPager2
 class CustomViewPagerMediator<V: ViewGroup, T: Enum<T>> (
   private val viewPager2: ViewPager2,
   private val pseudoTab: V,
-  private val id: Array<T>,
-  private val processInitialization: (Int) -> View
+  private val identifier: Class<T>,
+  private val setView: (Int) -> View
   ) {
 
   private var currentPosition: Int = 0
@@ -26,15 +26,19 @@ class CustomViewPagerMediator<V: ViewGroup, T: Enum<T>> (
     }
   }
 
+  init {
+    initAllTabs()
+  }
+
   private fun mediateViewPager() {
     viewPager2.apply {
       registerOnPageChangeCallback(pageChangeListener)
     }
   }
 
-  fun initAllTabs() {
-    id.forEach {enum ->
-      val tabItem = processInitialization.invoke(enum.ordinal)
+  private fun initAllTabs() {
+    identifier.enumConstants?.forEach {enum ->
+      val tabItem = setView.invoke(enum.ordinal)
       tabItem.setOnClickListener {
         viewPager2.currentItem = enum.ordinal
       }

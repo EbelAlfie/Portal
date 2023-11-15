@@ -5,7 +5,7 @@ import com.share.portal.domain.models.FileTreeEntity
 
 interface OnlineDataSource {
 
-  fun establishConnectionAsClient(): ResponseModel<FileTreeEntity>
+  //fun establishConnectionAsClient(): ResponseModel<FileTreeEntity>
 
   fun establishConnectionAsServer(packet: FileTreeEntity)
 }
