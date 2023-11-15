@@ -31,17 +31,20 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
   }
 
   private fun getPeers() {
-    (requireActivity() as MainActivity).provideP2pService().apply {
-      setPeerConnectionListener(object: PeerConnectionListener {
-        override fun onConnectionSuccess(device: WifiP2pDevice) {
-          showToast("Sukses")
+    (requireActivity() as MainActivity).apply {
+      with(provideP2pService()) {
+        setPeerConnectionListener(object: PeerConnectionListener {
+          override fun onConnectionSuccess(device: WifiP2pDevice) {
+            showToast("connect success $device")
+            provideViewModel().connectWithClient(device.deviceAddress, 0)
+          }
+          override fun onConnectionFailed(statusCode: Int) = showError(statusCode)
+        })
+        setPeerListener {
+          peerAdapter.submitPeers(it)
         }
-        override fun onConnectionFailed(statusCode: Int) = showError(statusCode)
-      })
-      setPeerListener {
-        peerAdapter.submitPeers(it)
+        discoverPeers()
       }
-      discoverPeers()
     }
 
   }
@@ -86,7 +89,6 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
     //getWifiPerantara()?.unregisterWifi()
   }
 
-  private fun getWifiPerantara(): WifiPerantara? =
-    requireActivity() as? WifiPerantara
+  private fun getWifiPerantara(): WifiPerantara? = requireActivity() as? WifiPerantara
 
 }
