@@ -9,6 +9,7 @@ import com.share.portal.databinding.FragmentFileSharingBinding
 import com.share.portal.view.filemanager.MainActivity
 import com.share.portal.view.filemanager.WifiPerantara
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter
+import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerConnectionListener
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerItemListener
 import com.share.portal.view.general.ProgenitorFragment
 
@@ -31,13 +32,11 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
 
   private fun getPeers() {
     (requireActivity() as MainActivity).provideP2pService().apply {
-      setConnectListener(object: WifiP2pManager.ActionListener {
-        override fun onSuccess() {
+      setPeerConnectionListener(object: PeerConnectionListener {
+        override fun onConnectionSuccess(device: WifiP2pDevice) {
           showToast("Sukses")
-
-          //success, establish file transfer expand the list to look at their files
         }
-        override fun onFailure(reason: Int) = showError(reason)
+        override fun onConnectionFailed(statusCode: Int) = showError(statusCode)
       })
       setPeerListener {
         peerAdapter.submitPeers(it)

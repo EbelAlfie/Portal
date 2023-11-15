@@ -5,6 +5,7 @@ import com.share.portal.data.datasource.OnlineDataSourceImpl
 import com.share.portal.data.repository.FileRepository
 import com.share.portal.domain.models.FileTreeEntity
 import java.io.File
+import java.net.InetSocketAddress
 import javax.inject.Inject
 
 class FileRepositoryImpl @Inject constructor(
@@ -25,6 +26,14 @@ class FileRepositoryImpl @Inject constructor(
 
   override fun receiveFile(): FileTreeEntity {
     TODO("Not yet implemented")
+  }
+
+  override fun connectWithClient(address: InetSocketAddress) {
+    onlineSource.requestConnection(address)
+  }
+
+  override fun establishAsServer() {
+    onlineSource.establishWSServer()
   }
 
 }

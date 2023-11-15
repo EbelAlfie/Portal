@@ -15,6 +15,11 @@ class PeerAdapter: RecyclerView.Adapter<PeerViewHolder>() {
     fun onPeerClicked(peer: WifiP2pDevice)
   }
 
+  interface PeerConnectionListener {
+    fun onConnectionSuccess(device: WifiP2pDevice)
+    fun onConnectionFailed(statusCode: Int)
+  }
+
   private val diffCallback = object: DiffUtil.ItemCallback<WifiP2pDevice>() {
     override fun areItemsTheSame(oldItem: WifiP2pDevice, newItem: WifiP2pDevice): Boolean =
       oldItem === newItem

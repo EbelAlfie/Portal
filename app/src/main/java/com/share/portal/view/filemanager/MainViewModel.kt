@@ -2,17 +2,18 @@ package com.share.portal.view.filemanager
 
 import androidx.lifecycle.ViewModel
 import com.share.portal.domain.FileUseCaseImpl
-import java.io.File
+import java.net.InetSocketAddress
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
   private val useCase: FileUseCaseImpl
 ): ViewModel() {
-  fun sendFile(filePacket: File) {
-    useCase.sendFile(filePacket)
+
+  fun connectWithClient(host: String, port: Int) {
+    useCase.connectWithClient(InetSocketAddress(host, port))
   }
 
-  fun receiveFile() {
-    useCase.receiveFile()
+  fun establishAsServer() {
+    useCase.establishAsServer()
   }
 }

@@ -178,4 +178,6 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
   fun provideP2pService(): WifiBroadcastReceiver {
     return wifiBroadcastReceiver
   }
+
+  fun provideViewModel(): MainViewModel = viewModel
 }
