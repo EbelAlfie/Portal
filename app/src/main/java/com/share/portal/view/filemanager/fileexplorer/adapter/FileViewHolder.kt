@@ -12,10 +12,13 @@ class FileViewHolder(private val binding: ItemFileBinding):
   fun bindData(data: FileData, mListener: FileListener?) {
     binding.apply {
       icIcon.setImageResource(data.extension.icon)
-      tvFilename.text = data.fileName
+      tvFilename.text = data.file.name
       root.setOnClickListener {
         if (data.extension == FileExtension.FOLDER)
-          mListener?.onFileClicked(data.path)
+          mListener?.onFileClicked(data.file.path)
+      }
+      root.setOnLongClickListener {
+        mListener?.onFileHold(binding, data.file); true
       }
     }
   }

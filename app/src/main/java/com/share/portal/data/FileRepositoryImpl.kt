@@ -2,6 +2,7 @@ package com.share.portal.data
 
 import com.share.portal.data.datasource.OfflineDataSourceImpl
 import com.share.portal.data.datasource.OnlineDataSourceImpl
+import com.share.portal.data.models.ResponseModel
 import com.share.portal.data.repository.FileRepository
 import com.share.portal.domain.models.FileTreeEntity
 import java.io.File
@@ -28,11 +29,13 @@ class FileRepositoryImpl @Inject constructor(
     TODO("Not yet implemented")
   }
 
-  override fun connectWithClient(address: InetSocketAddress) {
-    onlineSource.requestConnection(address)
+  override suspend fun connectWithClient(address: InetSocketAddress): Boolean {
+    val response = onlineSource.requestConnection(address)
+    if (response.data != null) return response.data
+    else throw Throwable(response.error)
   }
 
-  override fun establishAsServer() {
+  override suspend fun establishAsServer() {
     onlineSource.establishWSServer()
   }
 

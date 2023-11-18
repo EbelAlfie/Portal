@@ -15,9 +15,7 @@ import com.share.portal.view.general.ProgenitorFragment
 
 class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
 
-  private val peerAdapter: PeerAdapter by lazy {
-    PeerAdapter()
-  }
+  private val peerAdapter: PeerAdapter by lazy { PeerAdapter() }
   override fun initBinding(layoutInflater: LayoutInflater): FragmentFileSharingBinding =
     FragmentFileSharingBinding.inflate(layoutInflater)
 

@@ -1,6 +1,7 @@
 package com.share.portal.domain
 
 import com.share.portal.data.FileRepositoryImpl
+import com.share.portal.data.models.ResponseModel
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.domain.usecase.FileUseCase
 import java.io.File
@@ -19,11 +20,11 @@ class FileUseCaseImpl @Inject constructor(private val fileRepository: FileReposi
     TODO("Not yet implemented")
   }
 
-  override fun connectWithClient(address: InetSocketAddress) {
-    fileRepository.connectWithClient(address)
+  override suspend fun connectWithClient(address: InetSocketAddress): ResponseModel<Boolean> {
+    return fileRepository.connectWithClient(address)
   }
 
-  override fun establishAsServer() {
+  override suspend fun establishAsServer() {
     fileRepository.establishAsServer()
   }
 }

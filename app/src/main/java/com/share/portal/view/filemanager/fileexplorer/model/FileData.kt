@@ -6,23 +6,20 @@ import com.share.portal.R
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension.Companion.convertExtension
 import kotlinx.parcelize.Parcelize
+import java.io.File
 
 @Parcelize
 data class FileData(
-  val fileName: String,
+  val file: File,
   val extension: FileExtension,
-  val path: String,
-  val size: Long,
 ): Parcelable {
 
   companion object {
     fun store(fileTree: FileTreeEntity): List<FileData> {
       return fileTree.child.map {
         FileData(
-          fileName = it.name,
-          extension = convertExtension(it.extension),
-          path = it.path,
-          size = it.totalSpace, //bytes
+          file = it,
+          extension = convertExtension(it.extension)
         )
       }
     }

@@ -15,4 +15,5 @@ class WifiSharingViewmodel @Inject constructor(
   fun receiveFile() {
     useCase.receiveFile()
   }
+
 }

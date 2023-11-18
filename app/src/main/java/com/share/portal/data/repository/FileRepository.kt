@@ -1,5 +1,6 @@
 package com.share.portal.data.repository
 
+import com.share.portal.data.models.ResponseModel
 import com.share.portal.domain.models.FileTreeEntity
 import java.io.File
 import java.net.InetSocketAddress
@@ -11,6 +12,6 @@ interface FileRepository {
 
   fun receiveFile(): FileTreeEntity
 
-  fun connectWithClient(address: InetSocketAddress)
-  fun establishAsServer()
+  suspend fun connectWithClient(address: InetSocketAddress): Boolean
+  suspend fun establishAsServer()
 }

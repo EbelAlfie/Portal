@@ -7,7 +7,7 @@ import com.share.portal.data.datasource.OnlineDataSourceImpl
 import dagger.Binds
 import dagger.Module
 
-@Module
+@Module(includes = [WSModule::class])
 interface DataSourceModule {
   @Binds
   fun provideOfflineModule(dataSource: OfflineDataSourceImpl): OfflineDataSource

@@ -88,12 +88,12 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
   private fun setupActivity() {
     applicationComponent.inject(this)
     registerBackPress()
-    configureWifiService()
     setupViews()
+    initializeAsServer()
   }
 
-  private fun configureWifiService() {
-    wifiBroadcastReceiver
+  private fun initializeAsServer() {
+    viewModel.establishAsServer()
   }
 
   private fun registerBackPress() {

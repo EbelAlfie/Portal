@@ -10,7 +10,9 @@ import com.share.portal.view.filemanager.MainActivity
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.fileexplorer.adapter.ParentAdapter
+import com.share.portal.view.filemanager.fileexplorer.model.FileState
 import com.share.portal.view.general.ProgenitorFragment
+import java.io.File
 import javax.inject.Inject
 
 class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
@@ -39,6 +41,11 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
   }
 
   private fun onBackButtonPressed() {
+    if (fileAdapter.getState() == FileState.STATE_SELECTION) {
+      fileAdapter.setState(FileState.STATE_EXPLORE)
+      //clear selection
+      return
+    }
     val currentRoot = parentAdapter.getCurrentNode().substringBeforeLast("/")
     if (currentRoot.isNotBlank()) traverseFile(currentRoot)
     else requireActivity().finish()
@@ -57,7 +64,10 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
 
     fileAdapter.setFileListener (object: FileListener {
       override fun onFileClicked(filePath: String) = traverseFile(filePath)
-      override fun onFileHold(view: ItemFileBinding) {}
+      override fun onFileHold(view: ItemFileBinding, file: File) {
+        fileAdapter.setState(FileState.STATE_SELECTION)
+
+      }
     })
     parentAdapter.setListener(::traverseFile)
 

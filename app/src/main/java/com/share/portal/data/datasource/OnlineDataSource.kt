@@ -1,11 +1,15 @@
 package com.share.portal.data.datasource
 
+import com.share.portal.data.models.ResponseModel
+import java.io.File
 import java.net.InetSocketAddress
 
 interface OnlineDataSource {
 
   //fun establishConnectionAsClient(): ResponseModel<FileTreeEntity>
 
-  fun establishWSServer()
-  fun requestConnection(address: InetSocketAddress)
+  suspend fun establishWSServer()
+  suspend fun requestConnection(address: InetSocketAddress): ResponseModel<Boolean>
+  suspend fun closeConnection()
+  suspend fun sendToClient(file: File): ResponseModel<Boolean>
 }
