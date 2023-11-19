@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class OfflineDataSourceImpl @Inject constructor(): OfflineDataSource {
 
-  override fun getAllExternalFiles(rootPath: String): ResponseModel<FileTreeEntity> {
+  override suspend fun getAllExternalFiles(rootPath: String): ResponseModel<FileTreeEntity> {
     return try {
       val rootFile = if (rootPath == FileParam.EXTERNAL.pathName || rootPath.isBlank())
          Environment.getExternalStorageDirectory()

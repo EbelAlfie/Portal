@@ -12,8 +12,12 @@ import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerConnectionListener
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerItemListener
 import com.share.portal.view.general.ProgenitorFragment
+import javax.inject.Inject
 
 class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
+
+  @Inject
+  lateinit var viewModel: WifiSharingViewmodel
 
   private val peerAdapter: PeerAdapter by lazy { PeerAdapter() }
   override fun initBinding(layoutInflater: LayoutInflater): FragmentFileSharingBinding =

@@ -1,6 +1,7 @@
 package com.share.portal.view.filemanager.fileexplorer.adapter
 
 import androidx.recyclerview.widget.RecyclerView
+import com.share.portal.R
 import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.fileexplorer.model.FileData
@@ -21,6 +22,14 @@ class FileViewHolder(private val binding: ItemFileBinding):
         mListener?.onFileHold(binding, data.file); true
       }
     }
+  }
+
+  fun ItemFileBinding.setSelected() {
+    root.backgroundTintList = root.context.getColorStateList(R.color.blue_default)
+  }
+
+  fun ItemFileBinding.setUnselected() {
+    root.backgroundTintList = root.context.getColorStateList(R.color.white)
   }
 
 }

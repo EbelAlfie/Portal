@@ -1,12 +1,11 @@
 package com.share.portal.data.repository
 
-import com.share.portal.data.models.ResponseModel
 import com.share.portal.domain.models.FileTreeEntity
 import java.io.File
 import java.net.InetSocketAddress
 
 interface FileRepository {
-  fun getAllExternalFiles(rootPath: String = ""): FileTreeEntity
+  suspend fun getAllExternalFiles(rootPath: String = ""): FileTreeEntity
 
   fun sendFile(file: File)
 

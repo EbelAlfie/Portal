@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel
 import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.models.FileParam
 import com.share.portal.domain.models.FileTreeEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FileViewModel @Inject constructor(
@@ -29,11 +32,13 @@ class FileViewModel @Inject constructor(
   }
 
   fun getAllFiles() {
-    try {
-      val data = fileUseCase.getAllExternalFiles(rootPath)
-      _fileData.postValue(data)
-    } catch (error: Exception) {
-      _errorFile.postValue(error)
+    CoroutineScope(Dispatchers.IO).launch {
+      try {
+        val data = fileUseCase.getAllExternalFiles(rootPath)
+        _fileData.postValue(data)
+      } catch (error: Exception) {
+        _errorFile.postValue(error)
+      }
     }
   }
 }

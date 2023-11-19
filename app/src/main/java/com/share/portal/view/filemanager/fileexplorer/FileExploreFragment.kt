@@ -63,12 +63,18 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
   private fun setupView() {
 
     fileAdapter.setFileListener (object: FileListener {
-      override fun onFileClicked(filePath: String) = traverseFile(filePath)
+      override fun onFileClicked(filePath: String) {
+        when (fileAdapter.getState()) {
+          FileState.STATE_SELECTION -> traverseFile(filePath)
+          else -> traverseFile(filePath)
+        }
+      }
       override fun onFileHold(view: ItemFileBinding, file: File) {
         fileAdapter.setState(FileState.STATE_SELECTION)
-
+        //onFileClicked(file.path)
       }
     })
+    
     parentAdapter.setListener(::traverseFile)
 
     binding.run {

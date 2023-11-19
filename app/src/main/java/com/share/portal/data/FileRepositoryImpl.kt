@@ -2,7 +2,6 @@ package com.share.portal.data
 
 import com.share.portal.data.datasource.OfflineDataSourceImpl
 import com.share.portal.data.datasource.OnlineDataSourceImpl
-import com.share.portal.data.models.ResponseModel
 import com.share.portal.data.repository.FileRepository
 import com.share.portal.domain.models.FileTreeEntity
 import java.io.File
@@ -15,7 +14,7 @@ class FileRepositoryImpl @Inject constructor(
   )
   : FileRepository {
 
-  override fun getAllExternalFiles(rootPath: String): FileTreeEntity {
+  override suspend fun getAllExternalFiles(rootPath: String): FileTreeEntity {
     val response = offlineSource.getAllExternalFiles(rootPath)
     if (response.data != null) return response.data
     else throw Throwable(response.error)

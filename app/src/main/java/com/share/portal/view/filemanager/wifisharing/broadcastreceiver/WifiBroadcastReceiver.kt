@@ -74,12 +74,8 @@ class WifiBroadcastReceiver(
     val config = WifiP2pConfig()
     config.deviceAddress = peer.deviceAddress
     p2pManager.connect(channel, config, object: WifiP2pManager.ActionListener {
-      override fun onSuccess() {
-        peerConnectionListener?.onConnectionSuccess(peer)
-      }
-      override fun onFailure(reason: Int) {
-        peerConnectionListener?.onConnectionFailed(reason)
-      }
+      override fun onSuccess() { peerConnectionListener?.onConnectionSuccess(peer) }
+      override fun onFailure(reason: Int) { peerConnectionListener?.onConnectionFailed(reason) }
     })
   }
 
