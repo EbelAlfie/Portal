@@ -6,9 +6,8 @@ import java.net.ServerSocket
 import java.net.Socket
 import javax.inject.Singleton
 
-@Singleton
 @Module
-object WSModule {
+class WSModule {
 
   @Provides
   fun provideWSEars(): ServerSocket {

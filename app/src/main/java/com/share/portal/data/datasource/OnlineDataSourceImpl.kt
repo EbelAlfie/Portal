@@ -1,21 +1,20 @@
 package com.share.portal.data.datasource
 
-import android.net.Uri
-import com.share.portal.data.dinject.dmodules.WSModule
 import com.share.portal.data.models.ResponseModel
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.io.InputStream
 import java.net.InetSocketAddress
+import java.net.ServerSocket
+import java.net.Socket
 import javax.inject.Inject
 
 class OnlineDataSourceImpl @Inject constructor(
-  private val wsInstance: WSModule
 ): OnlineDataSource {
-  private val socket by lazy { wsInstance.provideWSMouth() }
+
+  private val socket = Socket()
+  private val serverSocket: ServerSocket by lazy { ServerSocket(0) }
   override suspend fun establishWSServer() {
-    val serverSocket = wsInstance.provideWSEars()
     return serverSocket.use {
       val client = serverSocket.accept()
       val inputstream = client.getInputStream()
@@ -42,7 +41,16 @@ class OnlineDataSourceImpl @Inject constructor(
   }
 
   override suspend fun sendToClient(file: File): ResponseModel<Boolean> {
-    val outputStream = socket.getOutputStream()
+    return try {
+      val outputStream = socket.getOutputStream()
+      ResponseModel(
+        data = true
+      )
+    }catch (e: Exception) {
+      ResponseModel(
+        error = e
+      )
+    }
   }
 
   override suspend fun closeConnection() {

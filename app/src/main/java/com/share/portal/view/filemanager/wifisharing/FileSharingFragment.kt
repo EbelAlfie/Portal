@@ -16,8 +16,8 @@ import javax.inject.Inject
 
 class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
 
-  @Inject
-  lateinit var viewModel: WifiSharingViewmodel
+  //@Inject
+  //lateinit var viewModel: WifiSharingViewmodel
 
   private val peerAdapter: PeerAdapter by lazy { PeerAdapter() }
   override fun initBinding(layoutInflater: LayoutInflater): FragmentFileSharingBinding =
