@@ -42,15 +42,11 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
         })
 
         setConnectionInfoListener {
-//          if (it.groupFormed && !it.isGroupOwner)
-//            provideViewModel().connectWSClient(it.groupOwnerAddress)
           showToast(it.toString())
           Log.d("WIFIGROUP", it.toString())
         }
 
-        setPeerListener {
-          peerAdapter.submitPeers(it)
-        }
+        setPeerListener { peerAdapter.submitPeers(it) }
 
         discoverPeers()
       }

@@ -13,6 +13,8 @@ import com.share.portal.view.filemanager.fileexplorer.model.FileState.STATE_EXPL
 import java.io.File
 
 class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
+  private val selectedFile: MutableList<ItemFileBinding> = mutableListOf()
+
   private var fileState: FileState = FileState.STATE_EXPLORE
   private var mListener: FileListener? = null
 
@@ -47,7 +49,19 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
   fun getState(): FileState = fileState
 
   interface FileListener {
-    fun onFileClicked(filePath: String)
+    fun onFileClicked(view: ItemFileBinding?, filePath: String)
     fun onFileHold(view: ItemFileBinding, file: File)
+  }
+
+  fun selectFile(view: ItemFileBinding) {
+    view.container.isSelected = true
+    selectedFile.add(view)
+  }
+
+  fun deselectFile() {
+    selectedFile.removeAll {
+      it.container.isSelected = false
+      true
+    }
   }
 }

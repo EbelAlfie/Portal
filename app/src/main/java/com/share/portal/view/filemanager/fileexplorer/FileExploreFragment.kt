@@ -42,8 +42,7 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
 
   private fun onBackButtonPressed() {
     if (fileAdapter.getState() == FileState.STATE_SELECTION) {
-      fileAdapter.setState(FileState.STATE_EXPLORE)
-      //clear selection
+      deselectThis()
       return
     }
     val currentRoot = parentAdapter.getCurrentNode().substringBeforeLast("/")
@@ -63,15 +62,15 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
   private fun setupView() {
 
     fileAdapter.setFileListener (object: FileListener {
-      override fun onFileClicked(filePath: String) {
+      override fun onFileClicked(view: ItemFileBinding?, filePath: String) {
         when (fileAdapter.getState()) {
-          FileState.STATE_SELECTION -> traverseFile(filePath)
+          FileState.STATE_SELECTION -> view?.let { selectThis(it, filePath) }
           else -> traverseFile(filePath)
         }
       }
       override fun onFileHold(view: ItemFileBinding, file: File) {
         fileAdapter.setState(FileState.STATE_SELECTION)
-        //onFileClicked(file.path)
+        onFileClicked(view, file.path)
       }
     })
     
@@ -84,6 +83,17 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
       rvParent.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
       rvParent.adapter = parentAdapter
     }
+  }
+
+  private fun selectThis(view: ItemFileBinding, filePath: String) {
+    fileAdapter.selectFile(view)
+    viewModel.storeFile(filePath)
+  }
+
+  private fun deselectThis() {
+    fileAdapter.setState(FileState.STATE_EXPLORE)
+    fileAdapter.deselectFile()
+    viewModel.destoreFile()
   }
 
   private fun getFile() = viewModel.getAllFiles()

@@ -16,8 +16,8 @@ class WifiBroadcastReceiver(
 ): BroadcastReceiver() {
   private var wifiState: Int = WifiP2pManager.WIFI_P2P_STATE_DISABLED
 
-  private var peerConnectionListener: PeerConnectionListener? = null
   private var onPeerDiscoveredListener: WifiP2pManager.ActionListener? = null
+  private var peerConnectionListener: PeerConnectionListener? = null
   private var peerListListener: WifiP2pManager.PeerListListener? = null
   private var connectionInfoListener: WifiP2pManager.ConnectionInfoListener? = null
 

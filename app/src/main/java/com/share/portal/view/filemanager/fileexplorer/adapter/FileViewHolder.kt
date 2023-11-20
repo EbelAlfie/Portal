@@ -16,7 +16,7 @@ class FileViewHolder(private val binding: ItemFileBinding):
       tvFilename.text = data.file.name
       root.setOnClickListener {
         if (data.extension == FileExtension.FOLDER)
-          mListener?.onFileClicked(data.file.path)
+          mListener?.onFileClicked(null, data.file.path)
       }
       root.setOnLongClickListener {
         mListener?.onFileHold(binding, data.file); true
