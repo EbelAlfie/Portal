@@ -1,5 +1,6 @@
 package com.share.portal.data.datasource
 
+import com.share.portal.data.dinject.dmodules.WSModule
 import com.share.portal.data.models.ResponseModel
 import java.io.File
 import java.io.FileNotFoundException
@@ -10,6 +11,7 @@ import java.net.Socket
 import javax.inject.Inject
 
 class OnlineDataSourceImpl @Inject constructor(
+  //private val wsModule: WSModule
 ): OnlineDataSource {
 
   private val socket = Socket()

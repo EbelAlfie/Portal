@@ -4,7 +4,10 @@ import com.share.portal.domain.dinject.DomainComponent
 import com.share.portal.view.dinject.dmodules.ViewModelModule
 import com.share.portal.view.filemanager.MainActivity
 import dagger.Component
+import javax.inject.Singleton
 
+@AppScope
+@Singleton
 @Component(
   modules = [ViewModelModule::class],
   dependencies = [
