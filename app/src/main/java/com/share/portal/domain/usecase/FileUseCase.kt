@@ -2,6 +2,7 @@ package com.share.portal.domain.usecase
 
 import com.share.portal.domain.models.FileTreeEntity
 import java.io.File
+import java.net.InetAddress
 import java.net.InetSocketAddress
 
 interface FileUseCase {
@@ -12,5 +13,5 @@ interface FileUseCase {
   fun receiveFile(): FileTreeEntity
 
   suspend fun connectWithClient(address: InetSocketAddress): Boolean
-  suspend fun establishAsServer()
+  suspend fun establishAsServer(): InetAddress
 }

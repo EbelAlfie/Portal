@@ -2,6 +2,7 @@ package com.share.portal.view.filemanager.wifisharing
 
 import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +13,6 @@ import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerConnectionListener
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerItemListener
 import com.share.portal.view.general.ProgenitorFragment
-import javax.inject.Inject
 
 class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
 
@@ -35,13 +35,18 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
   private fun getPeers() {
     (requireActivity() as MainActivity).apply {
       with(provideP2pService()) {
+
         setPeerConnectionListener(object: PeerConnectionListener {
-          override fun onConnectionSuccess(device: WifiP2pDevice) {
-            showToast("connect success $device")
-            provideViewModel().connectWSClient(device.deviceAddress, 0)
-          }
+          override fun onConnectionSuccess(device: WifiP2pDevice) { requestConnectionInfo() }
           override fun onConnectionFailed(statusCode: Int) = showError(statusCode)
         })
+
+        setConnectionInfoListener {
+//          if (it.groupFormed && !it.isGroupOwner)
+//            provideViewModel().connectWSClient(it.groupOwnerAddress)
+          showToast(it.toString())
+          Log.d("WIFIGROUP", it.toString())
+        }
 
         setPeerListener {
           peerAdapter.submitPeers(it)
@@ -69,6 +74,9 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
         (requireActivity() as MainActivity).provideP2pService().requestConnection(peer)
     })
     binding.apply {
+      btnRefresh.setOnClickListener {
+        (requireActivity() as MainActivity).provideP2pService().discoverPeers()
+      }
       rvPeers.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
       rvPeers.adapter = peerAdapter
     }

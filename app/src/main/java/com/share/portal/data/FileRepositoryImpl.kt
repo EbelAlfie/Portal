@@ -5,6 +5,7 @@ import com.share.portal.data.datasource.OnlineDataSourceImpl
 import com.share.portal.data.repository.FileRepository
 import com.share.portal.domain.models.FileTreeEntity
 import java.io.File
+import java.net.InetAddress
 import java.net.InetSocketAddress
 import javax.inject.Inject
 
@@ -34,8 +35,8 @@ class FileRepositoryImpl @Inject constructor(
     else throw Throwable(response.error)
   }
 
-  override suspend fun establishAsServer() {
-    onlineSource.establishWSServer()
+  override suspend fun establishAsServer(): InetAddress {
+    return onlineSource.establishWSServer()
   }
 
 }

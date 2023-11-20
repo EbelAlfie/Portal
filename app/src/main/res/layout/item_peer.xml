@@ -40,6 +40,16 @@
         android:layout_margin="@dimen/spacing_5"
         app:layout_constraintStart_toStartOf="@id/tv_device_name"
         app:layout_constraintTop_toBottomOf="@id/tv_device_name"
+        app:layout_constraintBottom_toTopOf="@id/tv_device_status"
+        tools:text="Simsang"/>
+
+    <TextView
+        android:id="@+id/tv_device_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_5"
+        app:layout_constraintStart_toStartOf="@id/tv_device_name"
+        app:layout_constraintTop_toBottomOf="@id/tv_device_ip"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="Simsang"/>
 

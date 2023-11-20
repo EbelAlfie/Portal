@@ -3,6 +3,7 @@ package com.share.portal.view.filemanager.wifisharing.broadcastreceiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.net.wifi.WpsInfo
 import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
@@ -18,9 +19,10 @@ class WifiBroadcastReceiver(
   private var peerConnectionListener: PeerConnectionListener? = null
   private var onPeerDiscoveredListener: WifiP2pManager.ActionListener? = null
   private var peerListListener: WifiP2pManager.PeerListListener? = null
+  private var connectionInfoListener: WifiP2pManager.ConnectionInfoListener? = null
 
-  fun setConnectListener(listener: WifiP2pManager.ActionListener) {
-    onPeerDiscoveredListener = listener
+  fun setConnectionInfoListener(listener: WifiP2pManager.ConnectionInfoListener) {
+    connectionInfoListener = listener
   }
 
   fun setPeerConnectionListener(listener: PeerConnectionListener) {
@@ -45,6 +47,10 @@ class WifiBroadcastReceiver(
         Log.d("WIFIGEMINK", "WIFI_P2P_PEERS_CHANGED_ACTION ")
       }
       WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
+//        val networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO) as NetworkInfo
+//        if (networkInfo.isConnected()) {
+          requestConnectionInfo()
+        //}
         Log.d("WIFIGEMINK", "WIFI_P2P_CONNECTION_CHANGED_ACTION ")
       }
       WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {
@@ -73,10 +79,15 @@ class WifiBroadcastReceiver(
   fun requestConnection(peer: WifiP2pDevice) {
     val config = WifiP2pConfig()
     config.deviceAddress = peer.deviceAddress
+    config.wps.setup = WpsInfo.PBC
     p2pManager.connect(channel, config, object: WifiP2pManager.ActionListener {
       override fun onSuccess() { peerConnectionListener?.onConnectionSuccess(peer) }
       override fun onFailure(reason: Int) { peerConnectionListener?.onConnectionFailed(reason) }
     })
+  }
+
+  fun requestConnectionInfo() {
+    p2pManager.requestConnectionInfo(channel, connectionInfoListener)
   }
 
 }

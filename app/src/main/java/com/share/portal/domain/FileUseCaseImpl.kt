@@ -4,6 +4,7 @@ import com.share.portal.data.FileRepositoryImpl
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.domain.usecase.FileUseCase
 import java.io.File
+import java.net.InetAddress
 import java.net.InetSocketAddress
 import javax.inject.Inject
 
@@ -23,7 +24,7 @@ class FileUseCaseImpl @Inject constructor(private val fileRepository: FileReposi
     return fileRepository.connectWithClient(address)
   }
 
-  override suspend fun establishAsServer() {
-    fileRepository.establishAsServer()
+  override suspend fun establishAsServer(): InetAddress {
+    return fileRepository.establishAsServer()
   }
 }

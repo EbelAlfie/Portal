@@ -10,9 +10,20 @@ class PeerViewHolder(private val binding: ItemPeerBinding): RecyclerView.ViewHol
     binding.apply {
       tvDeviceName.text = peer.deviceName
       tvDeviceIp.text = peer.deviceAddress
+      tvDeviceStatus.text = setStatusText(peer.status)
       root.setOnClickListener {
         listener?.onPeerClicked(peer)
       }
+    }
+  }
+
+  private fun setStatusText(status: Int): String {
+    return when (status) {
+      WifiP2pDevice.AVAILABLE -> "Available"
+      WifiP2pDevice.CONNECTED -> "Connected"
+      WifiP2pDevice.INVITED -> "Invited"
+      WifiP2pDevice.FAILED -> "Failed"
+      else -> "None"
     }
   }
 }
