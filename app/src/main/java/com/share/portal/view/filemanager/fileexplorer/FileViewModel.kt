@@ -16,8 +16,6 @@ class FileViewModel @Inject constructor(
 ): ViewModel() {
   private var rootPath: String
 
-  private val selectedFile: MutableList<String> = mutableListOf()
-
   private val _fileData = MutableLiveData<FileTreeEntity>()
   fun fileData(): LiveData<FileTreeEntity> = _fileData
 
@@ -42,13 +40,5 @@ class FileViewModel @Inject constructor(
         _errorFile.postValue(error)
       }
     }
-  }
-
-  fun storeFile(filePath: String) {
-    selectedFile.add(filePath)
-  }
-
-  fun destoreFile() {
-    selectedFile.clear()
   }
 }

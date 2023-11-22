@@ -8,14 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.fileexplorer.model.FileData
+import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
 import com.share.portal.view.filemanager.fileexplorer.model.FileState
-import com.share.portal.view.filemanager.fileexplorer.model.FileState.STATE_EXPLORE
 import java.io.File
 
 class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
   private val selectedFile: MutableList<ItemFileBinding> = mutableListOf()
 
-  private var fileState: FileState = FileState.STATE_EXPLORE
   private var mListener: FileListener? = null
 
   private val diffCallback = object: DiffUtil.ItemCallback<FileData>() {
@@ -31,10 +30,6 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
     mListener = listener
   }
 
-  fun setState(state: FileState) {
-    fileState = state
-  }
-
   fun update(items: FileTreeEntity) = diffUtil.submitList(FileData.store(items))
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder =
@@ -46,19 +41,20 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
   override fun onBindViewHolder(holder: FileViewHolder, position: Int) =
     holder.bindData(diffUtil.currentList[position], mListener)
 
-  fun getState(): FileState = fileState
-
   interface FileListener {
-    fun onFileClicked(view: ItemFileBinding?, filePath: String)
-    fun onFileHold(view: ItemFileBinding, file: File)
+    fun onFileClicked(filePath: String, extension: FileExtension)
+    fun onFileHold(file: File)
+    fun onPerformSelect(view: ItemFileBinding, path: String)
+    fun getFileState(): FileState
   }
 
-  fun selectFile(view: ItemFileBinding) {
-    view.container.isSelected = true
-    selectedFile.add(view)
+  fun selectFile(view: ItemFileBinding, isSelect: Boolean) {
+    view.container.isSelected = isSelect
+    if (isSelect) selectedFile.add(view)
+    else selectedFile.remove(view)
   }
 
-  fun deselectFile() {
+  fun deselectAll() {
     selectedFile.removeAll {
       it.container.isSelected = false
       true

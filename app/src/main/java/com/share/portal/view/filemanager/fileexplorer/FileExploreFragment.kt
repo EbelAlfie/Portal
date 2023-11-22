@@ -4,21 +4,20 @@ import android.view.LayoutInflater
 import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.databinding.FragmentFileExplorerBinding
-import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.MainActivity
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
-import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.fileexplorer.adapter.ParentAdapter
-import com.share.portal.view.filemanager.fileexplorer.model.FileState
 import com.share.portal.view.general.ProgenitorFragment
-import java.io.File
 import javax.inject.Inject
 
 class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
 
   @Inject
   lateinit var viewModel: FileViewModel
+
+  @Inject
+  lateinit var fileProcessor: FileProcessor
 
   private val fileAdapter: FileAdapter by lazy { FileAdapter() }
   private val parentAdapter: ParentAdapter by lazy { ParentAdapter() }
@@ -28,6 +27,7 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
 
   override fun initFragment() {
     fragmentComponent.inject(this)
+    fileProcessor.init(fileAdapter, viewModel)
     registerObservers()
     registerBackPress()
     setupView()
@@ -41,18 +41,17 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
   }
 
   private fun onBackButtonPressed() {
-    if (fileAdapter.getState() == FileState.STATE_SELECTION) {
-      deselectThis()
-      return
+    fileProcessor.onBackPressed {
+      val currentRoot = parentAdapter.getCurrentNode().substringBeforeLast("/")
+      if (currentRoot.isNotBlank()) fileProcessor.traverseFile(currentRoot)
+      else requireActivity().finish()
     }
-    val currentRoot = parentAdapter.getCurrentNode().substringBeforeLast("/")
-    if (currentRoot.isNotBlank()) traverseFile(currentRoot)
-    else requireActivity().finish()
   }
 
   private fun registerObservers() {
     viewModel.fileData().observe(this) {
       loadData(it)
+      showToast(it.current.path)
     }
     viewModel.errorFile().observe(this) {
       showErrorDialog(it)
@@ -60,21 +59,8 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
   }
 
   private fun setupView() {
-
-    fileAdapter.setFileListener (object: FileListener {
-      override fun onFileClicked(view: ItemFileBinding?, filePath: String) {
-        when (fileAdapter.getState()) {
-          FileState.STATE_SELECTION -> view?.let { selectThis(it, filePath) }
-          else -> traverseFile(filePath)
-        }
-      }
-      override fun onFileHold(view: ItemFileBinding, file: File) {
-        fileAdapter.setState(FileState.STATE_SELECTION)
-        onFileClicked(view, file.path)
-      }
-    })
-    
-    parentAdapter.setListener(::traverseFile)
+    fileProcessor.setAdapterListener()
+    parentAdapter.setListener(fileProcessor::traverseFile)
 
     binding.run {
       rvFiles.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -83,25 +69,6 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
       rvParent.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
       rvParent.adapter = parentAdapter
     }
-  }
-
-  private fun selectThis(view: ItemFileBinding, filePath: String) {
-    fileAdapter.selectFile(view)
-    viewModel.storeFile(filePath)
-  }
-
-  private fun deselectThis() {
-    fileAdapter.setState(FileState.STATE_EXPLORE)
-    fileAdapter.deselectFile()
-    viewModel.destoreFile()
-  }
-
-  private fun getFile() = viewModel.getAllFiles()
-
-  private fun traverseFile(filePath: String) {
-    viewModel.setRootPath(filePath)
-    getFile()
-    showToast(filePath)
   }
 
   private fun loadData(data: FileTreeEntity) {
