@@ -8,6 +8,12 @@ import javax.inject.Inject
 class WifiSharingViewmodel @Inject constructor(
   private val useCase: FileUseCase
 ): ViewModel() {
+  private var rootPath: String = ""
+
+  fun requestClientFiles () {
+    rootPath
+  }
+
   fun sendFile(filePacket: File) {
     useCase.sendFile(filePacket)
   }

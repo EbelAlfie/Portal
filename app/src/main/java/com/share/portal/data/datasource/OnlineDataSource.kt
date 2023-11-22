@@ -10,7 +10,7 @@ interface OnlineDataSource {
   //fun establishConnectionAsClient(): ResponseModel<FileTreeEntity>
 
   suspend fun establishWSServer(): InetAddress
-  suspend fun requestConnection(address: InetSocketAddress): ResponseModel<Boolean>
+  suspend fun requestClientConnection(address: InetSocketAddress): ResponseModel<Boolean>
   suspend fun closeConnection()
   suspend fun sendToClient(file: File): ResponseModel<Boolean>
 }

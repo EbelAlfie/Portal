@@ -14,22 +14,30 @@ class OnlineDataSourceImpl @Inject constructor(
   //private val wsModule: WSModule
 ): OnlineDataSource {
 
-  private val socket = Socket()
+  private val clientSocket = Socket()
   private val serverSocket: ServerSocket by lazy { ServerSocket(8988) }
+
+  /** As Server **/
   override suspend fun establishWSServer(): InetAddress {
-    serverSocket.use {
-      val client = serverSocket.accept()
-      val inputstream = client.getInputStream()
-      serverSocket.close()
-    }
+//    serverSocket.use {
+//      val client = serverSocket.accept()
+//      val inputstream = client.getInputStream()
+//      serverSocket.close()
+//    }
     return serverSocket.inetAddress
   }
 
-  override suspend fun requestConnection(address: InetSocketAddress): ResponseModel<Boolean> {
+  fun onRequestReceived() {
+    val inputStream = clientSocket.getInputStream()
+  }
+
+  /** As Client **/
+
+  override suspend fun requestClientConnection(address: InetSocketAddress): ResponseModel<Boolean> {
     return try {
       Log.d("AIUEO", "requestConnection:")
-      socket.bind(null)
-      socket.connect(address, 500)
+      clientSocket.bind(null)
+      clientSocket.connect(address, 500)
       Log.d("AIUEO", "requestConnection: ")
       ResponseModel(
         data = true
@@ -45,9 +53,24 @@ class OnlineDataSourceImpl @Inject constructor(
     }
   }
 
+  //After connected, request client's files
+  fun sendFileRequestToClient(root: String): ResponseModel<Boolean> {
+    return try {
+      val outputStream = clientSocket.getOutputStream()
+      outputStream.write(root.toByteArray())
+      ResponseModel(
+        data = true
+      )
+    }catch (e: Exception) {
+      ResponseModel(
+        error = e
+      )
+    }
+  }
+
   override suspend fun sendToClient(file: File): ResponseModel<Boolean> {
     return try {
-      val outputStream = socket.getOutputStream()
+      val outputStream = clientSocket.getOutputStream()
       ResponseModel(
         data = true
       )
@@ -59,7 +82,7 @@ class OnlineDataSourceImpl @Inject constructor(
   }
 
   override suspend fun closeConnection() {
-    socket.takeIf { it.isConnected }?.apply {
+    clientSocket.takeIf { it.isConnected }?.apply {
       close()
     }
   }

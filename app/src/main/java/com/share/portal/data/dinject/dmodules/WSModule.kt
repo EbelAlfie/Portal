@@ -10,12 +10,12 @@ import javax.inject.Singleton
 class WSModule {
 
   @Provides
-  fun provideWSEars(): ServerSocket {
+  fun provideServerSocket(): ServerSocket {
     return ServerSocket(0)
   }
 
   @Provides
-  fun provideWSMouth(): Socket {
+  fun provideClientSocket(): Socket {
     return Socket()
   }
 }

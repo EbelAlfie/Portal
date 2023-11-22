@@ -21,16 +21,23 @@ class FileRepositoryImpl @Inject constructor(
     else throw Throwable(response.error)
   }
 
+  fun onConnectedWithClient() {
+
+  }
+
+  fun onReceiveFileRequest() {
+
+  }
+
   override fun sendFile(file: File) {
-    TODO("Not yet implemented")
+
   }
 
   override fun receiveFile(): FileTreeEntity {
-    TODO("Not yet implemented")
   }
 
   override suspend fun connectWithClient(address: InetSocketAddress): Boolean {
-    val response = onlineSource.requestConnection(address)
+    val response = onlineSource.requestClientConnection(address)
     if (response.data != null) return response.data
     else throw Throwable(response.error)
   }
