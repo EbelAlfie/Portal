@@ -33,7 +33,8 @@ class FileRepositoryImpl @Inject constructor(
 
   }
 
-  override fun receiveFile(): FileTreeEntity {
+  override fun receiveFile() {
+
   }
 
   override suspend fun connectWithClient(address: InetSocketAddress): Boolean {

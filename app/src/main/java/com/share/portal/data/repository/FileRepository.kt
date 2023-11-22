@@ -10,7 +10,7 @@ interface FileRepository {
 
   fun sendFile(file: File)
 
-  fun receiveFile(): FileTreeEntity
+  fun receiveFile()
 
   suspend fun connectWithClient(address: InetSocketAddress): Boolean
   suspend fun establishAsServer(): InetAddress

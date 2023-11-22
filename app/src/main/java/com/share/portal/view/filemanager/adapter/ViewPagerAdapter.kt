@@ -6,19 +6,22 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.share.portal.view.filemanager.fileexplorer.FileExploreFragment
 import com.share.portal.view.filemanager.wifisharing.FileSharingFragment
+import com.share.portal.view.general.ProgenitorFragment
 
 class ViewPagerAdapter(
   fragmentManager: FragmentManager,
   lifecycle: Lifecycle
 ): FragmentStateAdapter(fragmentManager, lifecycle) {
 
-  override fun getItemCount(): Int = PageEnum.values().size
+  private val fragmentList = arrayListOf(
+    FileExploreFragment(),
+    FileSharingFragment()
+  )
 
-  override fun createFragment(position: Int): Fragment =
-    when(position) {
-      PageEnum.FILE_EXPLORER.ordinal -> FileExploreFragment()
-      PageEnum.FILE_SHARING.ordinal -> FileSharingFragment()
-      else -> FileExploreFragment()
-    }
+  override fun getItemCount(): Int = fragmentList.size
+
+  override fun createFragment(position: Int): Fragment = fragmentList[position]
+
+  fun getFragmentAt(position: Int) = fragmentList[position]
 
 }

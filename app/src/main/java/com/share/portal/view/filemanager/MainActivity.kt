@@ -102,7 +102,11 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
     })
   }
 
-  private fun onBackButtonPressed() {}
+  private fun onBackButtonPressed() {
+    adapter.getFragmentAt(
+      binding.vpContainer.currentItem
+    ).onBackPressed()
+  }
 
   private fun setupToolbar() {
     binding.toolbar.apply {
@@ -178,6 +182,4 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
   fun provideP2pService(): WifiBroadcastReceiver {
     return wifiBroadcastReceiver
   }
-
-  fun provideViewModel(): MainViewModel = viewModel
 }

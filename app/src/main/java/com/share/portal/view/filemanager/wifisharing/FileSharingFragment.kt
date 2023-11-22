@@ -25,9 +25,12 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
 
   override fun initFragment() = setupFragment()
 
+  override fun onBackPressed() {
+    requireActivity().finish()
+  }
+
   private fun setupFragment() {
     fragmentComponent.inject(this)
-    registerBackPress()
     setupView()
     getPeers()
   }
@@ -52,16 +55,6 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
       }
     }
 
-  }
-
-  private fun registerBackPress() {
-    requireActivity().apply {
-      onBackPressedDispatcher.addCallback(this@FileSharingFragment,
-        object: OnBackPressedCallback(true) {
-          override fun handleOnBackPressed() = finish()
-        }
-      )
-    }
   }
 
   private fun setupView() {

@@ -19,11 +19,11 @@ class OnlineDataSourceImpl @Inject constructor(
 
   /** As Server **/
   override suspend fun establishWSServer(): InetAddress {
-//    serverSocket.use {
-//      val client = serverSocket.accept()
-//      val inputstream = client.getInputStream()
-//      serverSocket.close()
-//    }
+    serverSocket.use {
+      val remoteClient = serverSocket.accept()
+      val inputstream = remoteClient.getInputStream()
+      serverSocket.close()
+    }
     return serverSocket.inetAddress
   }
 

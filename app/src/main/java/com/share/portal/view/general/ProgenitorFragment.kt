@@ -42,4 +42,6 @@ abstract class ProgenitorFragment<V: ViewBinding>: Fragment() {
   abstract fun initFragment()
 
   abstract fun initBinding(layoutInflater: LayoutInflater): V
+
+  abstract fun onBackPressed()
 }

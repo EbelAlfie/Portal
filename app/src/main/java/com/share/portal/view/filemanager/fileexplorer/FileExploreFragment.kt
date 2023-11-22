@@ -29,18 +29,10 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
     fragmentComponent.inject(this)
     fileProcessor.init(fileAdapter, viewModel)
     registerObservers()
-    registerBackPress()
     setupView()
   }
 
-  private fun registerBackPress() { //TODO optimise
-    (requireActivity() as MainActivity).onBackPressedDispatcher
-      .addCallback(this, object: OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() = onBackButtonPressed()
-      })
-  }
-
-  private fun onBackButtonPressed() {
+  override fun onBackPressed() {
     fileProcessor.onBackPressed {
       val currentRoot = parentAdapter.getCurrentNode().substringBeforeLast("/")
       if (currentRoot.isNotBlank()) fileProcessor.traverseFile(currentRoot)
