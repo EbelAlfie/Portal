@@ -47,10 +47,7 @@ class WifiBroadcastReceiver(
         Log.d("WIFIGEMINK", "WIFI_P2P_PEERS_CHANGED_ACTION ")
       }
       WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
-//        val networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO) as NetworkInfo
-//        if (networkInfo.isConnected()) {
-          requestConnectionInfo()
-        //}
+        requestConnectionInfo()
         Log.d("WIFIGEMINK", "WIFI_P2P_CONNECTION_CHANGED_ACTION ")
       }
       WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {
@@ -86,8 +83,7 @@ class WifiBroadcastReceiver(
     })
   }
 
-  fun requestConnectionInfo() {
+  fun requestConnectionInfo() =
     p2pManager.requestConnectionInfo(channel, connectionInfoListener)
-  }
 
 }
