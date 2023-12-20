@@ -4,7 +4,6 @@ import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
 import android.util.Log
 import android.view.LayoutInflater
-import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.databinding.FragmentFileSharingBinding
 import com.share.portal.view.filemanager.MainActivity
@@ -40,15 +39,13 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
       with(provideP2pService()) {
 
         setPeerConnectionListener(object: PeerConnectionListener {
-          override fun onConnectionSuccess(device: WifiP2pDevice) { requestConnectionInfo() }
+          override fun onConnectionSuccess(device: WifiP2pDevice) {}
           override fun onConnectionFailed(statusCode: Int) = showError(statusCode)
         })
-
         setConnectionInfoListener {
           showToast(it.toString())
           Log.d("WIFIGROUP", it.toString())
         }
-
         setPeerListener { peerAdapter.submitPeers(it) }
 
         discoverPeers()
