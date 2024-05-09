@@ -1,13 +1,13 @@
 package com.share.portal.view.filemanager.fileexplorer
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.models.FileParam
 import com.share.portal.domain.models.FileTreeEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,11 +16,11 @@ class FileViewModel @Inject constructor(
 ): ViewModel() {
   private var rootPath: String
 
-  private val _fileData = MutableLiveData<FileTreeEntity>()
-  fun fileData(): LiveData<FileTreeEntity> = _fileData
+  private val _fileData = MutableStateFlow<FileTreeEntity?>(null)
+  val fileData: StateFlow<FileTreeEntity?> = _fileData
 
-  private val _errorFile = MutableLiveData<Exception>()
-  fun errorFile(): LiveData<Exception> = _errorFile
+  private val _errorFile = MutableStateFlow<Exception?>(null)
+  fun errorFile(): StateFlow<Exception?> = _errorFile
 
   init {
     rootPath = FileParam.EXTERNAL.pathName
@@ -32,12 +32,12 @@ class FileViewModel @Inject constructor(
   }
 
   fun getAllFiles() {
-    CoroutineScope(Dispatchers.IO).launch {
+    CoroutineScope(Dispatchers.IO).launch {//TODO VIEWMODEL SCOPE
       try {
         val data = fileUseCase.getAllExternalFiles(rootPath)
-        _fileData.postValue(data)
+        _fileData.value = data
       } catch (error: Exception) {
-        _errorFile.postValue(error)
+        _errorFile.value = error
       }
     }
   }

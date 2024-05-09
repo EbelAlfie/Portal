@@ -2,6 +2,7 @@ package com.share.portal.view.filemanager
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.FileUseCaseImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +27,7 @@ class MainViewModel @Inject constructor(
   }
 
   fun establishAsServer() {
-    CoroutineScope(Dispatchers.IO).launch {
+    viewModelScope.launch {
       try {
         serverAddr = useCase.establishAsServer()
       } catch (e: Exception) {

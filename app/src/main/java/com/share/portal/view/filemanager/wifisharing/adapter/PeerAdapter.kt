@@ -26,13 +26,14 @@ class PeerAdapter: RecyclerView.Adapter<PeerViewHolder>() {
 
     override fun areContentsTheSame(oldItem: WifiP2pDevice, newItem: WifiP2pDevice
     ): Boolean = oldItem == newItem //TODO change
-
   }
+
   private val diffUtil = AsyncListDiffer(this, diffCallback)
 
-  fun setPeerListener(listener: PeerItemListener) {
+  fun setItemListener(listener: PeerItemListener) {
     mListener = listener
   }
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeerViewHolder =
     PeerViewHolder(ItemPeerBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 

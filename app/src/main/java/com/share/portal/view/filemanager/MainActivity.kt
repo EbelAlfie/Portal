@@ -29,7 +29,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
   @Inject
   lateinit var viewModel: MainViewModel
 
-  override val intentFilter: IntentFilter
+  override val wifiIntentFilter: IntentFilter
     get() = IntentFilter().apply {
     addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
     addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION)
@@ -170,16 +170,11 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
   }
 
   override fun registerWifi() {
-    registerReceiver(
-      wifiBroadcastReceiver, intentFilter,
-    )
+    registerReceiver(wifiBroadcastReceiver, wifiIntentFilter)
   }
 
-  override fun unregisterWifi() {
-    unregisterReceiver(wifiBroadcastReceiver)
-  }
+  override fun unregisterWifi() = unregisterReceiver(wifiBroadcastReceiver)
 
-  fun provideP2pService(): WifiBroadcastReceiver {
-    return wifiBroadcastReceiver
-  }
+  override fun getP2pService() = wifiBroadcastReceiver
+
 }

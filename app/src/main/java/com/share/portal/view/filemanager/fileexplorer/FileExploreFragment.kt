@@ -1,14 +1,15 @@
 package com.share.portal.view.filemanager.fileexplorer
 
 import android.view.LayoutInflater
-import androidx.activity.OnBackPressedCallback
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.databinding.FragmentFileExplorerBinding
 import com.share.portal.domain.models.FileTreeEntity
-import com.share.portal.view.filemanager.MainActivity
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
 import com.share.portal.view.filemanager.fileexplorer.adapter.ParentAdapter
 import com.share.portal.view.general.ProgenitorFragment
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
@@ -22,7 +23,7 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
   private val fileAdapter: FileAdapter by lazy { FileAdapter() }
   private val parentAdapter: ParentAdapter by lazy { ParentAdapter() }
 
-  override fun initBinding(layoutInflater: LayoutInflater): FragmentFileExplorerBinding =
+  override fun initBinding(layoutInflater: LayoutInflater) =
     FragmentFileExplorerBinding.inflate(layoutInflater)
 
   override fun initFragment() {
@@ -41,12 +42,17 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
   }
 
   private fun registerObservers() {
-    viewModel.fileData().observe(this) {
-      loadData(it)
-      showToast(it.current.path)
+    lifecycleScope.launch {
+      viewModel.fileData.collectLatest {
+        if (it == null) return@collectLatest
+        loadData(it)
+      }
     }
-    viewModel.errorFile().observe(this) {
-      showErrorDialog(it)
+    lifecycleScope.launch {
+      viewModel.errorFile().collectLatest {
+        if (it == null) return@collectLatest
+        showErrorDialog(it)
+      }
     }
   }
 

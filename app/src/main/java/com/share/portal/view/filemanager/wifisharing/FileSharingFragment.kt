@@ -13,10 +13,10 @@ import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerCon
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerItemListener
 import com.share.portal.view.general.ProgenitorFragment
 
-class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
+class FileSharingFragment : ProgenitorFragment<FragmentFileSharingBinding>() {
 
-  //@Inject
-  //lateinit var viewModel: WifiSharingViewmodel
+//  @Inject
+//  lateinit var viewModel: WifiSharingViewmodel
 
   private val peerAdapter: PeerAdapter by lazy { PeerAdapter() }
   override fun initBinding(layoutInflater: LayoutInflater): FragmentFileSharingBinding =
@@ -35,42 +35,45 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
   }
 
   private fun getPeers() {
-    (requireActivity() as MainActivity).apply {
-      with(provideP2pService()) {
-
-        setPeerConnectionListener(object: PeerConnectionListener {
-          override fun onConnectionSuccess(device: WifiP2pDevice) {}
-          override fun onConnectionFailed(statusCode: Int) = showError(statusCode)
-        })
-        setConnectionInfoListener {
-          showToast(it.toString())
-          Log.d("WIFIGROUP", it.toString())
+    getWifiPerantara().getP2pService().apply {
+      setPeerConnectionListener(object : PeerConnectionListener {
+        override fun onConnectionSuccess(device: WifiP2pDevice) {
+          Log.d("CONNECtiOn", device.toString())
         }
-        setPeerListener { peerAdapter.submitPeers(it) }
-
-        discoverPeers()
+        override fun onConnectionFailed(statusCode: Int) = showError(statusCode)
+      })
+      setConnectionInfoListener {
+        showToast(it.toString())
+        Log.d("WIFIGROUP", it.toString())
       }
-    }
+      setPeerListener { peerAdapter.submitPeers(it) }
 
+      discoverPeers()
+    }
   }
 
   private fun setupView() {
-    peerAdapter.setPeerListener (object: PeerItemListener {
-      override fun onPeerClicked(peer: WifiP2pDevice) =
-        (requireActivity() as MainActivity).provideP2pService().requestConnection(peer)
-    })
+    setupPeerAdapter()
     binding.apply {
       btnRefresh.setOnClickListener {
-        (requireActivity() as MainActivity).provideP2pService().discoverPeers()
+        (requireActivity() as MainActivity).getP2pService().discoverPeers()
       }
-      rvPeers.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+      rvPeers.layoutManager =
+        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
       rvPeers.adapter = peerAdapter
     }
   }
 
+  private fun setupPeerAdapter() {
+    peerAdapter.setItemListener(object : PeerItemListener {
+      override fun onPeerClicked(peer: WifiP2pDevice) =
+        getWifiPerantara().getP2pService().requestConnection(peer)
+    })
+  }
+
   override fun onResume() {
     super.onResume()
-    //getWifiPerantara()?.registerWifi()
+    getWifiPerantara().registerWifi()
   }
 
   override fun onPause() {
@@ -87,6 +90,6 @@ class FileSharingFragment: ProgenitorFragment<FragmentFileSharingBinding>() {
     }
   }
 
-  private fun getWifiPerantara(): WifiPerantara? = requireActivity() as? WifiPerantara
+  private fun getWifiPerantara(): WifiPerantara = requireActivity() as WifiPerantara
 
 }

@@ -8,7 +8,7 @@ import com.share.portal.view.filemanager.fileexplorer.model.FileState
 import java.io.File
 import javax.inject.Inject
 
-class FileProcessor @Inject constructor(){
+class FileProcessor @Inject constructor() {
   private var fileState: FileState = FileState.STATE_EXPLORE
 
   private val fileBuffer: MutableList<String> = mutableListOf()
