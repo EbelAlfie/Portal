@@ -9,7 +9,7 @@ import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.fileexplorer.model.FileData
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
-import com.share.portal.view.filemanager.fileexplorer.model.FileState
+import com.share.portal.view.filemanager.fileexplorer.model.FileOperationState
 import java.io.File
 
 class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
@@ -30,13 +30,12 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
     mListener = listener
   }
 
-  fun update(items: FileTreeEntity) = diffUtil.submitList(FileData.store(items))
+  fun updateList(items: FileTreeEntity) = diffUtil.submitList(FileData.store(items))
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder =
     FileViewHolder(ItemFileBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
-  override fun getItemCount(): Int =
-    diffUtil.currentList.size
+  override fun getItemCount(): Int = diffUtil.currentList.size
 
   override fun onBindViewHolder(holder: FileViewHolder, position: Int) =
     holder.bindData(diffUtil.currentList[position], mListener)
@@ -45,7 +44,7 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
     fun onFileClicked(filePath: String, extension: FileExtension)
     fun onFileHold(file: File)
     fun onPerformSelect(view: ItemFileBinding, path: String)
-    fun getFileState(): FileState
+    fun getFileState(): FileOperationState
   }
 
   fun selectFile(view: ItemFileBinding, isSelect: Boolean) {

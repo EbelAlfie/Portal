@@ -12,6 +12,7 @@ import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerConnectionListener
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerItemListener
 import com.share.portal.view.general.ProgenitorFragment
+import javax.inject.Inject
 
 class FileSharingFragment : ProgenitorFragment<FragmentFileSharingBinding>() {
 

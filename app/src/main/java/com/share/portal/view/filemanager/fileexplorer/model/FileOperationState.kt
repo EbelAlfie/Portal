@@ -1,8 +1,6 @@
 package com.share.portal.view.filemanager.fileexplorer.model
 
-enum class FileState {
-  STATE_ROOT,
-  STATE_NOT_ROOT,
+enum class FileOperationState {
   STATE_SELECTION,
-  STATE_EXPLORE;
+  STATE_EXPLORATION;
 }

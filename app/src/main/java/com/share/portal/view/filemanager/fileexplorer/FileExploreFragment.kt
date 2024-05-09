@@ -49,7 +49,7 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
       }
     }
     lifecycleScope.launch {
-      viewModel.errorFile().collectLatest {
+      viewModel.errorFile.collectLatest {
         if (it == null) return@collectLatest
         showErrorDialog(it)
       }
@@ -71,7 +71,7 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
 
   private fun loadData(data: FileTreeEntity) {
     parentAdapter.update(data.current)
-    fileAdapter.update(data)
+    fileAdapter.updateList(data)
   }
 
   private fun showErrorDialog(throwable: Throwable) {

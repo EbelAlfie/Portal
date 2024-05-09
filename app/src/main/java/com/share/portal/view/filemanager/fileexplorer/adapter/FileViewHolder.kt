@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.fileexplorer.model.FileData
-import com.share.portal.view.filemanager.fileexplorer.model.FileState
+import com.share.portal.view.filemanager.fileexplorer.model.FileOperationState
 
 class FileViewHolder(private val binding: ItemFileBinding) :
   RecyclerView.ViewHolder(binding.root) {
@@ -16,13 +16,14 @@ class FileViewHolder(private val binding: ItemFileBinding) :
 
       root.setOnLongClickListener {
         mListener?.onFileHold(data.file)
-        root.performClick()
+        //root.performClick()
         true
       }
 
       root.setOnClickListener {
         when (mListener?.getFileState()) {
-          FileState.STATE_EXPLORE -> mListener.onFileClicked(data.file.path, data.extension)
+          FileOperationState.STATE_EXPLORATION ->
+            mListener.onFileClicked(data.file.path, data.extension)
           else -> mListener?.onPerformSelect(binding, data.file.path)
         }
       }

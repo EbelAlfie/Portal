@@ -10,9 +10,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(
   modules = [ViewModelModule::class],
-  dependencies = [
-    DomainComponent::class,
-  ]
+  dependencies = [DomainComponent::class]
 )
 interface ApplicationComponent {
   @Component.Factory

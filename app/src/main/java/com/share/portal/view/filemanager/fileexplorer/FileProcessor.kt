@@ -4,12 +4,12 @@ import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
-import com.share.portal.view.filemanager.fileexplorer.model.FileState
+import com.share.portal.view.filemanager.fileexplorer.model.FileOperationState
 import java.io.File
 import javax.inject.Inject
 
 class FileProcessor @Inject constructor() {
-  private var fileState: FileState = FileState.STATE_EXPLORE
+  private var fileState: FileOperationState = FileOperationState.STATE_EXPLORATION
 
   private val fileBuffer: MutableList<String> = mutableListOf()
   private lateinit var fileAdapter: FileAdapter
@@ -30,16 +30,18 @@ class FileProcessor @Inject constructor() {
         fileAdapter.selectFile(view, isSelect)
       }
       override fun onFileHold(file: File) {
-        fileState = FileState.STATE_SELECTION
+        fileState = FileOperationState.STATE_SELECTION
       }
-      override fun getFileState(): FileState = fileState
+      override fun getFileState(): FileOperationState = fileState
     })
   }
 
   /** file operations **/
   fun traverseFile(filePath: String) {
-    viewModel.setRootPath(filePath)
-    viewModel.getAllFiles()
+    viewModel.apply {
+      setRootPath(filePath)
+      getAllFiles()
+    }
   }
 
   fun performSelect(filePath: String): Boolean {
@@ -55,8 +57,8 @@ class FileProcessor @Inject constructor() {
   }
 
   fun onBackPressed(callback: () -> Unit) {
-    if (fileState == FileState.STATE_SELECTION) {
-      fileState = FileState.STATE_EXPLORE
+    if (fileState == FileOperationState.STATE_SELECTION) {
+      fileState = FileOperationState.STATE_EXPLORATION
       clearAll()
     } else
       callback.invoke()
