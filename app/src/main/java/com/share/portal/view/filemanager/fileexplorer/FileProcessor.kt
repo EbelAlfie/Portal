@@ -1,11 +1,7 @@
 package com.share.portal.view.filemanager.fileexplorer
 
-import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
-import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter.FileListener
-import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
 import com.share.portal.view.filemanager.fileexplorer.model.FileOperationState
-import java.io.File
 import javax.inject.Inject
 
 class FileProcessor @Inject constructor() {
@@ -21,19 +17,7 @@ class FileProcessor @Inject constructor() {
   }
 
   fun setAdapterListener() {
-    fileAdapter.setFileListener (object: FileListener {
-      override fun onFileClicked(filePath: String, extension: FileExtension) {
-        traverseFile(filePath)
-      }
-      override fun onPerformSelect(view: ItemFileBinding, path: String) {
-        val isSelect = performSelect(path)
-        fileAdapter.selectFile(view, isSelect)
-      }
-      override fun onFileHold(file: File) {
-        fileState = FileOperationState.STATE_SELECTION
-      }
-      override fun getFileState(): FileOperationState = fileState
-    })
+
   }
 
   /** file operations **/
@@ -44,22 +28,9 @@ class FileProcessor @Inject constructor() {
     }
   }
 
-  fun performSelect(filePath: String): Boolean {
-    val isSelect = fileBuffer.indexOf(filePath)
-    if (isSelect == -1) fileBuffer.add(filePath)
-    else fileBuffer.remove(filePath)
-    return isSelect == -1
-  }
-
-  private fun clearAll() {
-    fileBuffer.clear()
-    fileAdapter.deselectAll()
-  }
-
   fun onBackPressed(callback: () -> Unit) {
     if (fileState == FileOperationState.STATE_SELECTION) {
       fileState = FileOperationState.STATE_EXPLORATION
-      clearAll()
     } else
       callback.invoke()
   }

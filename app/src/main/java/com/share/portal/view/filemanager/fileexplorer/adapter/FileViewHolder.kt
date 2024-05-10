@@ -16,8 +16,7 @@ class FileViewHolder(private val binding: ItemFileBinding) :
 
       root.setOnLongClickListener {
         mListener?.onFileHold(data.file)
-        //root.performClick()
-        true
+        root.performClick()
       }
 
       root.setOnClickListener {

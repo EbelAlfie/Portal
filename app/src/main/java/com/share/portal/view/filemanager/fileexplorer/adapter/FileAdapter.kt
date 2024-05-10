@@ -13,8 +13,6 @@ import com.share.portal.view.filemanager.fileexplorer.model.FileOperationState
 import java.io.File
 
 class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
-  private val selectedFile: MutableList<ItemFileBinding> = mutableListOf()
-
   private var mListener: FileListener? = null
 
   private val diffCallback = object: DiffUtil.ItemCallback<FileData>() {
@@ -48,15 +46,15 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
   }
 
   fun selectFile(view: ItemFileBinding, isSelect: Boolean) {
-    view.container.isSelected = isSelect
-    if (isSelect) selectedFile.add(view)
-    else selectedFile.remove(view)
+//    view.container.isSelected = isSelect
+//    if (isSelect) selectedFile.add(view)
+//    else selectedFile.remove(view)
   }
 
   fun deselectAll() {
-    selectedFile.removeAll {
-      it.container.isSelected = false
-      true
-    }
+//    selectedFile.removeAll {
+//      it.container.isSelected = false
+//      true
+//    }
   }
 }
