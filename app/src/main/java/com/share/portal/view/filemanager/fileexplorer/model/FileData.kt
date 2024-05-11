@@ -11,6 +11,7 @@ import java.io.File
 @Parcelize
 data class FileData(
   val file: File,
+  val isSelected: Boolean = false,
   val extension: FileExtension,
 ): Parcelable {
 

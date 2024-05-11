@@ -38,23 +38,9 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
   override fun onBindViewHolder(holder: FileViewHolder, position: Int) =
     holder.bindData(diffUtil.currentList[position], mListener)
 
-  interface FileListener {
-    fun onFileClicked(filePath: String, extension: FileExtension)
-    fun onFileHold(file: File)
-    fun onPerformSelect(view: ItemFileBinding, path: String)
-    fun getFileState(): FileOperationState
+  abstract class FileListener {
+    open fun onFileClicked(filePath: String, extension: FileExtension) {}
+    open fun onFileHold(file: File) {}
   }
 
-  fun selectFile(view: ItemFileBinding, isSelect: Boolean) {
-//    view.container.isSelected = isSelect
-//    if (isSelect) selectedFile.add(view)
-//    else selectedFile.remove(view)
-  }
-
-  fun deselectAll() {
-//    selectedFile.removeAll {
-//      it.container.isSelected = false
-//      true
-//    }
-  }
 }

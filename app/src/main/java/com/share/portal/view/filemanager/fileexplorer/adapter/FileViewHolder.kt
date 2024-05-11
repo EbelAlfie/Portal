@@ -1,6 +1,7 @@
 package com.share.portal.view.filemanager.fileexplorer.adapter
 
 import androidx.recyclerview.widget.RecyclerView
+import com.share.portal.R
 import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.fileexplorer.model.FileData
@@ -14,18 +15,6 @@ class FileViewHolder(private val binding: ItemFileBinding) :
       icIcon.setImageResource(data.extension.icon)
       tvFilename.text = data.file.name
 
-      root.setOnLongClickListener {
-        mListener?.onFileHold(data.file)
-        root.performClick()
-      }
-
-      root.setOnClickListener {
-        when (mListener?.getFileState()) {
-          FileOperationState.STATE_EXPLORATION ->
-            mListener.onFileClicked(data.file.path, data.extension)
-          else -> mListener?.onPerformSelect(binding, data.file.path)
-        }
-      }
 
     }
   }
