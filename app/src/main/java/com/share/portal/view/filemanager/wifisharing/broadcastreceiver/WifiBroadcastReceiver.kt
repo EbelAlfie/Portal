@@ -36,23 +36,15 @@ class WifiBroadcastReceiver(
   override fun onReceive(context: Context, intent: Intent) {
     val action: String = intent.action ?: return
     when (action) {
-      WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION ->{
+      WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION ->
         checkWifiAvailability(intent)
-        Log.d("WIFIGEMINK", "WIFI_P2P_STATE_CHANGED_ACTION ")
-      }
       WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION -> {
-        Log.d("WIFIGEMINK", "WIFI_P2P_PEERS_CHANGED_ACTION ")
         if (wifiState == WifiP2pManager.WIFI_P2P_STATE_DISABLED) return
         getPeerList()
-        Log.d("WIFIGEMINK", "WIFI_P2P_PEERS_CHANGED_ACTION ")
       }
-      WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
+      WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION ->
         requestConnectionInfo()
-        Log.d("WIFIGEMINK", "WIFI_P2P_CONNECTION_CHANGED_ACTION ")
-      }
-      WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {
-        Log.d("WIFIGEMINK", "WIFI_P2P_THIS_DEVICE_CHANGED_ACTION ")
-      }
+      WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {}
     }
   }
 

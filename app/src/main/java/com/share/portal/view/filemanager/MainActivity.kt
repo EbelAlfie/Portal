@@ -29,16 +29,16 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
   @Inject
   lateinit var viewModel: MainViewModel
 
+  private val adapter: ViewPagerAdapter by lazy {
+    ViewPagerAdapter(supportFragmentManager, lifecycle)
+  }
+
   override val wifiIntentFilter: IntentFilter
     get() = IntentFilter().apply {
     addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
     addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION)
     addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)
     addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
-  }
-
-  private val adapter: ViewPagerAdapter by lazy {
-    ViewPagerAdapter(supportFragmentManager, lifecycle)
   }
 
   private val wifiP2PManager: WifiP2pManager by lazy(LazyThreadSafetyMode.NONE) {
