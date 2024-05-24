@@ -1,19 +1,23 @@
 package com.share.portal.view.filemanager.wifisharing.broadcastreceiver
 
+import android.Manifest.permission
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.net.wifi.WpsInfo
-import android.net.wifi.p2p.WifiP2pConfig
 import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
 import android.util.Log
+import androidx.annotation.RequiresPermission
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerConnectionListener
 
 class WifiBroadcastReceiver(
   private val p2pManager: WifiP2pManager,
   private val channel: WifiP2pManager.Channel
 ): BroadcastReceiver() {
+  private val portalServiceManager: PortalServiceManager by lazy {
+    PortalServiceManager(p2pManager, channel)
+  }
+
   private var wifiState: Int = WifiP2pManager.WIFI_P2P_STATE_DISABLED
 
   private var onPeerDiscoveredListener: WifiP2pManager.ActionListener? = null
@@ -33,12 +37,18 @@ class WifiBroadcastReceiver(
     peerListListener = listener
   }
 
+  @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
+  fun initiatePeerDiscovery() = p2pManager.discoverServices(channel, onPeerDiscoveredListener)
+
+  @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
+  fun openPortal() = portalServiceManager.openPortal()
+
   override fun onReceive(context: Context, intent: Intent) {
     val action: String = intent.action ?: return
     when (action) {
       WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION ->
         checkWifiAvailability(intent)
-      WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION -> {
+      WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION -> { //Peer discovery success
         if (wifiState == WifiP2pManager.WIFI_P2P_STATE_DISABLED) return
         getPeerList()
       }
@@ -61,21 +71,12 @@ class WifiBroadcastReceiver(
     }
   }
 
-  private fun getPeerList() = p2pManager.requestPeers(channel, peerListListener)
-
-  fun initiatePeerDiscovery() = p2pManager.discoverPeers(channel, onPeerDiscoveredListener)
+  private fun getPeerList() {}
 
   fun requestConnection(peer: WifiP2pDevice) {
-    val config = WifiP2pConfig()
-    config.deviceAddress = peer.deviceAddress
-    config.wps.setup = WpsInfo.PBC
-    p2pManager.connect(channel, config, object: WifiP2pManager.ActionListener {
-      override fun onSuccess() { peerConnectionListener?.onConnectionSuccess(peer) }
-      override fun onFailure(reason: Int) { peerConnectionListener?.onConnectionFailed(reason) }
-    })
+
   }
 
-  fun requestConnectionInfo() =
-    p2pManager.requestConnectionInfo(channel, connectionInfoListener)
+  private fun requestConnectionInfo() {} //= p2pManager.requestConnectionInfo(channel, connectionInfoListener)
 
 }

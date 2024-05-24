@@ -171,6 +171,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
 
   override fun registerWifi() {
     registerReceiver(wifiBroadcastReceiver, wifiIntentFilter)
+    wifiBroadcastReceiver.openPortal()
   }
 
   override fun unregisterWifi() = unregisterReceiver(wifiBroadcastReceiver)

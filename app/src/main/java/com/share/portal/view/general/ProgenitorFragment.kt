@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.share.portal.App
+import com.share.portal.PortalBlue
 import com.share.portal.view.dinject.FragmentComponent
 import com.share.portal.view.utils.ToastBuilder
 
@@ -18,7 +18,7 @@ abstract class ProgenitorFragment<V: ViewBinding>: Fragment() {
   }
 
   val fragmentComponent: FragmentComponent by lazy {
-    (requireActivity().application as App).getFragmentComponent()
+    (requireActivity().application as PortalBlue).getFragmentComponent()
   }
 
   override fun onCreateView(

@@ -5,7 +5,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
-import com.share.portal.App
+import com.share.portal.PortalBlue
 import com.share.portal.view.dinject.ApplicationComponent
 import com.share.portal.view.utils.ToastBuilder
 
@@ -17,7 +17,7 @@ abstract class ProgenitorActivity<V: ViewBinding>: AppCompatActivity() {
     }
 
     protected val applicationComponent: ApplicationComponent by lazy {
-        (application as App).getAppComponent()
+        (application as PortalBlue).getAppComponent()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

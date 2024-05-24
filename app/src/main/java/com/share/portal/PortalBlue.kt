@@ -10,7 +10,7 @@ import com.share.portal.view.dinject.DaggerApplicationComponent
 import com.share.portal.view.dinject.DaggerFragmentComponent
 import com.share.portal.view.dinject.FragmentComponent
 
-class App: Application() {
+class PortalBlue: Application() {
   fun getAppComponent(): ApplicationComponent =
     DaggerApplicationComponent.factory().create(getDomainComponent())
 
