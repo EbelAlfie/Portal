@@ -12,7 +12,6 @@ import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerConnectionListener
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerItemListener
 import com.share.portal.view.general.ProgenitorFragment
-import javax.inject.Inject
 
 class FileSharingFragment : ProgenitorFragment<FragmentFileSharingBinding>() {
 
@@ -35,29 +34,11 @@ class FileSharingFragment : ProgenitorFragment<FragmentFileSharingBinding>() {
     getPeers()
   }
 
-  private fun getPeers() {
-    getWifiPerantara().getP2pService().apply {
-      setPeerConnectionListener(object : PeerConnectionListener {
-        override fun onConnectionSuccess(device: WifiP2pDevice) {
-          Log.d("CONNECtiOn", device.toString())
-        }
-        override fun onConnectionFailed(statusCode: Int) = showError(statusCode)
-      })
-      setConnectionInfoListener {
-        showToast(it.toString())
-        Log.d("WIFIGROUP", it.toString())
-      }
-      setPeerListener { peerAdapter.submitPeers(it) }
-
-      discoverPeers()
-    }
-  }
-
   private fun setupView() {
     setupPeerAdapter()
     binding.apply {
       btnRefresh.setOnClickListener {
-        (requireActivity() as MainActivity).getP2pService().discoverPeers()
+        (requireActivity() as MainActivity).getP2pService().initiatePeerDiscovery()
       }
       rvPeers.layoutManager =
         LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -70,6 +51,26 @@ class FileSharingFragment : ProgenitorFragment<FragmentFileSharingBinding>() {
       override fun onPeerClicked(peer: WifiP2pDevice) =
         getWifiPerantara().getP2pService().requestConnection(peer)
     })
+  }
+
+  private fun getPeers() {
+    getWifiPerantara().getP2pService().apply {
+      setPeerConnectionListener(object : PeerConnectionListener {
+        override fun onConnectionSuccess(device: WifiP2pDevice) {
+          Log.d("CONNECtiOn", device.toString())
+        }
+        override fun onConnectionFailed(statusCode: Int) = showError(statusCode)
+      })
+
+      setConnectionInfoListener {
+        showToast(it.toString())
+        Log.d("WIFIGROUP", it.toString())
+      }
+
+      setPeerListener { peerAdapter.submitPeers(it) }
+
+      initiatePeerDiscovery()
+    }
   }
 
   override fun onResume() {

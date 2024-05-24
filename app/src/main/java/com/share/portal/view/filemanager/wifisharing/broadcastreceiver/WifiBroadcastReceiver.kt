@@ -52,7 +52,7 @@ class WifiBroadcastReceiver(
     wifiState = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
     when (wifiState) {
       WifiP2pManager.WIFI_P2P_STATE_ENABLED -> {
-        discoverPeers()
+        initiatePeerDiscovery()
         Log.d("WIFIGEMINK", "WIFI_P2P_STATE_ENABLED ")
       }
       else -> {
@@ -63,7 +63,7 @@ class WifiBroadcastReceiver(
 
   private fun getPeerList() = p2pManager.requestPeers(channel, peerListListener)
 
-  fun discoverPeers() = p2pManager.discoverPeers(channel, onPeerDiscoveredListener)
+  fun initiatePeerDiscovery() = p2pManager.discoverPeers(channel, onPeerDiscoveredListener)
 
   fun requestConnection(peer: WifiP2pDevice) {
     val config = WifiP2pConfig()
