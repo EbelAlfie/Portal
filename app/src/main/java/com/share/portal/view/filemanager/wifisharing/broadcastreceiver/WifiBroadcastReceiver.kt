@@ -43,6 +43,10 @@ class WifiBroadcastReceiver(
   @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
   fun openPortal() = portalServiceManager.openPortal()
 
+  fun requestConnection(peer: WifiP2pDevice) {
+
+  }
+
   override fun onReceive(context: Context, intent: Intent) {
     val action: String = intent.action ?: return
     when (action) {
@@ -72,10 +76,6 @@ class WifiBroadcastReceiver(
   }
 
   private fun getPeerList() {}
-
-  fun requestConnection(peer: WifiP2pDevice) {
-
-  }
 
   private fun requestConnectionInfo() {} //= p2pManager.requestConnectionInfo(channel, connectionInfoListener)
 

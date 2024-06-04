@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.databinding.FragmentFileSharingBinding
-import com.share.portal.view.filemanager.MainActivity
 import com.share.portal.view.filemanager.WifiPerantara
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerConnectionListener
@@ -38,7 +37,7 @@ class FileSharingFragment : ProgenitorFragment<FragmentFileSharingBinding>() {
     setupPeerAdapter()
     binding.apply {
       btnRefresh.setOnClickListener {
-        (requireActivity() as MainActivity).getP2pService().initiatePeerDiscovery()
+        getWifiPerantara().getP2pService().initiatePeerDiscovery()
       }
       rvPeers.layoutManager =
         LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)

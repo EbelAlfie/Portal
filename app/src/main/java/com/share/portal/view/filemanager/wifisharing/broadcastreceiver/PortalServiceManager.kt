@@ -32,21 +32,7 @@ class PortalServiceManager(
     // and listener that will be used to indicate success or failure of
     // the request.
 
-    wifiP2pManager.addLocalService(channel, serviceInfo, object : WifiP2pManager.ActionListener {
-      override fun onSuccess() {
-        // Command successful! Code isn't necessarily needed here,
-        // Unless you want to update the UI or add logging statements.
-      }
-
-      override fun onFailure(reason: Int) {
-        Log.d("Failure reason", reason.toString())
-        when (reason) {
-          WifiP2pManager.BUSY -> {}
-          WifiP2pManager.ERROR -> {}
-          WifiP2pManager.P2P_UNSUPPORTED -> {}
-        }
-      }
-    })
+    wifiP2pManager.addLocalService(channel, serviceInfo, null) // TODO add listener
   }
 
   @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
