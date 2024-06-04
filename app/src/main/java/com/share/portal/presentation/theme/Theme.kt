@@ -1,4 +1,4 @@
-package com.share.portal.ui.theme
+package com.share.portal.presentation.theme
 
 import android.app.Activity
 import android.os.Build

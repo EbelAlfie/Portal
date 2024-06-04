@@ -1,4 +1,4 @@
-package com.share.portal.ui.theme
+package com.share.portal.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
