@@ -1,10 +1,12 @@
-package com.share.portal.presentation.theme
+package com.share.portal.presentation.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.share.portal.R
 
 // Set of Material typography styles to start with
 val Typography = Typography(
