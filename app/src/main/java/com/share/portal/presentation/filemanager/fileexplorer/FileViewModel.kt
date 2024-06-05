@@ -7,11 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.models.FileParam
 import com.share.portal.domain.models.FileTreeEntity
+import com.share.portal.presentation.filemanager.fileexplorer.model.FileData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 class FileViewModel @Inject constructor(
@@ -25,7 +27,8 @@ class FileViewModel @Inject constructor(
   private val _errorFile = MutableStateFlow<Exception?>(null)
   val errorFile: StateFlow<Exception?> = _errorFile
 
-  private val fileTraverseStack = MutableStateFlow<List<FileTreeEntity>>(listOf())
+  private val fileTraverseStack =
+    MutableStateFlow<MutableList<FileTreeEntity>>(mutableListOf())
 
   val canGoBack by derivedStateOf { fileTraverseStack.value.size > 1 }
 
@@ -49,5 +52,11 @@ class FileViewModel @Inject constructor(
   }
 
   fun goBack() { //pop
+  }
+
+  fun traverseFile(fileItem: FileData) {
+//    fileTraverseStack.value.add(
+//      File
+//    )
   }
 }
