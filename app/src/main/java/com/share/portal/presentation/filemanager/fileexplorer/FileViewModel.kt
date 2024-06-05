@@ -1,5 +1,7 @@
 package com.share.portal.presentation.filemanager.fileexplorer
 
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.FileUseCaseImpl
@@ -18,10 +20,14 @@ class FileViewModel @Inject constructor(
   private var rootPath: String = FileParam.EXTERNAL.pathName
 
   private val _fileData = MutableStateFlow<FileTreeEntity?>(null)
-  val fileData: StateFlow<FileTreeEntity?> = _fileData
+  val fileData: StateFlow<FileTreeEntity?> = _fileData //Stack of parent file
 
   private val _errorFile = MutableStateFlow<Exception?>(null)
   val errorFile: StateFlow<Exception?> = _errorFile
+
+  private val fileTraverseStack = MutableStateFlow<List<FileTreeEntity>>(listOf())
+
+  val canGoBack by derivedStateOf { fileTraverseStack.value.size > 1 }
 
   init {
     getAllFiles()
@@ -42,7 +48,6 @@ class FileViewModel @Inject constructor(
     }
   }
 
-  fun canGoBack() {}
-
-  fun goBack() {}
+  fun goBack() { //pop
+  }
 }
