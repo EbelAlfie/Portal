@@ -31,7 +31,7 @@ class PeerFinderPage : PageFactory {
   }
 
   @Composable
-  override fun PagerContent() {
+  override fun PageContent() {
     PeersScreen()
   }
 }

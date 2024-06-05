@@ -19,26 +19,34 @@ enum class Page(val index: Int) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PagerScreen() {
+fun PagerScreen(
+  pageFactory: List<PageFactory>
+) {
   val pagerState = rememberPagerState { Page.entries.size }
   Scaffold(
     modifier = Modifier,
     topBar = {
-      PortalBlueHeader()
+      PortalBlueHeader() {
+        pageFactory.forEach {
+          it.TabIcon(isSelected = it.pageId.index == pagerState.currentPage)
+        }
+      }
     }
   ) { contentPadding ->
     HorizontalPager(
       modifier = Modifier.padding(contentPadding),
       state = pagerState
     ) {
-
+      pageFactory.forEach {
+        it.PageContent()
+      }
     }
   }
 }
 
 
 @Composable
-fun PagerContent(page: Page) {
+fun PageContent(page: Page) {
   when (page) {
     FileExplorer -> FileExploreScreen()
     FileSharing -> PeersScreen()
@@ -56,6 +64,6 @@ interface PageFactory {
   fun TabIcon(isSelected: Boolean)
 
   @Composable
-  fun PagerContent()
+  fun PageContent()
 
 }

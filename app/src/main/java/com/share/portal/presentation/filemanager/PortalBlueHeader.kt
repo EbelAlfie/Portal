@@ -2,6 +2,7 @@ package com.share.portal.presentation.filemanager
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,12 +15,16 @@ import com.share.portal.R.string
 
 @Preview
 @Composable
-fun PortalBlueHeader(modifier: Modifier = Modifier) {
+fun PortalBlueHeader(
+  modifier: Modifier = Modifier,
+  trailingContent: @Composable RowScope.() -> Unit = {}
+) {
   Row(
     modifier = modifier
       .fillMaxWidth()
   ) {
     AppLabel()
+    trailingContent()
   }
 }
 

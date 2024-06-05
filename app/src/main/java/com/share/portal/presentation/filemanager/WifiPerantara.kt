@@ -1,7 +1,7 @@
 package com.share.portal.presentation.filemanager
 
 import android.content.IntentFilter
-import com.share.portal.view.filemanager.wifisharing.broadcastreceiver.WifiBroadcastReceiver
+import com.share.portal.presentation.filemanager.wifisharing.broadcastreceiver.WifiBroadcastReceiver
 
 interface WifiPerantara {
   val wifiIntentFilter: IntentFilter

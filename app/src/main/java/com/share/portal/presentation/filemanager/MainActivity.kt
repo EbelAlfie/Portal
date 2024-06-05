@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import com.share.portal.presentation.filemanager.fileexplorer.FileExplorerPage
+import com.share.portal.presentation.filemanager.wifisharing.PeerFinderPage
 import com.share.portal.presentation.filemanager.wifisharing.broadcastreceiver.WifiBroadcastReceiver
 import com.share.portal.presentation.ui.theme.Portal_BlueTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +40,9 @@ class MainActivity : ComponentActivity(), WifiPerantara {
     super.onCreate(savedInstanceState)
     setContent {
       Portal_BlueTheme {
-        PagerScreen()
+        PagerScreen(
+          pageFactory = listOf(FileExplorerPage(), PeerFinderPage())
+        )
       }
     }
   }

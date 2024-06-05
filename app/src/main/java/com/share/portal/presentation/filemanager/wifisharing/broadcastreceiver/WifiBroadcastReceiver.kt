@@ -8,7 +8,6 @@ import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
 import android.util.Log
 import androidx.annotation.RequiresPermission
-import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerConnectionListener
 
 class WifiBroadcastReceiver(
   private val p2pManager: WifiP2pManager,
@@ -21,7 +20,7 @@ class WifiBroadcastReceiver(
   private var wifiState: Int = WifiP2pManager.WIFI_P2P_STATE_DISABLED
 
   private var onPeerDiscoveredListener: WifiP2pManager.ActionListener? = null
-  private var peerConnectionListener: PeerConnectionListener? = null
+  //private var peerConnectionListener: PeerConnectionListener? = null
   private var peerListListener: WifiP2pManager.PeerListListener? = null
   private var connectionInfoListener: WifiP2pManager.ConnectionInfoListener? = null
 
@@ -29,9 +28,9 @@ class WifiBroadcastReceiver(
     connectionInfoListener = listener
   }
 
-  fun setPeerConnectionListener(listener: PeerConnectionListener) {
-    peerConnectionListener = listener
-  }
+//  fun setPeerConnectionListener(listener: PeerConnectionListener) {
+//    peerConnectionListener = listener
+//  }
 
   fun setPeerListener(listener: WifiP2pManager.PeerListListener) {
     peerListListener = listener

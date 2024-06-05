@@ -41,4 +41,8 @@ class FileViewModel @Inject constructor(
       }
     }
   }
+
+  fun canGoBack() {}
+
+  fun goBack() {}
 }
