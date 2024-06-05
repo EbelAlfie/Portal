@@ -2,6 +2,7 @@ package com.share.portal.view.filemanager.wifisharing.broadcastreceiver
 
 import android.Manifest.permission
 import android.net.wifi.p2p.WifiP2pManager
+import android.net.wifi.p2p.WifiP2pManager.ActionListener
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
 import android.util.Log
@@ -32,27 +33,31 @@ class PortalServiceManager(
     // and listener that will be used to indicate success or failure of
     // the request.
 
-    wifiP2pManager.addLocalService(channel, serviceInfo, null) // TODO add listener
+    wifiP2pManager.addLocalService(channel, serviceInfo, object: ActionListener {
+      override fun onSuccess() {
+        Log.d("Portal: add local service", "onSuccess: ")
+      }
+
+      override fun onFailure(reason: Int) {
+        Log.d("Portal: add local service", "Failed: $reason")
+      }
+
+    }) // TODO add listener
   }
 
+  val txtListener = WifiP2pManager.DnsSdTxtRecordListener { fullDomain, record, device ->
+    Log.d("DnsSdTxtRecord", "DnsSdTxtRecord available -$record")
+  }
+
+  val servListener = WifiP2pManager.DnsSdServiceResponseListener { instanceName, registrationType, resourceType ->
+    Log.d("DnsSdTxtRecord 2", "DnsSdTxtRecord available -$instanceName")
+  }
+  val serviceRequest = WifiP2pDnsSdServiceRequest.newInstance()
+
   @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
-  private fun discoverService() {
-    /* Callback includes:
-     * fullDomain: full domain name: e.g. "printer._ipp._tcp.local."
-     * record: TXT record dta as a map of key/value pairs.
-     * device: The device running the advertised service.
-     */
-
-    val txtListener = WifiP2pManager.DnsSdTxtRecordListener { fullDomain, record, device ->
-      Log.d("DnsSdTxtRecord", "DnsSdTxtRecord available -$record")
-    }
-
-    val servListener = WifiP2pManager.DnsSdServiceResponseListener { instanceName, registrationType, resourceType ->
-
-    }
+  fun discoverService(peerDiscoverListener: WifiP2pManager.ActionListener? = null) {
     wifiP2pManager.setDnsSdResponseListeners(channel, servListener, txtListener)
 
-    val serviceRequest = WifiP2pDnsSdServiceRequest.newInstance()
     wifiP2pManager.addServiceRequest(
       channel,
       serviceRequest,
@@ -69,20 +74,7 @@ class PortalServiceManager(
 
     wifiP2pManager.discoverServices(
       channel,
-      object : WifiP2pManager.ActionListener {
-        override fun onSuccess() {
-          // Success!
-        }
-
-        override fun onFailure(code: Int) {
-          // Command failed. Check for P2P_UNSUPPORTED, ERROR, or BUSY
-          when (code) {
-            WifiP2pManager.P2P_UNSUPPORTED -> {
-              Log.d("Error", "Wi-Fi Direct isn't supported on this device.")
-            }
-          }
-        }
-      }
+      peerDiscoverListener
     )
   }
 

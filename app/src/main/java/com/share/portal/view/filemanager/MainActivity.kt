@@ -3,6 +3,7 @@ package com.share.portal.view.filemanager
 import android.Manifest
 import android.content.IntentFilter
 import android.net.wifi.p2p.WifiP2pManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
@@ -168,6 +169,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
 
   override fun registerWifi() {
     registerReceiver(wifiBroadcastReceiver, wifiIntentFilter)
+    Log.d("Portal: discoversself", "registerWifi: ")
     wifiBroadcastReceiver.openPortal()
   }
 

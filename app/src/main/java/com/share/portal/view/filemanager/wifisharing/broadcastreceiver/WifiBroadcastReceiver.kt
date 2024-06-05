@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
+import android.net.wifi.p2p.WifiP2pManager.ActionListener
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.share.portal.view.filemanager.wifisharing.adapter.PeerAdapter.PeerConnectionListener
@@ -37,8 +38,12 @@ class WifiBroadcastReceiver(
     peerListListener = listener
   }
 
+  fun setOnPeerDiscoveredListener(listener: ActionListener) {
+    onPeerDiscoveredListener = listener
+  }
+
   @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
-  fun initiatePeerDiscovery() = p2pManager.discoverServices(channel, onPeerDiscoveredListener)
+  fun initiatePeerDiscovery() = portalServiceManager.discoverService(onPeerDiscoveredListener)
 
   @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
   fun openPortal() = portalServiceManager.openPortal()
