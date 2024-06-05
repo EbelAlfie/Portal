@@ -54,10 +54,7 @@ class MainActivity : PermissionActivity<ActivityMainBinding>(), WifiPerantara {
 
   /** Permission exclusives **/
   override fun getPermissions(): List<String> =
-    listOf(
-      Manifest.permission.WRITE_EXTERNAL_STORAGE,
-      Manifest.permission.READ_EXTERNAL_STORAGE,
-    ) + PermissionUtils.getWifiSharingPermission()
+     PermissionUtils.getStoragePermission() + PermissionUtils.getWifiSharingPermission()
 
   override fun onPermissionGranted() = setupActivity()
 
