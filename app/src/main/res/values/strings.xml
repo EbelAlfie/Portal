@@ -1,3 +1,12 @@
 <resources>
-  <string name="app_name">Portal_Blue</string>
+    <string name="app_name">Portal app</string>
+    <string name="portal_label">Portal</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_string">Portal app</string>
+    <string name="test_now">Test now</string>
+
+    <string name="warning.general.title">Oops!</string>
+    <string name="warning.general.content">Some permission are needed to be able to use wifi sharing on this device</string>
+    <string name="warning.wifi_sharing.title">Oops!</string>
+    <string name="warning.wifi_sharing.content">Some actions are not granted by the user</string>
 </resources>

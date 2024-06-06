@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.share.portal.R
 import com.share.portal.domain.models.ParentFile
@@ -31,13 +30,13 @@ class FileExplorerPage : PageFactory {
   override val pageId: Page = Page.FileExplorer
 
   @Composable
-  override fun TabIcon(isSelected: Boolean) {
-    val modifier = if (isSelected) Modifier
+  override fun TabIcon(modifier: Modifier, isSelected: Boolean) {
+    val textModifier = if (isSelected) Modifier
       .background(GreyAlpha, CircleShape)
       .padding(5.dp)
-    else Modifier
+    else modifier
     Icon(
-      modifier = modifier,
+      modifier = textModifier,
       painter = painterResource(id = R.drawable.ic_folder),
       contentDescription = null
     )

@@ -18,13 +18,13 @@ class PeerFinderPage : PageFactory {
   override val pageId: Page = Page.FileSharing
 
   @Composable
-  override fun TabIcon(isSelected: Boolean) {
-    val modifier = if (isSelected) Modifier
+  override fun TabIcon(modifier: Modifier, isSelected: Boolean) {
+    val textModifier = if (isSelected) Modifier
       .background(GreyAlpha, CircleShape)
       .padding(5.dp)
-    else Modifier
+    else modifier
     Icon(
-      modifier = modifier,
+      modifier = textModifier,
       painter = painterResource(id = drawable.ic_file_sharing),
       contentDescription = null
     )
