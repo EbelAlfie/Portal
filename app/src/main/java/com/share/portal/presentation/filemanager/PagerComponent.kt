@@ -1,13 +1,12 @@
 package com.share.portal.presentation.filemanager
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -29,60 +28,35 @@ fun PagerScreen(
     modifier = Modifier,
     topBar = {
       PortalBlueHeader {
-        TabRow(selectedTabIndex = pagerState.currentPage) {
-          pageFactory.forEach {
-            it.TabIcon(
-              modifier = Modifier.padding(5.dp),
-              isSelected = it.pageId.index == pagerState.currentPage
-            )
-          }
+        val coroutineScope = rememberCoroutineScope()
+        pageFactory.forEachIndexed { index, page ->
+          page.TabIcon(
+            modifier = Modifier
+              .padding(5.dp)
+              .clickable {
+                coroutineScope.launch {
+                  pagerState.animateScrollToPage(index)
+                }
+              },
+            isSelected = page.pageId.index == pagerState.currentPage
+          )
         }
+
       }
     }
   ) { contentPadding ->
-    val coroutineScope = rememberCoroutineScope()
-    Tab(
+    HorizontalPager(
       modifier = Modifier
         .padding(contentPadding)
         .fillMaxSize(),
-      selected = pagerState.currentPage == index,
-      onClick = {
-        coroutineScope.launch {
-          pagerState.animateScrollToPage(index)
-        }
-      }
+      state = pagerState
     ) {
-      HorizontalPager(
-        modifier = Modifier
-          .padding(contentPadding)
-          .fillMaxSize(),
-        state = pagerState
-      ) {
-        pageFactory.forEach {
-          it.PageContent()
-        }
+      pageFactory.forEach {
+        it.PageContent()
       }
     }
   }
-
-//  BottomSheetContainer(data = ) {
-//    BottomSheetErrorContent(sheetData = it) {
-//      it.onDismissRequest?.invoke()
-//    }
-//  }
 }
-
-
-//@Composable
-//fun PageContent(page: Page) {
-//  when (page) {
-//    FileExplorer -> FileExploreScreen()
-//    FileSharing -> PeersScreen()
-//  }
-//}
-
-@Composable
-fun TabIcons() {}
 
 interface PageFactory {
 

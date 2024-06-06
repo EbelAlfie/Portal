@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,14 +41,18 @@ fun PortalBlueHeader(
 
 @Composable
 fun AppLabel(modifier: Modifier = Modifier) {
-  Row(modifier) {
+  Row(
+    modifier = modifier,
+    verticalAlignment = Alignment.CenterVertically
+  ) {
     Image(
-      modifier = Modifier,
-      painter = painterResource(id = R.drawable.ic_folder),
+      modifier = Modifier.clip(CircleShape),
+      painter = painterResource(id = R.mipmap.ic_launcher),
       contentDescription = null
     )
     Text(
-      text = stringResource(id = string.portal_label)
+      text = stringResource(id = string.portal_label),
+      color = Color.White
     )
   }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -18,12 +19,29 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.share.portal.R
+import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.domain.models.ParentFile
 import com.share.portal.presentation.filemanager.Page
 import com.share.portal.presentation.filemanager.PageFactory
 import com.share.portal.presentation.filemanager.fileexplorer.model.FileData
 import com.share.portal.presentation.ui.theme.GreyAlpha
+
+sealed interface FileUiState {
+  object Loading: FileUiState
+
+  data class Loaded(
+    val file: MutableList<FileTreeEntity>
+  ): FileUiState
+
+  object Empty: FileUiState
+
+  object Selection: FileUiState
+
+  object Traversal: FileUiState
+
+}
 
 class FileExplorerPage : PageFactory {
 
@@ -44,13 +62,13 @@ class FileExplorerPage : PageFactory {
 
   @Composable
   override fun PageContent() {
-    //FileExploreScreen()
+    FileExploreScreen()
   }
 }
 
 @Composable
 fun FileExploreScreen(
-  fileViewModel: FileViewModel
+  fileViewModel: FileViewModel = hiltViewModel()
 ) {
   BackHandler (fileViewModel.canGoBack, fileViewModel::goBack)
   Column(
@@ -70,7 +88,9 @@ fun ParentFileContent() {
 
 @Composable
 fun FileScreen() {
+  LazyColumn {
 
+  }
 }
 
 @Composable
