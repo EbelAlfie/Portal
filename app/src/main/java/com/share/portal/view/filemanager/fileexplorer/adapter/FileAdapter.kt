@@ -9,7 +9,6 @@ import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.fileexplorer.model.FileData
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
-import com.share.portal.view.filemanager.fileexplorer.model.FileOperationState
 import java.io.File
 
 class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {

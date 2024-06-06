@@ -3,13 +3,13 @@ package com.share.portal.view.filemanager.fileexplorer
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
-import com.share.portal.view.filemanager.fileexplorer.model.FileOperationState
+import com.share.portal.view.filemanager.fileexplorer.model.FileState
 import java.io.File
 import javax.inject.Inject
 
 @Deprecated("Pindah ke viewmodel")
 class FileProcessor @Inject constructor() {
-  private var fileState: FileOperationState = FileOperationState.STATE_EXPLORATION
+  private var fileState: FileState = FileState.Exploration
 
   private val fileBuffer: MutableList<String> = mutableListOf()
   private lateinit var fileAdapter: FileAdapter
@@ -25,7 +25,7 @@ class FileProcessor @Inject constructor() {
       override fun onFileClicked(filePath: String, extension: FileExtension) {
         super.onFileClicked(filePath, extension)
         when (fileState) {
-          FileOperationState.STATE_EXPLORATION -> {}
+          FileState.Exploration -> {}
           else -> {}
         }
       }
@@ -40,22 +40,21 @@ class FileProcessor @Inject constructor() {
   /** Update global state **/
   fun updateFileState() {
     fileState = when (fileState) {
-      FileOperationState.STATE_EXPLORATION -> FileOperationState.STATE_SELECTION
-      else -> FileOperationState.STATE_EXPLORATION
+      FileState.Exploration -> FileState.Selection
+      else -> FileState.Exploration
     }
   }
 
   /** file operations **/
   fun traverseFile(filePath: String) {
     viewModel.apply {
-      setRootPath(filePath)
-      getAllFiles()
+      getAllFiles(filePath)
     }
   }
 
   fun onBackPressed(callback: () -> Unit) {
-    if (fileState == FileOperationState.STATE_SELECTION) {
-      fileState = FileOperationState.STATE_EXPLORATION
+    if (fileState == FileState.Selection) {
+      fileState = FileState.Exploration
     } else
       callback.invoke()
   }
