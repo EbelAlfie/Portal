@@ -9,6 +9,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,11 +19,8 @@ class FileViewModel @Inject constructor(
 ): ViewModel() {
   private var rootPath: String = FileParam.EXTERNAL.pathName
 
-  private val _fileData = MutableStateFlow<FileTreeEntity?>(null)
-  val fileData: StateFlow<FileTreeEntity?> = _fileData
-
-  private val _errorFile = MutableStateFlow<Exception?>(null)
-  val errorFile: StateFlow<Exception?> = _errorFile
+  private val _fileUiState = MutableStateFlow<FileUiState>(FileUiState.Loading)
+  val fileUiState: StateFlow<FileUiState> = _fileUiState.asStateFlow()
 
   init {
     getAllFiles()
@@ -35,10 +34,28 @@ class FileViewModel @Inject constructor(
     viewModelScope.launch {
       try {
         val data = fileUseCase.getAllExternalFiles(rootPath)
-        _fileData.value = data
+        _fileUiState.update { oldState ->
+          if (oldState is FileUiState.Loaded) {
+            oldState.files.add
+          } else {
+            FileUiState.Loaded(
+              files = data
+            )
+          }
+        }
       } catch (error: Exception) {
-        _errorFile.value = error
+        _fileUiState.value = FileUiState.Error(
+          cause = error
+        )
       }
     }
+  }
+
+  fun canGoBack(): Boolean {
+    return true
+  }
+
+  fun goBack() {
+
   }
 }

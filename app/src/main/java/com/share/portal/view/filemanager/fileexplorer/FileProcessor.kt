@@ -7,6 +7,7 @@ import com.share.portal.view.filemanager.fileexplorer.model.FileOperationState
 import java.io.File
 import javax.inject.Inject
 
+@Deprecated("Pindah ke viewmodel")
 class FileProcessor @Inject constructor() {
   private var fileState: FileOperationState = FileOperationState.STATE_EXPLORATION
 

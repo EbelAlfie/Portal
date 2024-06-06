@@ -17,8 +17,8 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
   @Inject
   lateinit var viewModel: FileViewModel
 
-  @Inject
-  lateinit var fileProcessor: FileProcessor
+//  @Inject
+//  lateinit var fileProcessor: FileProcessor
 
   private val fileAdapter: FileAdapter by lazy { FileAdapter() }
   private val parentAdapter: ParentAdapter by lazy { ParentAdapter() }
@@ -28,38 +28,33 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
 
   override fun initFragment() {
     fragmentComponent.inject(this)
-    fileProcessor.init(fileAdapter, viewModel)
     registerObservers()
     setupView()
   }
 
   override fun onBackPressed() {
-    fileProcessor.onBackPressed {
-      val currentRoot = parentAdapter.getCurrentNode().substringBeforeLast("/")
-      if (currentRoot.isNotBlank()) fileProcessor.traverseFile(currentRoot)
-      else requireActivity().finish()
-    }
+    if (viewModel.canGoBack()) viewModel.goBack()
+    else requireActivity().finish()
   }
 
   private fun registerObservers() {
     lifecycleScope.launch {
-      viewModel.fileData.collectLatest {
-        if (it == null) return@collectLatest
-        loadData(it)
-      }
+      viewModel.fileUiState.collectLatest { updateUiState(it) }
     }
-    lifecycleScope.launch {
-      viewModel.errorFile.collectLatest {
-        if (it == null) return@collectLatest
-        showErrorDialog(it)
-      }
+  }
+
+  fun updateUiState(uiState: FileUiState) {
+    when (uiState) {
+      is FileUiState.Loading ->
+        {}
+      is FileUiState.Loaded ->
+        loadData(uiState.files)
+      is FileUiState.Error ->
+        showErrorDialog(uiState.cause)
     }
   }
 
   private fun setupView() {
-    fileProcessor.setAdapterListener()
-    parentAdapter.setListener(fileProcessor::traverseFile)
-
     binding.run {
       rvFiles.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
       rvFiles.adapter = fileAdapter
@@ -74,7 +69,7 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
     fileAdapter.updateList(data)
   }
 
-  private fun showErrorDialog(throwable: Throwable) {
-    showToast(throwable.message)
+  private fun showErrorDialog(throwable: Throwable?) {
+    showToast(throwable?.message)
   }
 }
