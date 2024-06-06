@@ -7,9 +7,11 @@ import com.share.portal.databinding.FragmentFileExplorerBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
 import com.share.portal.view.filemanager.fileexplorer.adapter.ParentAdapter
+import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
 import com.share.portal.view.general.ProgenitorFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
@@ -47,21 +49,45 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
     when (uiState) {
       is FileUiState.Loading ->
         {}
-      is FileUiState.Loaded ->
-        loadData(uiState.files)
+      is FileUiState.FileExplore ->
+        loadData(uiState.allFiles.last())
       is FileUiState.Error ->
         showErrorDialog(uiState.cause)
+      is FileUiState.FileSelect ->
+        {}
     }
   }
 
   private fun setupView() {
     binding.run {
-      rvFiles.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-      rvFiles.adapter = fileAdapter
-
+      setupRootAdapter()
       rvParent.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
       rvParent.adapter = parentAdapter
+
+      setupFileAdapter()
+      rvFiles.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+      rvFiles.adapter = fileAdapter
     }
+  }
+
+  private fun setupRootAdapter() {
+    parentAdapter
+  }
+
+  private fun setupFileAdapter() {
+    fileAdapter.setFileListener(
+      object: FileAdapter.FileListener() {
+        override fun onFileClicked(filePath: String, extension: FileExtension) {
+          super.onFileClicked(filePath, extension)
+          viewModel.onFileClicked(filePath)
+        }
+
+        override fun onFileHold(file: File) {
+          super.onFileHold(file)
+          viewModel.onLongHold(file)
+        }
+      }
+    )
   }
 
   private fun loadData(data: FileTreeEntity) {

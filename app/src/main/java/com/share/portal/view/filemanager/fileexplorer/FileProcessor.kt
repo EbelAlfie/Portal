@@ -48,7 +48,7 @@ class FileProcessor @Inject constructor() {
   /** file operations **/
   fun traverseFile(filePath: String) {
     viewModel.apply {
-      getAllFiles(filePath)
+      getAllChildrenFiles(filePath)
     }
   }
 

@@ -38,7 +38,9 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
     holder.bindData(diffUtil.currentList[position], mListener)
 
   abstract class FileListener {
-    open fun onFileClicked(filePath: String, extension: FileExtension) {}
+    open fun onFileClicked(filePath: String, extension: FileExtension) {
+      if (extension == FileExtension.FOLDER) return
+    }
     open fun onFileHold(file: File) {}
   }
 
