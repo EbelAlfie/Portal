@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
+class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
 
   @Inject
   lateinit var viewModel: FileViewModel
@@ -46,39 +46,39 @@ class FileExploreFragment: ProgenitorFragment<FragmentFileExplorerBinding>() {
 
   fun updateUiState(uiState: FileUiState) {
     when (uiState) {
-      is FileUiState.Loading ->
-        {}
+      is FileUiState.Loading -> {} //Display loading screen
       is FileUiState.FileExplore ->
         loadData(uiState.allFiles.last())
+
       is FileUiState.Error ->
         showErrorDialog(uiState.cause)
-      is FileUiState.FileSelect ->
-        {} //notify adapter
+
+      is FileUiState.FileSelect -> {} //notify adapter
     }
   }
 
   private fun setupView() {
     binding.run {
-      setupRootAdapter()
-      rvParent.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+      rvParent.layoutManager =
+        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
       rvParent.adapter = parentAdapter
 
       setupFileAdapter()
-      rvFiles.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+      rvFiles.layoutManager =
+        LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
       rvFiles.adapter = fileAdapter
     }
   }
 
-  private fun setupRootAdapter() {
-    parentAdapter
-  }
-
   private fun setupFileAdapter() {
     fileAdapter.setFileListener(
-      object: FileAdapter.FileListener() {
+      object : FileAdapter.FileListener() {
         override fun onFileClicked(filePath: String, position: Int, extension: FileExtension) {
           super.onFileClicked(filePath, position, extension)
-          viewModel.onFileClicked(filePath)
+          if (viewModel.fileUiState.value is FileUiState.FileExplore)
+            viewModel.onFileClicked(filePath)
+          else
+            viewModel.selectFile(position)
         }
 
         override fun onFileHold(filePosition: Int) {

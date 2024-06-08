@@ -58,7 +58,7 @@ class FileViewModel @Inject constructor(
       }
       if (oldState is FileUiState.FileSelect) {
         FileUiState.FileExplore(
-          oldState.selectedFile
+          allFiles = oldState.allFiles
         )
       }
       oldState
@@ -68,22 +68,14 @@ class FileViewModel @Inject constructor(
   fun onFileClicked(filePath: String) {
     if (_fileUiState.value is FileUiState.FileExplore)
       getAllChildrenFiles(rootFile = filePath)
-    if (_fileUiState.value is FileUiState.FileSelect)
-      _fileUiState.update { state ->
-        if (state is FileUiState.FileExplore) {
-          FileUiState.FileSelect(
-            selectedFile = state.allFiles
-          )
-        } else
-          state //salah
-      }
   }
 
   fun switchOperationMode(filePosition: Int) {
     _fileUiState.update { oldState ->
       if (oldState is FileUiState.FileExplore) {
         FileUiState.FileSelect(
-
+          allFiles = oldState.allFiles,
+          selectedFile = mutableListOf(oldState.allFiles.last().child[filePosition])
         )
       } else
         oldState

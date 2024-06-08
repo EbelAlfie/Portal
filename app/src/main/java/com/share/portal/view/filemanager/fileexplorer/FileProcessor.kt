@@ -4,7 +4,6 @@ import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
 import com.share.portal.view.filemanager.fileexplorer.model.FileState
-import java.io.File
 import javax.inject.Inject
 
 @Deprecated("Pindah ke viewmodel")
@@ -22,16 +21,16 @@ class FileProcessor @Inject constructor() {
 
   fun setAdapterListener() {
     fileAdapter.setFileListener(object: FileListener() {
-      override fun onFileClicked(filePath: String, extension: FileExtension) {
-        super.onFileClicked(filePath, extension)
+      override fun onFileClicked(filePath: String, position: Int, extension: FileExtension) {
+        super.onFileClicked(filePath, position, extension)
         when (fileState) {
           FileState.Exploration -> {}
           else -> {}
         }
       }
 
-      override fun onFileHold(file: File) {
-        super.onFileHold(file)
+      override fun onFileHold(filePosition: Int) {
+        super.onFileHold(filePosition)
         updateFileState()
       }
     })
