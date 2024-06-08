@@ -9,7 +9,6 @@ import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.fileexplorer.model.FileData
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
-import java.io.File
 
 class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
   private var mListener: FileListener? = null
@@ -18,7 +17,7 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
     override fun areItemsTheSame(oldItem: FileData, newItem: FileData) =
       oldItem.hashCode() == newItem.hashCode()
     override fun areContentsTheSame(oldItem: FileData, newItem: FileData) =
-      oldItem.file.name == newItem.file.name
+      oldItem.fileName.name == newItem.fileName.name
   }
 
   private val diffUtil = AsyncListDiffer(this, diffCallback)
@@ -38,10 +37,10 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
     holder.bindData(diffUtil.currentList[position], mListener)
 
   abstract class FileListener {
-    open fun onFileClicked(filePath: String, extension: FileExtension) {
+    open fun onFileClicked(filePath: String, position: Int, extension: FileExtension) {
       if (extension == FileExtension.FOLDER) return
     }
-    open fun onFileHold(file: File) {}
+    open fun onFileHold(filePosition: Int) {}
   }
 
 }

@@ -1,6 +1,7 @@
 package com.share.portal.view.filemanager.fileexplorer
 
 import com.share.portal.domain.models.FileTreeEntity
+import java.io.File
 
 sealed interface FileUiState {
   object Loading: FileUiState
@@ -12,6 +13,7 @@ sealed interface FileUiState {
   data class Error(val cause: Throwable?): FileUiState
 
   data class FileSelect(
-    val selectedFile: MutableList<FileTreeEntity>
+    val allFiles: MutableList<FileTreeEntity>,
+    val selectedFile: MutableList<File>
   ): FileUiState
 }

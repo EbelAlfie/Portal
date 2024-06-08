@@ -9,12 +9,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.File
 import javax.inject.Inject
 
 class FileViewModel @Inject constructor(
   private val fileUseCase: FileUseCaseImpl
-): ViewModel() {
+) : ViewModel() {
 
   private val _fileUiState = MutableStateFlow<FileUiState>(FileUiState.Loading)
   val fileUiState: StateFlow<FileUiState> = _fileUiState.asStateFlow()
@@ -71,20 +70,31 @@ class FileViewModel @Inject constructor(
       getAllChildrenFiles(rootFile = filePath)
     if (_fileUiState.value is FileUiState.FileSelect)
       _fileUiState.update { state ->
-        (state as? FileUiState.FileExplore)?.let  {
+        if (state is FileUiState.FileExplore) {
           FileUiState.FileSelect(
-            selectedFile = it.allFiles
+            selectedFile = state.allFiles
           )
-        }
-        state
+        } else
+          state //salah
       }
   }
 
-  fun onLongHold(file: File) {
+  fun switchOperationMode(filePosition: Int) {
+    _fileUiState.update { oldState ->
+      if (oldState is FileUiState.FileExplore) {
+        FileUiState.FileSelect(
+
+        )
+      } else
+        oldState
+    }
+  }
+
+  fun selectFile(filePosition: Int) {
     _fileUiState.update { oldState ->
       (oldState as? FileUiState.FileSelect)?.let {
         val addedFile = it.selectedFile
-        addedFile.add(file)
+        addedFile.add(it.allFiles.last().child[filePosition])
         it.copy(
           selectedFile = addedFile
         )
