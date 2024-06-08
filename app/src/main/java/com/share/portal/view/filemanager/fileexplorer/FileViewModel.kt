@@ -75,7 +75,7 @@ class FileViewModel @Inject constructor(
       if (oldState is FileUiState.FileExplore) {
         FileUiState.FileSelect(
           allFiles = oldState.allFiles,
-          selectedFile = mutableListOf(oldState.allFiles.last().child[filePosition])
+          selectedIndices = mutableListOf(filePosition)
         )
       } else
         oldState
@@ -85,10 +85,10 @@ class FileViewModel @Inject constructor(
   fun selectFile(filePosition: Int) {
     _fileUiState.update { oldState ->
       (oldState as? FileUiState.FileSelect)?.let {
-        val addedFile = it.selectedFile
-        addedFile.add(it.allFiles.last().child[filePosition])
+        val selectedIndex = it.selectedIndices
+        selectedIndex.add(filePosition)
         it.copy(
-          selectedFile = addedFile
+          selectedIndices = selectedIndex
         )
       }
       oldState

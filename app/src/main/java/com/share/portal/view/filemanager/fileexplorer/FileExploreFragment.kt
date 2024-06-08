@@ -7,6 +7,7 @@ import com.share.portal.databinding.FragmentFileExplorerBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
 import com.share.portal.view.filemanager.fileexplorer.adapter.ParentAdapter
+import com.share.portal.view.filemanager.fileexplorer.model.FileData
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
 import com.share.portal.view.general.ProgenitorFragment
 import kotlinx.coroutines.flow.collectLatest
@@ -53,7 +54,8 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
       is FileUiState.Error ->
         showErrorDialog(uiState.cause)
 
-      is FileUiState.FileSelect -> {} //notify adapter
+      is FileUiState.FileSelect ->
+        fileAdapter.notifySelectedFile(uiState.selectedIndices)//notify adapter
     }
   }
 
@@ -73,19 +75,19 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
   private fun setupFileAdapter() {
     fileAdapter.setFileListener(
       object : FileAdapter.FileListener() {
-        override fun onFileClicked(filePath: String, position: Int, extension: FileExtension) {
-          super.onFileClicked(filePath, position, extension)
+        override fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
+          super.onFileClicked(filePath, filePosition, extension)
           if (viewModel.fileUiState.value is FileUiState.FileExplore)
             viewModel.onFileClicked(filePath)
-          else
-            viewModel.selectFile(position)
+          if (viewModel.fileUiState.value is FileUiState.FileSelect)
+            viewModel.selectFile(filePosition)
         }
 
         override fun onFileHold(filePosition: Int) {
           super.onFileHold(filePosition)
           if (viewModel.fileUiState.value is FileUiState.FileExplore)
             viewModel.switchOperationMode(filePosition)
-          else
+          if (viewModel.fileUiState.value is FileUiState.FileSelect)
             viewModel.selectFile(filePosition)
         }
       }
@@ -94,7 +96,7 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
 
   private fun loadData(data: FileTreeEntity) {
     parentAdapter.update(data.current)
-    fileAdapter.updateList(data)
+    fileAdapter.updateList(FileData.store(data))
   }
 
   private fun showErrorDialog(throwable: Throwable?) {

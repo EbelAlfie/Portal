@@ -17,7 +17,7 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
     override fun areItemsTheSame(oldItem: FileData, newItem: FileData) =
       oldItem.hashCode() == newItem.hashCode()
     override fun areContentsTheSame(oldItem: FileData, newItem: FileData) =
-      oldItem.fileName.name == newItem.fileName.name
+      oldItem.fileName == newItem.fileName
   }
 
   private val diffUtil = AsyncListDiffer(this, diffCallback)
@@ -26,7 +26,7 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
     mListener = listener
   }
 
-  fun updateList(items: FileTreeEntity) = diffUtil.submitList(FileData.store(items))
+  fun updateList(items: List<FileData>) = diffUtil.submitList(items)
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder =
     FileViewHolder(ItemFileBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -36,8 +36,17 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
   override fun onBindViewHolder(holder: FileViewHolder, position: Int) =
     holder.bindData(diffUtil.currentList[position], mListener)
 
+  fun notifySelectedFile(selectedIndices: MutableList<Int>) {
+    selectedIndices.forEach { selectedIndex ->
+      diffUtil.currentList[selectedIndex] = diffUtil.currentList[selectedIndex].copy(
+        isSelected = true
+      )
+      notifyItemChanged(selectedIndex)
+    }
+  }
+
   abstract class FileListener {
-    open fun onFileClicked(filePath: String, position: Int, extension: FileExtension) {
+    open fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
       if (extension == FileExtension.FOLDER) return
     }
     open fun onFileHold(filePosition: Int) {}

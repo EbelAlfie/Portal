@@ -21,8 +21,8 @@ class FileProcessor @Inject constructor() {
 
   fun setAdapterListener() {
     fileAdapter.setFileListener(object: FileListener() {
-      override fun onFileClicked(filePath: String, position: Int, extension: FileExtension) {
-        super.onFileClicked(filePath, position, extension)
+      override fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
+        super.onFileClicked(filePath, filePosition, extension)
         when (fileState) {
           FileState.Exploration -> {}
           else -> {}
