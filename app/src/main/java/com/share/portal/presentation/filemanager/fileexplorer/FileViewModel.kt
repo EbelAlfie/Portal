@@ -1,64 +1,108 @@
 package com.share.portal.presentation.filemanager.fileexplorer
 
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.models.FileParam
-import com.share.portal.domain.models.FileTreeEntity
-import com.share.portal.presentation.filemanager.fileexplorer.model.FileData
+import com.share.portal.view.filemanager.fileexplorer.FileUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 class FileViewModel @Inject constructor(
   private val fileUseCase: FileUseCaseImpl
-): ViewModel() {
-  private var rootPath: String = FileParam.EXTERNAL.pathName
+) : ViewModel() {
 
-  private val _fileData = MutableStateFlow<FileTreeEntity?>(null)
-  val fileData: StateFlow<FileTreeEntity?> = _fileData //Stack of parent file
-
-  private val _errorFile = MutableStateFlow<Exception?>(null)
-  val errorFile: StateFlow<Exception?> = _errorFile
-
-  private val _fileUiState =
-    MutableStateFlow<FileUiState>(FileUiState.Loading)
-  val fileUiState = _fileUiState.asStateFlow()
-
-  private val fileTraverseStack =
-    MutableStateFlow<MutableList<FileTreeEntity>>(mutableListOf())
-
-  val canGoBack by derivedStateOf { fileTraverseStack.value.size > 1 }
+  private val _fileUiState = MutableStateFlow<FileUiState>(FileUiState.Loading)
+  val fileUiState: StateFlow<FileUiState> = _fileUiState.asStateFlow()
 
   init {
-    getAllFiles()
+    getAllChildrenFiles()
   }
 
-  fun setRootPath(newRoot: String) {
-    rootPath = newRoot.ifBlank { FileParam.EXTERNAL.pathName }
-  }
-
-  fun getAllFiles() {
+  fun getAllChildrenFiles(rootFile: String = FileParam.EXTERNAL.pathName) {
+    val rootPath = rootFile.ifBlank { FileParam.EXTERNAL.pathName }
     viewModelScope.launch {
       try {
         val data = fileUseCase.getAllExternalFiles(rootPath)
-        _fileData.value = data
+        _fileUiState.update { oldState ->
+          if (oldState is FileUiState.FileExplore) {
+            oldState.allFiles.add(data)
+            oldState
+          } else {
+            FileUiState.FileExplore(
+              allFiles = mutableListOf(data)
+            )
+          }
+        }
       } catch (error: Exception) {
-        _errorFile.value = error
+        _fileUiState.value = FileUiState.Error(
+          cause = error
+        )
       }
     }
   }
 
-  fun goBack() { //pop
+  fun canGoBack(): Boolean {
+    return (_fileUiState.value as? FileUiState.FileExplore)?.let {
+      it.allFiles.size > 0
+    } ?: false
   }
 
-  fun traverseFile(fileItem: FileData) {
-//    fileTraverseStack.value.add(
-//      File
-//    )
+  fun goBack() {
+    _fileUiState.update { oldState ->
+      if (oldState is FileUiState.FileExplore) {
+        oldState.allFiles.removeLastOrNull()
+      }
+      if (oldState is FileUiState.FileSelect) {
+        FileUiState.FileExplore(
+          oldState.selectedFile
+        )
+      }
+      oldState
+    }
   }
+
+  fun onFileClicked(filePath: String) {
+    if (_fileUiState.value is FileUiState.FileExplore)
+      getAllChildrenFiles(rootFile = filePath)
+    if (_fileUiState.value is FileUiState.FileSelect)
+      _fileUiState.update { state ->
+        if (state is FileUiState.FileExplore) {
+          FileUiState.FileSelect(
+            selectedFile = state.allFiles
+          )
+        } else
+          state //salah
+      }
+  }
+
+  fun switchOperationMode(filePosition: Int) {
+    _fileUiState.update { oldState ->
+      if (oldState is FileUiState.FileExplore) {
+        FileUiState.FileSelect(
+
+        )
+      } else
+        oldState
+    }
+  }
+
+  fun selectFile(filePosition: Int) {
+    _fileUiState.update { oldState ->
+      (oldState as? FileUiState.FileSelect)?.let {
+        val addedFile = it.selectedFile
+        addedFile.add(it.allFiles.last().child[filePosition])
+        it.copy(
+          selectedFile = addedFile
+        )
+      }
+      oldState
+    }
+  }
+
 }
