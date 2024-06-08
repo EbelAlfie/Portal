@@ -54,7 +54,9 @@ class FileAdapter : RecyclerView.Adapter<FileViewHolder>() {
       if (filePosition == DiffResult.NO_POSITION) return
     }
 
-    open fun onFileHold(filePosition: Int) {}
+    open fun onFileHold(filePosition: Int) {
+      if (filePosition == DiffResult.NO_POSITION) return
+    }
   }
 
 }
