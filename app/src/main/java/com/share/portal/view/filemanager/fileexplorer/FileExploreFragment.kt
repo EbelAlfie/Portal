@@ -41,11 +41,11 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
 
   private fun registerObservers() {
     lifecycleScope.launch {
-      viewModel.fileUiState.collectLatest { updateUiState(it) }
+      viewModel.fileUiState.collect { updateUiState(it) }
     }
   }
 
-  fun updateUiState(uiState: FileUiState) {
+  private fun updateUiState(uiState: FileUiState) {
     when (uiState) {
       is FileUiState.Loading -> {} //Display loading screen
       is FileUiState.FileExplore ->

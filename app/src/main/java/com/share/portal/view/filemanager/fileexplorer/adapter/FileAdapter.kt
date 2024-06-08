@@ -10,19 +10,20 @@ import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.fileexplorer.model.FileData
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
 
-class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
+class FileAdapter : RecyclerView.Adapter<FileViewHolder>() {
   private var mListener: FileListener? = null
 
-  private val diffCallback = object: DiffUtil.ItemCallback<FileData>() {
+  private val diffCallback = object : DiffUtil.ItemCallback<FileData>() {
     override fun areItemsTheSame(oldItem: FileData, newItem: FileData) =
       oldItem.hashCode() == newItem.hashCode()
+
     override fun areContentsTheSame(oldItem: FileData, newItem: FileData) =
       oldItem.fileName == newItem.fileName
   }
 
   private val diffUtil = AsyncListDiffer(this, diffCallback)
 
-  fun setFileListener (listener: FileListener) {
+  fun setFileListener(listener: FileListener) {
     mListener = listener
   }
 
@@ -37,18 +38,21 @@ class FileAdapter: RecyclerView.Adapter<FileViewHolder>() {
     holder.bindData(diffUtil.currentList[position], mListener)
 
   fun notifySelectedFile(selectedIndices: MutableList<Int>) {
+    val newList = diffUtil.currentList.toMutableList()
     selectedIndices.forEach { selectedIndex ->
-      diffUtil.currentList[selectedIndex] = diffUtil.currentList[selectedIndex].copy(
+      newList[selectedIndex] = diffUtil.currentList[selectedIndex].copy(
         isSelected = true
       )
       notifyItemChanged(selectedIndex)
     }
+    diffUtil.submitList(newList)
   }
 
   abstract class FileListener {
     open fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
       if (extension == FileExtension.FOLDER) return
     }
+
     open fun onFileHold(filePosition: Int) {}
   }
 
