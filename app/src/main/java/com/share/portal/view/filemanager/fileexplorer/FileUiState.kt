@@ -6,7 +6,7 @@ sealed interface FileUiState {
   object Loading: FileUiState
 
   data class FileExplore(
-    val allFiles: MutableList<FileTreeEntity> //Linked list or stack?
+    val allFiles: List<FileTreeEntity> //Linked list or stack?
   ): FileUiState
 
   data class FileSelect(

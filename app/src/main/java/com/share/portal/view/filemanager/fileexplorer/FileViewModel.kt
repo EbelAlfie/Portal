@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.models.FileParam
+import com.share.portal.view.filemanager.fileexplorer.FileUiState.FileExplore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,8 +30,9 @@ class FileViewModel @Inject constructor(
         val data = fileUseCase.getAllExternalFiles(rootPath)
         _fileUiState.update { oldState ->
           if (oldState is FileUiState.FileExplore) {
-            oldState.allFiles.add(data)
-            oldState
+            oldState.copy(
+              allFiles = oldState.allFiles + data
+            )
           } else {
             FileUiState.FileExplore(
               allFiles = mutableListOf(data)
@@ -46,22 +48,30 @@ class FileViewModel @Inject constructor(
   }
 
   fun canGoBack(): Boolean {
-    return (_fileUiState.value as? FileUiState.FileExplore)?.let {
-      it.allFiles.size > 0
-    } ?: false
+    return when (_fileUiState.value) {
+      is FileUiState.FileExplore ->
+        (_fileUiState.value as FileExplore).allFiles.size > 1
+      is FileUiState.FileSelect -> true
+      else -> false
+    }
   }
 
   fun goBack() {
     _fileUiState.update { oldState ->
-      if (oldState is FileUiState.FileExplore) {
-        oldState.allFiles.removeLastOrNull()
+      when (oldState) {
+        is FileUiState.FileExplore -> {
+          val popedFile = oldState.allFiles.toMutableList()
+          popedFile.removeLastOrNull()
+          oldState.copy(
+            allFiles = popedFile
+          )
+        }
+        is FileUiState.FileSelect ->
+          FileUiState.FileExplore(
+            allFiles = oldState.allFiles
+          )
+        else -> oldState
       }
-      if (oldState is FileUiState.FileSelect) {
-        FileUiState.FileExplore(
-          allFiles = oldState.allFiles
-        )
-      }
-      oldState
     }
   }
 
@@ -74,7 +84,7 @@ class FileViewModel @Inject constructor(
     _fileUiState.update { oldState ->
       if (oldState is FileUiState.FileExplore) {
         FileUiState.FileSelect(
-          allFiles = oldState.allFiles,
+          allFiles = oldState.allFiles.toMutableList(),
           selectedIndices = mutableListOf(filePosition)
         )
       } else
@@ -84,14 +94,12 @@ class FileViewModel @Inject constructor(
 
   fun selectFile(filePosition: Int) {
     _fileUiState.update { oldState ->
-      (oldState as? FileUiState.FileSelect)?.let {
-        val selectedIndex = it.selectedIndices
-        selectedIndex.add(filePosition)
+      (oldState as FileUiState.FileSelect).let {
+        val selectedIndex = it.selectedIndices + filePosition
         it.copy(
-          selectedIndices = selectedIndex
+          selectedIndices = selectedIndex.toMutableList()
         )
       }
-      oldState
     }
   }
 

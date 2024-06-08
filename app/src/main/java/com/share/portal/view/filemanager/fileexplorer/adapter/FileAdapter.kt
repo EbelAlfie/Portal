@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DiffUtil.DiffResult
 import androidx.recyclerview.widget.RecyclerView
 import com.share.portal.databinding.ItemFileBinding
-import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.fileexplorer.model.FileData
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
 
@@ -18,7 +18,7 @@ class FileAdapter : RecyclerView.Adapter<FileViewHolder>() {
       oldItem.hashCode() == newItem.hashCode()
 
     override fun areContentsTheSame(oldItem: FileData, newItem: FileData) =
-      oldItem.fileName == newItem.fileName
+      oldItem.file.name == newItem.file.name
   }
 
   private val diffUtil = AsyncListDiffer(this, diffCallback)
@@ -51,6 +51,7 @@ class FileAdapter : RecyclerView.Adapter<FileViewHolder>() {
   abstract class FileListener {
     open fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
       if (extension == FileExtension.FOLDER) return
+      if (filePosition == DiffResult.NO_POSITION) return
     }
 
     open fun onFileHold(filePosition: Int) {}
