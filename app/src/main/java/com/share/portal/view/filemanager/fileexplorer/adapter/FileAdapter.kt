@@ -43,7 +43,6 @@ class FileAdapter : RecyclerView.Adapter<FileViewHolder>() {
       newList[selectedIndex] = diffUtil.currentList[selectedIndex].copy(
         isSelected = true
       )
-      notifyItemChanged(selectedIndex)
     }
     diffUtil.submitList(newList)
   }

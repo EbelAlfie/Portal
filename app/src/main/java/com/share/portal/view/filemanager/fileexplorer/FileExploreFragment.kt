@@ -54,8 +54,8 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
       is FileUiState.Error ->
         showErrorDialog(uiState.cause)
 
-      is FileUiState.FileSelect ->
-        fileAdapter.notifySelectedFile(uiState.selectedIndices)//notify adapter
+      is FileUiState.FileSelect -> {}
+        //fileAdapter.notifySelectedFile(uiState.selectedIndices)//notify adapter
     }
   }
 
