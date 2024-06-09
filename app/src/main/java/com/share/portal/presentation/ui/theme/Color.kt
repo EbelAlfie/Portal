@@ -1,5 +1,6 @@
 package com.share.portal.presentation.ui.theme
 
+import android.graphics.Color
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
