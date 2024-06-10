@@ -10,7 +10,6 @@ import com.share.portal.view.filemanager.fileexplorer.adapter.ParentAdapter
 import com.share.portal.view.filemanager.fileexplorer.model.FileData
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
 import com.share.portal.view.general.ProgenitorFragment
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -48,7 +47,7 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
   private fun updateUiState(uiState: FileUiState) {
     when (uiState) {
       is FileUiState.Loading -> {} //Display loading screen
-      is FileUiState.FileExplore ->
+      is FileUiState.Loaded ->
         loadData(uiState.allFiles.last())
 
       is FileUiState.Error ->
@@ -77,7 +76,7 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
       object : FileAdapter.FileListener() {
         override fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
           super.onFileClicked(filePath, filePosition, extension)
-          if (viewModel.fileUiState.value is FileUiState.FileExplore)
+          if (viewModel.fileUiState.value is FileUiState.Loaded)
             viewModel.onFileClicked(filePath)
           if (viewModel.fileUiState.value is FileUiState.FileSelect)
             viewModel.selectFile(filePosition)
@@ -85,7 +84,7 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
 
         override fun onFileHold(filePosition: Int) {
           super.onFileHold(filePosition)
-          if (viewModel.fileUiState.value is FileUiState.FileExplore)
+          if (viewModel.fileUiState.value is FileUiState.Loaded)
             viewModel.switchOperationMode(filePosition)
           if (viewModel.fileUiState.value is FileUiState.FileSelect)
             viewModel.selectFile(filePosition)
