@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.models.FileParam
+import com.share.portal.domain.usecase.FileUseCase
 import com.share.portal.presentation.filemanager.fileexplorer.FileUiState.FileExplore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FileViewModel @Inject constructor(
-  private val fileUseCase: FileUseCaseImpl
+  private val fileUseCase: FileUseCase
 ) : ViewModel() {
 
   private val _fileUiState = MutableStateFlow<FileUiState>(FileUiState.Loading)

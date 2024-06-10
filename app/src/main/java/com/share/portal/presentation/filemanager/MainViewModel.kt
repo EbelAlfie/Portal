@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.FileUseCaseImpl
+import com.share.portal.domain.usecase.FileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-  private val useCase: FileUseCaseImpl
+  private val useCase: FileUseCase
 ): ViewModel() {
   private var serverAddr: InetAddress? = null
 

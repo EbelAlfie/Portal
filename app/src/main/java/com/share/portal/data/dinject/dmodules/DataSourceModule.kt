@@ -6,8 +6,11 @@ import com.share.portal.data.datasource.OnlineDataSource
 import com.share.portal.data.datasource.OnlineDataSourceImpl
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module(includes = [WSModule::class])
+@InstallIn(ViewModelComponent::class)
 interface DataSourceModule {
   @Binds
   fun provideOfflineModule(dataSource: OfflineDataSourceImpl): OfflineDataSource

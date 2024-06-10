@@ -26,7 +26,9 @@ import com.share.portal.presentation.filemanager.fileexplorer.model.ParentData
 import com.share.portal.presentation.ui.theme.GreyAlpha
 import dagger.hilt.EntryPoint
 
-class FileExplorerPage : PageFactory {
+class FileExplorerPage(
+  private val viewModel: FileViewModel
+) : PageFactory {
 
   override val pageId: Page = Page.FileExplorer
 
@@ -45,13 +47,13 @@ class FileExplorerPage : PageFactory {
 
   @Composable
   override fun PageContent() {
-    FileExploreScreen()
+    FileExploreScreen(viewModel)
   }
 }
 
 @Composable
 fun FileExploreScreen(
-  fileViewModel: FileViewModel = hiltViewModel()
+  fileViewModel: FileViewModel
 ) {
   BackHandler (fileViewModel.canGoBack(), fileViewModel::goBack)
   Column(
