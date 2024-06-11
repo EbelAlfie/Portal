@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.models.FileParam
 import com.share.portal.view.filemanager.fileexplorer.FileUiState.Loaded
+import com.share.portal.view.filemanager.fileexplorer.OperationMode.FileSelect
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -61,10 +62,17 @@ class FileViewModel @Inject constructor(
       when (oldState) {
         is FileUiState.Loaded -> {
           val popedFile = oldState.allFiles.toMutableList()
-          popedFile.removeLastOrNull()
-          oldState.copy(
-            allFiles = popedFile
-          )
+          if (oldState.operationMode is FileSelect) {
+            oldState.copy(
+              allFiles = popedFile,
+              operationMode = OperationMode.FileExplore
+            )
+          } else {
+            popedFile.removeLastOrNull()
+            oldState.copy(
+              allFiles = popedFile
+            )
+          }
         }
         else -> oldState
       }
@@ -79,9 +87,9 @@ class FileViewModel @Inject constructor(
   fun switchOperationMode(filePosition: Int) {
     _fileUiState.update { oldState ->
       if (oldState is FileUiState.Loaded) {
-        FileUiState.FileSelect(
+        FileUiState.Loaded(
           allFiles = oldState.allFiles.toMutableList(),
-          selectedIndices = mutableListOf(filePosition)
+          operationMode = OperationMode.FileSelect()
         )
       } else
         oldState
@@ -90,10 +98,12 @@ class FileViewModel @Inject constructor(
 
   fun selectFile(filePosition: Int) {
     _fileUiState.update { oldState ->
-      (oldState as FileUiState.FileSelect).let {
-        val selectedIndex = it.selectedIndices + filePosition
+      (oldState as FileUiState.Loaded).let {
+        val selectedIndex = (it.operationMode as FileSelect).selectedFiles + filePosition
         it.copy(
-          selectedIndices = selectedIndex.toMutableList()
+          operationMode = OperationMode.FileSelect(
+            selectedFiles = selectedIndex
+          )
         )
       }
     }

@@ -15,8 +15,7 @@ sealed interface FileUiState {
 
 sealed interface OperationMode {
   data class FileSelect(
-    val allFiles: MutableList<FileTreeEntity>,
-    val selectedIndices: MutableList<Int>
+    val selectedFiles: List<Int> = listOf()
   ): OperationMode
 
   object FileExplore: OperationMode
