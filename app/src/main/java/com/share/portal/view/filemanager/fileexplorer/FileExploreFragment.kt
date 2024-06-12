@@ -52,9 +52,6 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
 
       is FileUiState.Error ->
         showErrorDialog(uiState.cause)
-
-      is FileUiState.FileSelect -> {}
-        //fileAdapter.notifySelectedFile(uiState.selectedIndices)//notify adapter
     }
   }
 
@@ -76,18 +73,22 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
       object : FileAdapter.FileListener() {
         override fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
           super.onFileClicked(filePath, filePosition, extension)
-          if (viewModel.fileUiState.value is FileUiState.Loaded)
-            viewModel.onFileClicked(filePath)
-          if (viewModel.fileUiState.value is FileUiState.FileSelect)
-            viewModel.selectFile(filePosition)
+          (viewModel.fileUiState.value as? FileUiState.Loaded)?.let {
+            if (it.operationMode is OperationMode.FileExplore)
+              viewModel.onFileClicked(filePath)
+            if (it.operationMode is OperationMode.FileSelect)
+              viewModel.selectFile(filePosition)
+          }
         }
 
         override fun onFileHold(filePosition: Int) {
           super.onFileHold(filePosition)
-          if (viewModel.fileUiState.value is FileUiState.Loaded)
-            viewModel.switchOperationMode(filePosition)
-          if (viewModel.fileUiState.value is FileUiState.FileSelect)
-            viewModel.selectFile(filePosition)
+          (viewModel.fileUiState.value as? FileUiState.Loaded)?.let {
+            if (it.operationMode is OperationMode.FileExplore)
+              viewModel.switchOperationMode(filePosition)
+            if (it.operationMode is OperationMode.FileSelect)
+              viewModel.selectFile(filePosition)
+          }
         }
       }
     )
