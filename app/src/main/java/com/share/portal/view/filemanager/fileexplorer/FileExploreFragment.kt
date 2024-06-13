@@ -18,9 +18,6 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
   @Inject
   lateinit var viewModel: FileViewModel
 
-//  @Inject
-//  lateinit var fileProcessor: FileProcessor
-
   private val fileAdapter: FileAdapter by lazy { FileAdapter() }
   private val parentAdapter: ParentAdapter by lazy { ParentAdapter() }
 
@@ -74,19 +71,20 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
         override fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
           super.onFileClicked(filePath, filePosition, extension)
           (viewModel.fileUiState.value as? FileUiState.Loaded)?.let {
-            if (it.operationMode is OperationMode.FileExplore)
-              viewModel.onFileClicked(filePath)
-            if (it.operationMode is OperationMode.FileSelect)
-              viewModel.selectFile(filePosition)
+            when (it.operationMode) {
+              is OperationMode.FileExplore -> viewModel.onFileClicked(filePath)
+              is OperationMode.FileSelect -> viewModel.selectFile(filePosition)
+            }
           }
         }
 
         override fun onFileHold(filePosition: Int) {
           super.onFileHold(filePosition)
           (viewModel.fileUiState.value as? FileUiState.Loaded)?.let {
-            if (it.operationMode is OperationMode.FileExplore)
-              viewModel.switchOperationMode(filePosition)
-            if (it.operationMode is OperationMode.FileSelect)
+            when (it.operationMode) {
+              is OperationMode.FileExplore -> viewModel.switchOperationMode(filePosition)
+              is OperationMode.FileSelect -> {}
+            }
               viewModel.selectFile(filePosition)
           }
         }

@@ -99,10 +99,10 @@ class FileViewModel @Inject constructor(
   fun selectFile(filePosition: Int) {
     _fileUiState.update { oldState ->
       (oldState as FileUiState.Loaded).let {
-        val selectedIndex = (it.operationMode as FileSelect).selectedFiles + filePosition
+        val selectedFile = (it.operationMode as FileSelect).selectedFiles + filePosition
         it.copy(
           operationMode = OperationMode.FileSelect(
-            selectedFiles = selectedIndex
+            selectedFiles = selectedFile
           )
         )
       }
