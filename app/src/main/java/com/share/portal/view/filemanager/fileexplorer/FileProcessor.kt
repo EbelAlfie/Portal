@@ -1,5 +1,6 @@
 package com.share.portal.view.filemanager.fileexplorer
 
+import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter.FileListener
 import com.share.portal.view.filemanager.fileexplorer.model.FileExtension
@@ -21,7 +22,7 @@ class FileProcessor @Inject constructor() {
 
   fun setAdapterListener() {
     fileAdapter.setFileListener(object: FileListener() {
-      override fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
+      override fun onFileClicked(filePath: ItemFileBinding, filePosition: Int, extension: FileExtension) {
         super.onFileClicked(filePath, filePosition, extension)
         when (fileState) {
           FileState.Exploration -> {}
@@ -29,8 +30,8 @@ class FileProcessor @Inject constructor() {
         }
       }
 
-      override fun onFileHold(filePosition: Int) {
-        super.onFileHold(filePosition)
+      override fun onFileHold(binding: ItemFileBinding, filePosition: Int) {
+        super.onFileHold(binding, filePosition)
         updateFileState()
       }
     })

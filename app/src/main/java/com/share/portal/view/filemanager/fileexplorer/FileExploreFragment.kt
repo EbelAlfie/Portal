@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.share.portal.databinding.FragmentFileExplorerBinding
+import com.share.portal.databinding.ItemFileBinding
 import com.share.portal.domain.models.FileTreeEntity
 import com.share.portal.view.filemanager.fileexplorer.adapter.FileAdapter
 import com.share.portal.view.filemanager.fileexplorer.adapter.ParentAdapter
@@ -68,24 +69,32 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
   private fun setupFileAdapter() {
     fileAdapter.setFileListener(
       object : FileAdapter.FileListener() {
-        override fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
+        override fun onFileClicked(filePath: ItemFileBinding, filePosition: Int, extension: FileExtension) {
           super.onFileClicked(filePath, filePosition, extension)
           (viewModel.fileUiState.value as? FileUiState.Loaded)?.let {
             when (it.operationMode) {
-              is OperationMode.FileExplore -> viewModel.onFileClicked(filePath)
-              is OperationMode.FileSelect -> viewModel.selectFile(filePosition)
+              is OperationMode.FileExplore -> viewModel.onFileClicked(filePosition)
+              is OperationMode.FileSelect -> {
+                viewModel.selectFile(filePosition)
+                filePath.root.apply {
+                  isSelected = !isSelected
+                }
+              }
             }
           }
         }
 
-        override fun onFileHold(filePosition: Int) {
-          super.onFileHold(filePosition)
+        override fun onFileHold(fileItem: ItemFileBinding, filePosition: Int) {
+          super.onFileHold(fileItem, filePosition)
           (viewModel.fileUiState.value as? FileUiState.Loaded)?.let {
             when (it.operationMode) {
               is OperationMode.FileExplore -> viewModel.switchOperationMode(filePosition)
               is OperationMode.FileSelect -> {}
             }
               viewModel.selectFile(filePosition)
+            fileItem.root.apply {
+              isSelected = !isSelected
+            }
           }
         }
       }

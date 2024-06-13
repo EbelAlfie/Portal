@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.models.FileParam
-import com.share.portal.view.filemanager.fileexplorer.FileUiState.Loaded
 import com.share.portal.view.filemanager.fileexplorer.OperationMode.FileSelect
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -79,9 +78,10 @@ class FileViewModel @Inject constructor(
     }
   }
 
-  fun onFileClicked(filePath: String) {
-    if (_fileUiState.value is FileUiState.Loaded)
-      getAllChildrenFiles(rootFile = filePath)
+  fun onFileClicked(filePosition: Int) {
+    (_fileUiState.value as? FileUiState.Loaded)?.let {
+      getAllChildrenFiles(rootFile = it.allFiles.last().child[filePosition].path)
+    }
   }
 
   fun switchOperationMode(filePosition: Int) {

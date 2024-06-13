@@ -37,23 +37,13 @@ class FileAdapter : RecyclerView.Adapter<FileViewHolder>() {
   override fun onBindViewHolder(holder: FileViewHolder, position: Int) =
     holder.bindData(diffUtil.currentList[position], mListener)
 
-  fun notifySelectedFile(selectedIndices: MutableList<Int>) {
-    val newList = diffUtil.currentList.toMutableList()
-    selectedIndices.forEach { selectedIndex ->
-      newList[selectedIndex] = diffUtil.currentList[selectedIndex].copy(
-        isSelected = true
-      )
-    }
-    diffUtil.submitList(newList)
-  }
-
   abstract class FileListener {
-    open fun onFileClicked(filePath: String, filePosition: Int, extension: FileExtension) {
+    open fun onFileClicked(filePath: ItemFileBinding, filePosition: Int, extension: FileExtension) {
       if (extension == FileExtension.FOLDER) return
       if (filePosition == DiffResult.NO_POSITION) return
     }
 
-    open fun onFileHold(filePosition: Int) {
+    open fun onFileHold(binding: ItemFileBinding, filePosition: Int) {
       if (filePosition == DiffResult.NO_POSITION) return
     }
   }

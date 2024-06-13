@@ -18,11 +18,11 @@ class FileViewHolder(private val binding: ItemFileBinding) :
       root.isSelected = data.isSelected
 
       root.setOnClickListener {
-        mListener?.onFileClicked(data.file.path, adapterPosition, data.extension)
+        mListener?.onFileClicked(binding, adapterPosition, data.extension)
       }
 
       root.setOnLongClickListener {
-        mListener?.onFileHold(adapterPosition)
+        mListener?.onFileHold(binding, adapterPosition)
         true
       }
 
