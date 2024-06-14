@@ -23,10 +23,11 @@ fun ParentFile(root: ParentData) {
     verticalAlignment = Alignment.CenterVertically
   ) {
     Icon(
+      modifier = Modifier.size(15.dp), 
       painter = painterResource(id = R.drawable.ic_arrow_right),
       contentDescription = null
     )
-    Text(text = "dataaaaaaaaaaaaa")
+    Text(text = root.name)
   }
 }
 
