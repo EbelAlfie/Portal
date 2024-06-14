@@ -33,14 +33,23 @@ fun ParentFile(root: ParentData) {
 
 @Composable
 fun FileItem(file: FileData) {
-  Row {
+  Row (
+    modifier = Modifier
+      .padding(3.dp)  
+      .fillMaxWidth() 
+      .border(1.dp, Color.Black, RectangleShape) 
+    ){
     Icon(
+      modifier = Modifier.padding(5.dp), 
       painter = painterResource(id = file.extension.icon),
       contentDescription = null
     )
-    Text(text = file.file.name)
+    Text(
+      modifier = Modifier.padding(5.dp), 
+      text = file.file.name
+    )
     Icon(
-      modifier = Modifier.border(1.dp, Color.Black, RectangleShape),
+      modifier = Modifier.padding(5.dp),
       painter = painterResource(id = R.drawable.ic_arrow_right),
       contentDescription = null
     )
