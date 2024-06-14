@@ -38,12 +38,12 @@ class FileAdapter : RecyclerView.Adapter<FileViewHolder>() {
     holder.bindData(diffUtil.currentList[position], mListener)
 
   abstract class FileListener {
-    open fun onFileClicked(filePath: ItemFileBinding, filePosition: Int, extension: FileExtension) {
+    open fun onFileClicked(fileItem: ItemFileBinding, filePosition: Int, extension: FileExtension) {
       if (extension == FileExtension.FOLDER) return
       if (filePosition == DiffResult.NO_POSITION) return
     }
 
-    open fun onFileHold(binding: ItemFileBinding, filePosition: Int) {
+    open fun onFileHold(fileItem: ItemFileBinding, filePosition: Int) {
       if (filePosition == DiffResult.NO_POSITION) return
     }
   }

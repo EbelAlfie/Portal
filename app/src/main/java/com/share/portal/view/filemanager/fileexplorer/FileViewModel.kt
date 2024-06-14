@@ -52,6 +52,7 @@ class FileViewModel @Inject constructor(
     return when (uiState) {
       is FileUiState.Loaded ->
         uiState.allFiles.size > 1 || uiState.operationMode is OperationMode.FileSelect
+
       else -> false
     }
   }
@@ -73,6 +74,7 @@ class FileViewModel @Inject constructor(
             )
           }
         }
+
         else -> oldState
       }
     }
@@ -97,15 +99,13 @@ class FileViewModel @Inject constructor(
   }
 
   fun selectFile(filePosition: Int) {
-    _fileUiState.update { oldState ->
-      (oldState as FileUiState.Loaded).let {
-        val selectedFile = (it.operationMode as FileSelect).selectedFiles + filePosition
-        it.copy(
-          operationMode = OperationMode.FileSelect(
-            selectedFiles = selectedFile
-          )
+    (_fileUiState.value as FileUiState.Loaded).let {
+      val selectedFile = (it.operationMode as FileSelect).selectedFiles + filePosition
+      it.copy(
+        operationMode = OperationMode.FileSelect(
+          selectedFiles = selectedFile
         )
-      }
+      )
     }
   }
 

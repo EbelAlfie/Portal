@@ -22,16 +22,16 @@ class FileProcessor @Inject constructor() {
 
   fun setAdapterListener() {
     fileAdapter.setFileListener(object: FileListener() {
-      override fun onFileClicked(filePath: ItemFileBinding, filePosition: Int, extension: FileExtension) {
-        super.onFileClicked(filePath, filePosition, extension)
+      override fun onFileClicked(fileItem: ItemFileBinding, filePosition: Int, extension: FileExtension) {
+        super.onFileClicked(fileItem, filePosition, extension)
         when (fileState) {
           FileState.Exploration -> {}
           else -> {}
         }
       }
 
-      override fun onFileHold(binding: ItemFileBinding, filePosition: Int) {
-        super.onFileHold(binding, filePosition)
+      override fun onFileHold(fileItem: ItemFileBinding, filePosition: Int) {
+        super.onFileHold(fileItem, filePosition)
         updateFileState()
       }
     })

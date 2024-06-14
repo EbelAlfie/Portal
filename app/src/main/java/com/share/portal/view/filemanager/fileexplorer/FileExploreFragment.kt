@@ -22,6 +22,8 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
   private val fileAdapter: FileAdapter by lazy { FileAdapter() }
   private val parentAdapter: ParentAdapter by lazy { ParentAdapter() }
 
+  private val selectedViews = mutableListOf<ItemFileBinding>()
+
   override fun initBinding(layoutInflater: LayoutInflater) =
     FragmentFileExplorerBinding.inflate(layoutInflater)
 
@@ -69,32 +71,34 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
   private fun setupFileAdapter() {
     fileAdapter.setFileListener(
       object : FileAdapter.FileListener() {
-        override fun onFileClicked(filePath: ItemFileBinding, filePosition: Int, extension: FileExtension) {
-          super.onFileClicked(filePath, filePosition, extension)
+        override fun onFileClicked(fileItem: ItemFileBinding, filePosition: Int, extension: FileExtension) {
+          super.onFileClicked(fileItem, filePosition, extension)
           (viewModel.fileUiState.value as? FileUiState.Loaded)?.let {
             when (it.operationMode) {
               is OperationMode.FileExplore -> viewModel.onFileClicked(filePosition)
               is OperationMode.FileSelect -> {
                 viewModel.selectFile(filePosition)
-                filePath.root.apply {
+                fileItem.root.apply {
                   isSelected = !isSelected
                 }
+                selectedViews.add(fileItem)
               }
             }
           }
         }
 
-        override fun onFileHold(fileItem: ItemFileBinding, filePosition: Int) {
-          super.onFileHold(fileItem, filePosition)
+        override fun onFileHold(itemView: ItemFileBinding, filePosition: Int) {
+          super.onFileHold(itemView, filePosition)
           (viewModel.fileUiState.value as? FileUiState.Loaded)?.let {
             when (it.operationMode) {
               is OperationMode.FileExplore -> viewModel.switchOperationMode(filePosition)
               is OperationMode.FileSelect -> {}
             }
             viewModel.selectFile(filePosition)
-            fileItem.root.apply {
+            itemView.root.apply {
               isSelected = !isSelected
             }
+            selectedViews.add(itemView)
           }
         }
       }
@@ -104,6 +108,14 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
   private fun loadData(data: FileTreeEntity) {
     parentAdapter.update(data.current)
     fileAdapter.updateList(FileData.store(data))
+    deselectAll()
+  }
+
+  private fun deselectAll() {
+    selectedViews.removeAll {
+      it.root.isSelected = false
+      true
+    }
   }
 
   private fun showErrorDialog(throwable: Throwable?) {
