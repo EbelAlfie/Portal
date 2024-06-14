@@ -91,7 +91,7 @@ class FileExploreFragment : ProgenitorFragment<FragmentFileExplorerBinding>() {
               is OperationMode.FileExplore -> viewModel.switchOperationMode(filePosition)
               is OperationMode.FileSelect -> {}
             }
-              viewModel.selectFile(filePosition)
+            viewModel.selectFile(filePosition)
             fileItem.root.apply {
               isSelected = !isSelected
             }
