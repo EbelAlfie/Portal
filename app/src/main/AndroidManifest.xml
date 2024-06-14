@@ -2,7 +2,47 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+  <!--File managements-->
+  <uses-permission
+      android:name="android.permission.READ_EXTERNAL_STORAGE" />
+  <uses-permission
+      android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+      tools:ignore="ScopedStorage" />
+  <uses-permission
+      android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+      tools:ignore="ScopedStorage" />
+  <uses-permission
+      android:name="android.permission.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION"
+      tools:ignore="ScopedStorage" />
+
+  <uses-permission
+      android:required="true"
+      android:name="android.permission.ACCESS_WIFI_STATE"/>
+  <uses-permission
+      android:required="true"
+      android:name="android.permission.CHANGE_WIFI_STATE"/>
+  <uses-permission
+      android:name="android.permission.CHANGE_NETWORK_STATE"/>
+  <uses-permission
+      android:required="true"
+      android:name="android.permission.INTERNET"/>
+
+  <uses-permission
+      android:name="android.permission.NEARBY_WIFI_DEVICES"
+      android:usesPermissionFlags="neverForLocation"
+      tools:targetApi="s" />
+
+  <uses-permission
+      android:required="true"
+      android:name="android.permission.ACCESS_FINE_LOCATION"
+      android:maxSdkVersion="32" />
+  <uses-permission
+      android:required="true"
+      android:name="android.permission.ACCESS_COARSE_LOCATION"
+      android:maxSdkVersion="32" />
+
   <application
+      android:name=".PortalBlue"
       android:allowBackup="true"
       android:dataExtractionRules="@xml/data_extraction_rules"
       android:fullBackupContent="@xml/backup_rules"
@@ -11,7 +51,6 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/Theme.Portal_Blue"
-      android:name=".PortalBlue"
       tools:targetApi="31">
     <activity
         android:name=".presentation.filemanager.MainActivity"

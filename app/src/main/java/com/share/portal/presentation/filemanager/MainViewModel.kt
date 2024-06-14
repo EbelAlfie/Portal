@@ -17,6 +17,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
   private val useCase: FileUseCase
 ): ViewModel() {
+
   private var serverAddr: InetAddress? = null
 
   fun connectWSClient(address: InetAddress) {

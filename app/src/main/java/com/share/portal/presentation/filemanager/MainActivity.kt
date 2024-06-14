@@ -41,6 +41,7 @@ class MainActivity : ComponentActivity(), WifiPerantara {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    registerWifi()
     setContent {
       Portal_BlueTheme {
         PagerScreen(
