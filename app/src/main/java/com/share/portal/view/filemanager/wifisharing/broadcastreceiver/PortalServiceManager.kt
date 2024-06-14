@@ -23,15 +23,8 @@ class PortalServiceManager(
       "available" to "visible"
     )
 
-    // Service information.  Pass it an instance name, service type
-    // _protocol._transportlayer , and the map containing
-    // information other devices will want once they connect to this one.
     val serviceInfo =
-      WifiP2pDnsSdServiceInfo.newInstance("_portal", "_presence._tcp", record)
-
-    // Add the local service, sending the service info, network channel,
-    // and listener that will be used to indicate success or failure of
-    // the request.
+      WifiP2pDnsSdServiceInfo.newInstance("_test", "_presence._tcp", record)
 
     wifiP2pManager.addLocalService(channel, serviceInfo, object: ActionListener {
       override fun onSuccess() {
@@ -42,7 +35,7 @@ class PortalServiceManager(
         Log.d("Portal: add local service", "Failed: $reason")
       }
 
-    }) // TODO add listener
+    })
   }
 
   val txtListener = WifiP2pManager.DnsSdTxtRecordListener { fullDomain, record, device ->
@@ -55,22 +48,12 @@ class PortalServiceManager(
   val serviceRequest = WifiP2pDnsSdServiceRequest.newInstance()
 
   @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
-  fun discoverService(peerDiscoverListener: WifiP2pManager.ActionListener? = null) {
+  fun discoverService(
+    peerDiscoverListener: WifiP2pManager.ActionListener? = null
+  ) {
     wifiP2pManager.setDnsSdResponseListeners(channel, servListener, txtListener)
 
-    wifiP2pManager.addServiceRequest(
-      channel,
-      serviceRequest,
-      object : WifiP2pManager.ActionListener {
-        override fun onSuccess() {
-          // Success!
-        }
-
-        override fun onFailure(code: Int) {
-          // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
-        }
-      }
-    )
+    wifiP2pManager.addServiceRequest(channel, serviceRequest, null)
 
     wifiP2pManager.discoverServices(
       channel,

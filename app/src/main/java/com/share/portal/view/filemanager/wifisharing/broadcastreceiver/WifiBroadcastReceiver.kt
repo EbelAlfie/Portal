@@ -37,6 +37,9 @@ class WifiBroadcastReceiver(
   fun setPeerListener(listener: WifiP2pManager.PeerListListener) {
     peerListListener = listener
   }
+  fun setNewPeerListener(listener: WifiP2pManager.ActionListener) {
+    onPeerDiscoveredListener = listener
+  }
 
   fun setOnPeerDiscoveredListener(listener: ActionListener) {
     onPeerDiscoveredListener = listener
@@ -71,7 +74,7 @@ class WifiBroadcastReceiver(
     wifiState = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
     when (wifiState) {
       WifiP2pManager.WIFI_P2P_STATE_ENABLED -> {
-        initiatePeerDiscovery()
+        //initiatePeerDiscovery()
         Log.d("WIFIGEMINK", "WIFI_P2P_STATE_ENABLED ")
       }
       else -> {

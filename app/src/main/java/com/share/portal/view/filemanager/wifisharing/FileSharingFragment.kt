@@ -68,6 +68,17 @@ class FileSharingFragment : ProgenitorFragment<FragmentFileSharingBinding>() {
 
       setPeerListener { peerAdapter.submitPeers(it) }
 
+      setNewPeerListener(object: WifiP2pManager.ActionListener {
+        override fun onSuccess() {
+          Log.d("WOII", "onSuccess: ")
+        }
+
+        override fun onFailure(reason: Int) {
+          Log.d("WOII", "$reason: ")
+        }
+
+      })
+
       initiatePeerDiscovery()
     }
   }
