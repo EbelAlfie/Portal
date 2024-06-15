@@ -23,6 +23,7 @@ import com.share.portal.presentation.filemanager.PageFactory
 import com.share.portal.presentation.filemanager.fileexplorer.FileUiState.FileExplore
 import com.share.portal.presentation.filemanager.fileexplorer.model.FileData
 import com.share.portal.presentation.filemanager.fileexplorer.model.ParentData
+import com.share.portal.presentation.ui.theme.Grey
 import com.share.portal.presentation.ui.theme.GreyAlpha
 import dagger.hilt.EntryPoint
 
@@ -41,6 +42,7 @@ class FileExplorerPage(
     Icon(
       modifier = textModifier,
       painter = painterResource(id = R.drawable.ic_folder),
+      tint = Grey,
       contentDescription = null
     )
   }
@@ -72,11 +74,11 @@ fun FileExploreScreen(
 
 @Composable
 fun FileExploreContent(
-  uiState: FileUiState.FileExplore
+  uiState: FileUiState.FileExplore,
 ) {
   val newFile = uiState.allFiles.last()
   ParentFileContent(ParentData.toParentDataList(newFile.current))
-  FileScreen(FileData.store(newFile))
+  FileScreen(FileData.store(newFile), { file ->})
 }
 
 @Composable
@@ -89,7 +91,10 @@ private fun ParentFileContent(rootFile: List<ParentData>) {
 }
 
 @Composable
-private fun FileScreen(files: List<FileData>) {
+private fun FileScreen(
+  files: List<FileData>,
+  onFileClicked: (FileData) -> Unit
+  ) {
   LazyColumn {
     items(files) {
       FileItem(it)

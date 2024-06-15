@@ -15,4 +15,5 @@ val BlueOpacity50 = Color(0xCC256EFF)
 val BlueDark = Color(0xFF253BFF)
 
 val GreyAlpha = Color(0x99B3AEAE)
-val White = Color(0xFFFFFF)
+val Grey = Color(0xFF848383)
+val White = Color(0xFFFFFFFF)

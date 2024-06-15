@@ -1,12 +1,17 @@
 package com.share.portal.presentation.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.share.portal.R
+
+val Somatic = FontFamily(
+  Font(R.font.somaticrounded, FontWeight.Bold),
+  Font(R.font.somatic)
+)
 
 // Set of Material typography styles to start with
 val Typography = Typography(

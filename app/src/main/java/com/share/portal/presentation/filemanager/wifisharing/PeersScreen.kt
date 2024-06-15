@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.share.portal.R.drawable
 import com.share.portal.presentation.filemanager.Page
 import com.share.portal.presentation.filemanager.PageFactory
+import com.share.portal.presentation.ui.theme.Grey
 import com.share.portal.presentation.ui.theme.GreyAlpha
 
 class PeerFinderPage : PageFactory {
@@ -26,6 +27,7 @@ class PeerFinderPage : PageFactory {
     Icon(
       modifier = textModifier,
       painter = painterResource(id = drawable.ic_file_sharing),
+      tint = Grey,
       contentDescription = null
     )
   }
