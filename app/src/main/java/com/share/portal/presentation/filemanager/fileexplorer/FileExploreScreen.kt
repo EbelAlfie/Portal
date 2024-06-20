@@ -16,16 +16,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.share.portal.R
 import com.share.portal.presentation.filemanager.Page
 import com.share.portal.presentation.filemanager.PageFactory
-import com.share.portal.presentation.filemanager.fileexplorer.FileUiState.FileExplore
+import com.share.portal.presentation.filemanager.fileexplorer.FileUiState
 import com.share.portal.presentation.filemanager.fileexplorer.model.FileData
 import com.share.portal.presentation.filemanager.fileexplorer.model.ParentData
 import com.share.portal.presentation.ui.theme.Grey
 import com.share.portal.presentation.ui.theme.GreyAlpha
-import dagger.hilt.EntryPoint
 
 class FileExplorerPage(
   private val viewModel: FileViewModel
@@ -65,7 +63,8 @@ fun FileExploreScreen(
     when (uiState) {
       is FileUiState.Loading -> {}
       is FileUiState.FileExplore -> FileExploreContent(
-        uiState = uiState as FileExplore
+        uiState = uiState as FileUiState.FileExplore,
+        onFileClicked = fileViewModel::onFileClicked
       )
       else -> {}
     }
@@ -75,10 +74,13 @@ fun FileExploreScreen(
 @Composable
 fun FileExploreContent(
   uiState: FileUiState.FileExplore,
+  onFileClicked: (String) -> Unit
 ) {
   val newFile = uiState.allFiles.last()
   ParentFileContent(ParentData.toParentDataList(newFile.current))
-  FileScreen(FileData.store(newFile), { file ->})
+  FileScreen(FileData.store(newFile)) { item ->
+    onFileClicked.invoke(item.file.path)
+  }
 }
 
 @Composable
