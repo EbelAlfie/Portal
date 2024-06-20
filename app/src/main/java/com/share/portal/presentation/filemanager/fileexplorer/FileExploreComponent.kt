@@ -41,9 +41,12 @@ fun ParentFile(root: ParentData) {
 }
 
 @Composable
-fun FileItem(file: FileData) {
+fun FileItem(
+  modifier: Modifier = Modifier,
+  file: FileData
+) {
   Row(
-    modifier = Modifier
+    modifier = modifier
       .padding(3.dp)
       .fillMaxWidth()
       .border(1.dp, Color.Black, RectangleShape)
@@ -83,7 +86,7 @@ fun FileParentPreview() {
 @Composable
 fun FileItemPreview() {
   FileItem(
-    FileData(
+    file = FileData(
       file = File.createTempFile("oi", ".mp3"),
       isSelected = false,
       extension = AUDIO
