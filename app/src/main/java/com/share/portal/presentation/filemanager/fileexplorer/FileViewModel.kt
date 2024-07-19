@@ -83,6 +83,10 @@ class FileViewModel @Inject constructor(
       getAllChildrenFiles(rootFile = filePath)
   }
 
+  fun onFileHold(filePosition: Int) {
+    switchOperationMode(filePosition)
+  }
+
   fun switchOperationMode(filePosition: Int) {
     _fileUiState.update { oldState ->
       if (oldState is FileUiState.FileExplore) {

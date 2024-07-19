@@ -1,14 +1,17 @@
 package com.share.portal.presentation.filemanager.fileexplorer
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -56,17 +59,20 @@ class FileExplorerPage(
 fun FileExploreScreen(
   fileViewModel: FileViewModel
 ) {
-  BackHandler (fileViewModel.canGoBack(), fileViewModel::goBack)
+  BackHandler(fileViewModel.canGoBack(), fileViewModel::goBack)
   Column(
     Modifier.fillMaxSize()
   ) {
     val uiState by fileViewModel.fileUiState.collectAsState()
     when (uiState) {
       is FileUiState.Loading -> {}
-      is FileUiState.FileExplore -> FileExploreContent(
-        uiState = uiState as FileUiState.FileExplore,
-        onFileClicked = fileViewModel::onFileClicked
-      )
+      is FileUiState.FileExplore ->
+        FileExploreContent(
+          uiState = uiState as FileUiState.FileExplore,
+          onFileClicked = fileViewModel::onFileClicked,
+          onFileHold = fileViewModel::onFileHold
+        )
+
       else -> {}
     }
   }
@@ -75,13 +81,20 @@ fun FileExploreScreen(
 @Composable
 fun FileExploreContent(
   uiState: FileUiState.FileExplore,
-  onFileClicked: (String) -> Unit
+  onFileClicked: (String) -> Unit,
+  onFileHold: (Int) -> Unit
 ) {
   val newFile = uiState.allFiles.last()
   ParentFileContent(ParentData.toParentDataList(newFile.current))
-  FileScreen(FileData.store(newFile)) { item ->
-    onFileClicked.invoke(item.file.path)
-  }
+  FileScreen(
+    files = FileData.store(newFile),
+    onFileClicked = {
+      onFileClicked.invoke(it.file.path)
+    },
+    onFileHold = {
+      onFileHold.invoke(it)
+    }
+  )
 }
 
 @Composable
@@ -93,18 +106,26 @@ private fun ParentFileContent(rootFile: List<ParentData>) {
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FileScreen(
   files: List<FileData>,
-  onFileClicked: (FileData) -> Unit
-  ) {
+  onFileClicked: (FileData) -> Unit,
+  onFileHold: (Int) -> Unit
+) {
   LazyColumn {
-    items(files) {
+    itemsIndexed(files) {index, item ->
       FileItem(
-        modifier = Modifier.clickable {
-          onFileClicked.invoke(it)
-        },
-        file = it
+        modifier = Modifier
+          .combinedClickable(
+            onClick = {
+              onFileClicked.invoke(item)
+            },
+            onLongClick = {
+              onFileHold.invoke(index)
+            }
+          ),
+        file = item
       )
     }
   }
