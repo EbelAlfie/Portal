@@ -3,7 +3,6 @@ package com.share.portal.presentation.filemanager.fileexplorer
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import com.share.portal.R
 import com.share.portal.presentation.filemanager.Page
 import com.share.portal.presentation.filemanager.PageFactory
-import com.share.portal.presentation.filemanager.fileexplorer.FileUiState
 import com.share.portal.presentation.filemanager.fileexplorer.model.FileData
 import com.share.portal.presentation.filemanager.fileexplorer.model.ParentData
 import com.share.portal.presentation.ui.theme.Grey
@@ -66,9 +64,9 @@ fun FileExploreScreen(
     val uiState by fileViewModel.fileUiState.collectAsState()
     when (uiState) {
       is FileUiState.Loading -> {}
-      is FileUiState.FileExplore ->
+      is FileUiState.FileScreen ->
         FileExploreContent(
-          uiState = uiState as FileUiState.FileExplore,
+          uiState = uiState as FileUiState.FileScreen,
           onFileClicked = fileViewModel::onFileClicked,
           onFileHold = fileViewModel::onFileHold
         )
@@ -80,7 +78,7 @@ fun FileExploreScreen(
 
 @Composable
 fun FileExploreContent(
-  uiState: FileUiState.FileExplore,
+  uiState: FileUiState.FileScreen,
   onFileClicked: (String) -> Unit,
   onFileHold: (Int) -> Unit
 ) {

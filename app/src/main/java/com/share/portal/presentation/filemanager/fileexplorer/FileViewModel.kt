@@ -2,10 +2,9 @@ package com.share.portal.presentation.filemanager.fileexplorer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.share.portal.domain.FileUseCaseImpl
 import com.share.portal.domain.models.FileParam
 import com.share.portal.domain.usecase.FileUseCase
-import com.share.portal.presentation.filemanager.fileexplorer.FileUiState.FileExplore
+import com.share.portal.presentation.filemanager.fileexplorer.FileUiState.FileScreen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,19 +25,21 @@ class FileViewModel @Inject constructor(
     getAllChildrenFiles()
   }
 
-  fun getAllChildrenFiles(rootFile: String = FileParam.EXTERNAL.pathName) {
+  private fun getAllChildrenFiles(rootFile: String = FileParam.EXTERNAL.pathName) {
     val rootPath = rootFile.ifBlank { FileParam.EXTERNAL.pathName }
     viewModelScope.launch {
       try {
         val data = fileUseCase.getAllExternalFiles(rootPath)
         _fileUiState.update { oldState ->
-          if (oldState is FileUiState.FileExplore) {
+          if (oldState is FileUiState.FileScreen) {
             oldState.copy(
-              allFiles = oldState.allFiles + data
+              allFiles = oldState.allFiles + data,
+              previewMode = PreviewMode.Explore
             )
           } else {
-            FileUiState.FileExplore(
-              allFiles = mutableListOf(data)
+            FileUiState.FileScreen(
+              allFiles = mutableListOf(data),
+              previewMode = PreviewMode.Explore
             )
           }
         }
@@ -51,35 +52,32 @@ class FileViewModel @Inject constructor(
   }
 
   fun canGoBack(): Boolean {
-    return when (_fileUiState.value) {
-      is FileUiState.FileExplore ->
-        (_fileUiState.value as FileExplore).allFiles.size > 1
-      is FileUiState.FileSelect -> true
-      else -> false
-    }
+    return (_fileUiState.value as? FileUiState.FileScreen)?.let {
+      return when (it.previewMode) {
+        is PreviewMode.Explore -> it.allFiles.size > 1
+        is PreviewMode.Select -> true
+      }
+    } ?: false
   }
 
   fun goBack() {
     _fileUiState.update { oldState ->
       when (oldState) {
-        is FileUiState.FileExplore -> {
+        is FileUiState.FileScreen -> {
           val popedFile = oldState.allFiles.toMutableList()
           popedFile.removeLastOrNull()
           oldState.copy(
             allFiles = popedFile
           )
         }
-        is FileUiState.FileSelect ->
-          FileUiState.FileExplore(
-            allFiles = oldState.allFiles
-          )
+
         else -> oldState
       }
     }
   }
 
   fun onFileClicked(filePath: String) {
-    if (_fileUiState.value is FileUiState.FileExplore)
+    if (_fileUiState.value is FileUiState.FileScreen)
       getAllChildrenFiles(rootFile = filePath)
   }
 
@@ -89,7 +87,7 @@ class FileViewModel @Inject constructor(
 
   fun switchOperationMode(filePosition: Int) {
     _fileUiState.update { oldState ->
-      if (oldState is FileUiState.FileExplore) {
+      if (oldState is FileUiState.FileScreen) {
         FileUiState.FileSelect(
           allFiles = oldState.allFiles.toMutableList(),
           selectedIndices = mutableListOf(filePosition)

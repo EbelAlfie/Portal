@@ -3,26 +3,18 @@ package com.share.portal.presentation.filemanager.fileexplorer
 import com.share.portal.domain.models.FileTreeEntity
 
 sealed interface FileUiState {
-  object Loading: FileUiState
+  data object Loading: FileUiState
 
-  data class FileExplore(
-    val allFiles: List<FileTreeEntity> //Linked list or stack?
-  ): FileUiState
-
-  data class FileSelect(
-    val allFiles: MutableList<FileTreeEntity>,
-    val selectedIndices: MutableList<Int>
+  data class FileScreen(
+    val allFiles: List<FileTreeEntity>, //Linked list or stack?
+    val previewMode: PreviewMode = PreviewMode.Explore
   ): FileUiState
 
   data class Error(val cause: Throwable?): FileUiState
 }
 
-sealed interface FileAction {
-  data class ClickFile(
-    val filePosition: Int
-  ): FileAction
+sealed interface PreviewMode {
+  data object Explore: PreviewMode
 
-  data class SelectFile(
-    val filePosition: Int
-  ): FileAction
+  data object Select: PreviewMode
 }
