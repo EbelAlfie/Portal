@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,12 +44,14 @@ fun ParentFile(root: ParentData) {
 @Composable
 fun FileItem(
   modifier: Modifier = Modifier,
-  file: FileData
+  file: FileData,
+  isSelected: Boolean = false
 ) {
   Row(
     modifier = modifier
       .padding(3.dp)
       .fillMaxWidth()
+      .background(if (isSelected) Color.Blue else Companion.White)
       .border(1.dp, Color.Black, RectangleShape)
   ) {
     Icon(

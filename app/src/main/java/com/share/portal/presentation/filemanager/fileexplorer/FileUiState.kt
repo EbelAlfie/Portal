@@ -16,5 +16,7 @@ sealed interface FileUiState {
 sealed interface PreviewMode {
   data object Explore: PreviewMode
 
-  data object Select: PreviewMode
+  data class Select(
+    val selectedIndices: MutableList<Int> = mutableListOf()
+  ): PreviewMode
 }

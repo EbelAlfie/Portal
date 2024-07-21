@@ -85,6 +85,7 @@ fun FileExploreContent(
   val newFile = uiState.allFiles.last()
   ParentFileContent(ParentData.toParentDataList(newFile.current))
   FileScreen(
+    uiState = uiState.previewMode,
     files = FileData.store(newFile),
     onFileClicked = {
       onFileClicked.invoke(it.file.path)
@@ -107,6 +108,7 @@ private fun ParentFileContent(rootFile: List<ParentData>) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FileScreen(
+  uiState: PreviewMode,
   files: List<FileData>,
   onFileClicked: (FileData) -> Unit,
   onFileHold: (Int) -> Unit
@@ -123,7 +125,8 @@ private fun FileScreen(
               onFileHold.invoke(index)
             }
           ),
-        file = item
+        file = item,
+        isSelected = (uiState as? PreviewMode.Select)?.let { index in it.selectedIndices } ?: false
       )
     }
   }

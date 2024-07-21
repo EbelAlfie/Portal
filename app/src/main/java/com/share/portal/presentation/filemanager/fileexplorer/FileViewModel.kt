@@ -76,35 +76,43 @@ class FileViewModel @Inject constructor(
     }
   }
 
+  private fun selectFile(filePosition: Int) {
+    _fileUiState.update { oldState ->
+      (oldState as FileUiState.FileScreen).let {
+        with (it.previewMode as PreviewMode.Select) {
+          val selectedIndex = selectedIndices.add(filePosition)
+          it.copy(
+            previewMode = PreviewMode.Select(selectedIndices)
+          )
+        }
+      }
+    }
+  }
+
   fun onFileClicked(filePath: String) {
     if (_fileUiState.value is FileUiState.FileScreen)
       getAllChildrenFiles(rootFile = filePath)
   }
 
   fun onFileHold(filePosition: Int) {
-    switchOperationMode(filePosition)
-  }
-
-  fun switchOperationMode(filePosition: Int) {
-    _fileUiState.update { oldState ->
-      if (oldState is FileUiState.FileScreen) {
-        FileUiState.FileSelect(
-          allFiles = oldState.allFiles.toMutableList(),
-          selectedIndices = mutableListOf(filePosition)
-        )
-      } else
-        oldState
+    with (_fileUiState.value as FileUiState.FileScreen) {
+      when (previewMode) {
+        is PreviewMode.Explore -> switchOperationMode()
+        is PreviewMode.Select -> selectFile(filePosition)
+      }
     }
   }
 
-  fun selectFile(filePosition: Int) {
+  private fun switchOperationMode() {
     _fileUiState.update { oldState ->
-      (oldState as FileUiState.FileSelect).let {
-        val selectedIndex = it.selectedIndices + filePosition
+      (oldState as? FileUiState.FileScreen)?.let {
         it.copy(
-          selectedIndices = selectedIndex.toMutableList()
+          previewMode = if (it.previewMode is PreviewMode.Explore)
+            PreviewMode.Select()
+          else
+            PreviewMode.Explore
         )
-      }
+      } ?: oldState
     }
   }
 
