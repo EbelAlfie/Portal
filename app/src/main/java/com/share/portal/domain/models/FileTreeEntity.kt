@@ -1,5 +1,6 @@
 package com.share.portal.domain.models
 
+import com.share.portal.presentation.filemanager.fileexplorer.model.FileData
 import java.io.File
 
 data class ParentFile (
@@ -16,7 +17,7 @@ data class ParentFile (
 
 data class FileTreeEntity(
   val current: ParentFile,
-  val child: List<File>
+  val child: List<FileData>
 ) {
   companion object {
     fun createFileTree(
@@ -25,7 +26,7 @@ data class FileTreeEntity(
     ): FileTreeEntity {
       return FileTreeEntity(
         current = ParentFile.createParent(current),
-        child = child
+        child = FileData.mapChildFile(child)
       )
     }
   }

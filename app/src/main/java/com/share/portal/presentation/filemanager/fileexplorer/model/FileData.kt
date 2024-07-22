@@ -11,13 +11,13 @@ import java.io.File
 @Parcelize
 data class FileData(
   val file: File,
-  val isSelected: Boolean = false,
+  var isSelected: Boolean = false,
   val extension: FileExtension,
 ): Parcelable {
 
   companion object {
-    fun store(fileTree: FileTreeEntity): List<FileData> {
-      return fileTree.child.map {
+    fun mapChildFile(child: List<File>): List<FileData> {
+      return child.map {
         FileData(
           file = it,
           extension = convertExtension(it.extension)

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.models.FileParam
 import com.share.portal.domain.usecase.FileUseCase
 import com.share.portal.presentation.filemanager.fileexplorer.FileUiState.FileScreen
+import com.share.portal.presentation.utils.getChildFiles
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,14 +33,15 @@ class FileViewModel @Inject constructor(
         val data = fileUseCase.getAllExternalFiles(rootPath)
         _fileUiState.update { oldState ->
           if (oldState is FileUiState.FileScreen) {
+            val allFiles = oldState.allFiles + data
             oldState.copy(
-              allFiles = oldState.allFiles + data,
-              previewMode = PreviewMode.Explore
+              allFiles = allFiles,
+              previewMode = PreviewMode.Explore(allFiles.getChildFiles())
             )
           } else {
             FileUiState.FileScreen(
               allFiles = mutableListOf(data),
-              previewMode = PreviewMode.Explore
+              previewMode = PreviewMode.Explore(mutableListOf(data).getChildFiles())
             )
           }
         }
@@ -67,7 +69,8 @@ class FileViewModel @Inject constructor(
           val popedFile = oldState.allFiles.toMutableList()
           popedFile.removeLastOrNull()
           oldState.copy(
-            allFiles = popedFile
+            allFiles = popedFile,
+            previewMode = PreviewMode.Explore(popedFile.getChildFiles()) //Always back to explore state first
           )
         }
 
@@ -80,18 +83,21 @@ class FileViewModel @Inject constructor(
     _fileUiState.update { oldState ->
       (oldState as FileUiState.FileScreen).let {
         with (it.previewMode as PreviewMode.Select) {
-          val selectedIndex = selectedIndices.add(filePosition)
-          it.copy(
-            previewMode = PreviewMode.Select(selectedIndices)
-          )
+          files[filePosition].isSelected = !files[filePosition].isSelected
+          it.copy() //TODO
         }
       }
     }
   }
 
-  fun onFileClicked(filePath: String) {
-    if (_fileUiState.value is FileUiState.FileScreen)
-      getAllChildrenFiles(rootFile = filePath)
+  fun onFileClicked(filePath: String, filePosition: Int) {
+    with (_fileUiState.value as FileUiState.FileScreen) {
+      when (previewMode) {
+        is PreviewMode.Explore -> getAllChildrenFiles(rootFile = filePath)
+        is PreviewMode.Select -> selectFile(filePosition) //TODO
+      }
+    }
+
   }
 
   fun onFileHold(filePosition: Int) {
@@ -107,10 +113,10 @@ class FileViewModel @Inject constructor(
     _fileUiState.update { oldState ->
       (oldState as? FileUiState.FileScreen)?.let {
         it.copy(
-          previewMode = if (it.previewMode is PreviewMode.Explore)
-            PreviewMode.Select()
-          else
-            PreviewMode.Explore
+          previewMode = when (it.previewMode) {
+            is PreviewMode.Explore -> PreviewMode.Select(it.allFiles.getChildFiles())
+            is PreviewMode.Select -> PreviewMode.Explore(it.allFiles.getChildFiles())
+          }
         )
       } ?: oldState
     }
