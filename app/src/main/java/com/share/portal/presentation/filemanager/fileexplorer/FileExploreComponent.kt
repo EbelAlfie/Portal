@@ -21,6 +21,7 @@ import com.share.portal.R
 import com.share.portal.presentation.filemanager.fileexplorer.model.FileData
 import com.share.portal.presentation.filemanager.fileexplorer.model.FileExtension.AUDIO
 import com.share.portal.presentation.filemanager.fileexplorer.model.ParentData
+import com.share.portal.presentation.ui.theme.BlueDefault
 import com.share.portal.presentation.ui.theme.Grey
 import java.io.File
 
@@ -51,7 +52,7 @@ fun FileItem(
     modifier = modifier
       .padding(3.dp)
       .fillMaxWidth()
-      .background(if (isSelected) Color.Blue else Companion.White)
+      .background(if (isSelected) BlueDefault else Companion.White)
       .border(1.dp, Color.Black, RectangleShape)
   ) {
     Icon(

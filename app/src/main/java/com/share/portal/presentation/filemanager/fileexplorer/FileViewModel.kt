@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.share.portal.domain.models.FileParam
 import com.share.portal.domain.usecase.FileUseCase
 import com.share.portal.presentation.filemanager.fileexplorer.FileUiState.FileScreen
-import com.share.portal.presentation.utils.getChildFiles
+import com.share.portal.presentation.filemanager.fileexplorer.model.FileData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,12 +36,12 @@ class FileViewModel @Inject constructor(
             val allFiles = oldState.allFiles + data
             oldState.copy(
               allFiles = allFiles,
-              previewMode = PreviewMode.Explore(allFiles.getChildFiles())
+              previewMode = PreviewMode.Explore
             )
           } else {
             FileUiState.FileScreen(
               allFiles = mutableListOf(data),
-              previewMode = PreviewMode.Explore(mutableListOf(data).getChildFiles())
+              previewMode = PreviewMode.Explore
             )
           }
         }
@@ -65,61 +65,55 @@ class FileViewModel @Inject constructor(
   fun goBack() {
     _fileUiState.update { oldState ->
       when (oldState) {
-        is FileUiState.FileScreen -> {
-          val popedFile = oldState.allFiles.toMutableList()
-          popedFile.removeLastOrNull()
-          oldState.copy(
-            allFiles = popedFile,
-            previewMode = PreviewMode.Explore(popedFile.getChildFiles()) //Always back to explore state first
-          )
-        }
-
+        is FileUiState.FileScreen -> handleFileScreenBack(oldState)
         else -> oldState
       }
     }
   }
 
-  private fun selectFile(filePosition: Int) {
-    _fileUiState.update { oldState ->
-      (oldState as FileUiState.FileScreen).let {
-        with (it.previewMode as PreviewMode.Select) {
-          files[filePosition].isSelected = !files[filePosition].isSelected
-          it.copy() //TODO
-        }
+  private fun handleFileScreenBack(oldState: FileScreen): FileScreen {
+    return when (oldState.previewMode) {
+      is PreviewMode.Explore -> {
+        val popedFile = oldState.allFiles.toMutableList()
+        popedFile.removeLastOrNull()
+        oldState.copy(allFiles = popedFile)
+      }
+      is PreviewMode.Select -> {
+        oldState.copy(previewMode = PreviewMode.Explore)
       }
     }
   }
 
-  fun onFileClicked(filePath: String, filePosition: Int) {
+  private fun selectFile(fileData: FileData) {
+    _fileUiState.update { currentState ->
+      with (currentState as FileUiState.FileScreen) {
+        val newCachedFile = when (previewMode) {
+          is PreviewMode.Explore -> listOf(fileData)
+          is PreviewMode.Select -> {
+            with(previewMode) {
+              if (selectedFiles.contains(fileData))
+                selectedFiles - fileData
+              else
+                selectedFiles + fileData
+            }
+          }
+        }
+        copy(previewMode = PreviewMode.Select(newCachedFile.toMutableList()))
+      }
+    }
+  }
+
+  fun onFileClicked(filePath: String, fileData: FileData) {
     with (_fileUiState.value as FileUiState.FileScreen) {
       when (previewMode) {
         is PreviewMode.Explore -> getAllChildrenFiles(rootFile = filePath)
-        is PreviewMode.Select -> selectFile(filePosition) //TODO
-      }
-    }
-
-  }
-
-  fun onFileHold(filePosition: Int) {
-    with (_fileUiState.value as FileUiState.FileScreen) {
-      when (previewMode) {
-        is PreviewMode.Explore -> switchOperationMode()
-        is PreviewMode.Select -> selectFile(filePosition)
+        is PreviewMode.Select -> selectFile(fileData)
       }
     }
   }
 
-  private fun switchOperationMode() {
-    _fileUiState.update { oldState ->
-      (oldState as? FileUiState.FileScreen)?.let {
-        it.copy(
-          previewMode = when (it.previewMode) {
-            is PreviewMode.Explore -> PreviewMode.Select(it.allFiles.getChildFiles())
-            is PreviewMode.Select -> PreviewMode.Explore(it.allFiles.getChildFiles())
-          }
-        )
-      } ?: oldState
-    }
+  fun onFileHold(fileData: FileData) {
+    selectFile(fileData)
   }
 
 }

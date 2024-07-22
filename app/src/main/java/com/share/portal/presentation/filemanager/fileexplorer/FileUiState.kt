@@ -8,20 +8,16 @@ sealed interface FileUiState {
 
   data class FileScreen(
     val allFiles: List<FileTreeEntity>, //Linked list or stack?
-    val previewMode: PreviewMode = PreviewMode.Explore()
+    val previewMode: PreviewMode = PreviewMode.Explore
   ): FileUiState
 
   data class Error(val cause: Throwable?): FileUiState
 }
 
-sealed class PreviewMode(
-  var allFiles: List<FileData> = listOf()
-) {
-  data class Explore(
-    val files: List<FileData> = listOf()
-  ): PreviewMode(files)
+sealed interface PreviewMode {
+  data object Explore: PreviewMode
 
   data class Select(
-    val files: List<FileData> = listOf()
-  ): PreviewMode(files)
+    val selectedFiles: List<FileData> = listOf()
+  ): PreviewMode
 }

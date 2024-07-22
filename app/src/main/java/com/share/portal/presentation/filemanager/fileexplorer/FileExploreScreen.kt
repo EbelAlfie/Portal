@@ -79,15 +79,16 @@ fun FileExploreScreen(
 @Composable
 fun FileExploreContent(
   uiState: FileUiState.FileScreen,
-  onFileClicked: (String, Int) -> Unit,
-  onFileHold: (Int) -> Unit
+  onFileClicked: (String, FileData) -> Unit,
+  onFileHold: (FileData) -> Unit
 ) {
   val newFile = uiState.allFiles.last()
   ParentFileContent(ParentData.toParentDataList(newFile.current))
   FileScreen(
-    uiState = uiState.previewMode,
-    onFileClicked = { data, index ->
-      onFileClicked.invoke(data.file.path, index)
+    previewMode = uiState.previewMode,
+    files = newFile.child,
+    onFileClicked = { data ->
+      onFileClicked.invoke(data.file.path, data)
     },
     onFileHold = {
       onFileHold.invoke(it)
@@ -107,23 +108,25 @@ private fun ParentFileContent(rootFile: List<ParentData>) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun FileScreen(
-  uiState: PreviewMode,
-  onFileClicked: (FileData, Int) -> Unit,
-  onFileHold: (Int) -> Unit
+  previewMode: PreviewMode,
+  files: List<FileData>,
+  onFileClicked: (FileData) -> Unit,
+  onFileHold: (FileData) -> Unit
 ) {
   LazyColumn {
-    itemsIndexed(uiState.allFiles) {index, item ->
+    itemsIndexed(files) {index, item ->
       FileItem(
         modifier = Modifier
           .combinedClickable(
             onClick = {
-              onFileClicked.invoke(item, index)
+              onFileClicked.invoke(item)
             },
             onLongClick = {
-              onFileHold.invoke(index)
+              onFileHold.invoke(item)
             }
           ),
         file = item,
+        isSelected = (previewMode as? PreviewMode.Select)?.selectedFiles?.contains(item) ?: false
       )
     }
   }
