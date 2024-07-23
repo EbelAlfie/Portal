@@ -1,6 +1,7 @@
 package com.share.portal.presentation.filemanager.wifisharing.broadcastreceiver
 
 import android.Manifest.permission
+import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest
@@ -36,7 +37,9 @@ class PortalServiceManager(
   }
 
   @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
-  private fun discoverService() {
+  fun discoverService(
+    onPeerDiscovered: (WifiP2pDevice) -> Unit
+  ) {
     /* Callback includes:
      * fullDomain: full domain name: e.g. "printer._ipp._tcp.local."
      * record: TXT record dta as a map of key/value pairs.
@@ -45,6 +48,7 @@ class PortalServiceManager(
 
     val txtListener = WifiP2pManager.DnsSdTxtRecordListener { fullDomain, record, device ->
       Log.d("DnsSdTxtRecord", "DnsSdTxtRecord available -$record")
+      onPeerDiscovered.invoke(device)
     }
 
     val servListener = WifiP2pManager.DnsSdServiceResponseListener { instanceName, registrationType, resourceType ->

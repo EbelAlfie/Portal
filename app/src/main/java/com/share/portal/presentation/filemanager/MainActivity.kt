@@ -1,14 +1,23 @@
 package com.share.portal.presentation.filemanager
 
+import android.Manifest.permission
+import android.annotation.SuppressLint
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.wifi.p2p.WifiP2pManager
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.core.app.ActivityCompat
+import com.share.portal.presentation.filemanager.fileexplorer.FileExploreScreen
 import com.share.portal.presentation.filemanager.fileexplorer.FileExplorerPage
 import com.share.portal.presentation.filemanager.fileexplorer.FileViewModel
 import com.share.portal.presentation.filemanager.wifisharing.PeerFinderPage
+import com.share.portal.presentation.filemanager.wifisharing.PeersScreen
 import com.share.portal.presentation.filemanager.wifisharing.WifiSharingViewmodel
 import com.share.portal.presentation.filemanager.wifisharing.broadcastreceiver.WifiBroadcastReceiver
 import com.share.portal.presentation.ui.theme.Portal_BlueTheme
@@ -17,12 +26,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(), WifiPerantara {
 
+  /** ViewModels **/
   private val viewModel: MainViewModel by viewModels()
 
   private val fileViewModel: FileViewModel by viewModels()
 
   private val wifiViewModel: WifiSharingViewmodel by viewModels()
 
+  /** Wifi services */
   override val wifiIntentFilter: IntentFilter
     get() = IntentFilter().apply {
       addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
@@ -42,28 +53,61 @@ class MainActivity : ComponentActivity(), WifiPerantara {
     )
   }
 
+  @OptIn(ExperimentalFoundationApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     registerWifi()
     setContent {
       Portal_BlueTheme {
         PagerScreen(
-          pageFactory = listOf(
-            FileExplorerPage(fileViewModel),
-            PeerFinderPage(wifiViewModel)
-          )
-        )
+          pageFactory = listOf(FileExplorerPage(), PeerFinderPage())
+        ) { page ->
+          when (page) {
+            Page.FileExplorer ->
+              FileExploreScreen(
+                fileViewModel = fileViewModel
+              )
+
+            Page.FileSharing ->
+              PeersScreen(
+                viewModel = wifiViewModel,
+                discoverPeers = ::initiateDiscovery
+              )
+          }
+        }
       }
     }
   }
 
-  private fun initializeAsServer() {
-    viewModel.establishAsServer()
+
+  @SuppressLint("MissingPermission")
+  private fun initiateDiscovery() {
+    wrapWithPermission {
+      wifiBroadcastReceiver.initiatePeerDiscovery(wifiViewModel::onPeerDiscovered)
+    }
   }
 
   override fun registerWifi() {
-    registerReceiver(wifiBroadcastReceiver, wifiIntentFilter)
-    wifiBroadcastReceiver.openPortal()
+    if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU)
+      registerReceiver(wifiBroadcastReceiver, wifiIntentFilter, RECEIVER_NOT_EXPORTED)
+    else
+      registerReceiver(wifiBroadcastReceiver, wifiIntentFilter)
+
+    wrapWithPermission(wifiBroadcastReceiver::openPortal)
+  }
+
+  private fun wrapWithPermission(action: () -> Unit) {
+    if (ActivityCompat.checkSelfPermission(
+        this,
+        permission.ACCESS_FINE_LOCATION
+      ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
+        this,
+        permission.NEARBY_WIFI_DEVICES
+      ) != PackageManager.PERMISSION_GRANTED
+    ) {
+      return
+    }
+    action()
   }
 
   override fun unregisterWifi() = unregisterReceiver(wifiBroadcastReceiver)

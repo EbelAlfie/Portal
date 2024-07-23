@@ -10,8 +10,4 @@ interface PageFactory {
 
   @Composable
   fun TabIcon(modifier: Modifier, isSelected: Boolean)
-
-  @Composable
-  fun PageContent()
-
 }

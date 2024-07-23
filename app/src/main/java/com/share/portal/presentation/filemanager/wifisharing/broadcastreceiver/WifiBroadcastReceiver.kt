@@ -37,7 +37,8 @@ class WifiBroadcastReceiver(
   }
 
   @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
-  fun initiatePeerDiscovery() = p2pManager.discoverServices(channel, onPeerDiscoveredListener)
+  fun initiatePeerDiscovery(onPeerDiscovered: (WifiP2pDevice) -> Unit) =
+    portalServiceManager.discoverService(onPeerDiscovered)
 
   @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
   fun openPortal() = portalServiceManager.openPortal()
@@ -65,7 +66,7 @@ class WifiBroadcastReceiver(
     wifiState = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
     when (wifiState) {
       WifiP2pManager.WIFI_P2P_STATE_ENABLED -> {
-        initiatePeerDiscovery()
+//        initiatePeerDiscovery()
         Log.d("WIFIGEMINK", "WIFI_P2P_STATE_ENABLED ")
       }
       else -> {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerScope
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -22,7 +23,8 @@ enum class Page(val index: Int) {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PagerScreen(
-  pageFactory: List<PageFactory>
+  pageFactory: List<PageFactory>,
+  pagerContent: @Composable PagerScope.(Page) -> Unit
 ) {
   val pagerState = rememberPagerState { Page.entries.size }
   Scaffold(
@@ -50,10 +52,8 @@ fun PagerScreen(
       modifier = Modifier
         .padding(contentPadding)
         .fillMaxSize(),
-      state = pagerState
-    ) {
-      pageFactory[it]
-        .PageContent()
-    }
+      state = pagerState,
+      pageContent = { pagerContent(pageFactory[it].pageId) }
+    )
   }
 }

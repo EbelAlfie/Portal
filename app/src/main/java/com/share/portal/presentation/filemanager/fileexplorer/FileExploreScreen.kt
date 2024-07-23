@@ -27,9 +27,7 @@ import com.share.portal.presentation.ui.theme.Grey
 import com.share.portal.presentation.ui.theme.GreyAlpha
 import com.share.portal.presentation.utils.PageFactory
 
-class FileExplorerPage(
-  private val viewModel: FileViewModel
-) : PageFactory {
+class FileExplorerPage : PageFactory {
 
   override val pageId: Page = Page.FileExplorer
 
@@ -45,11 +43,6 @@ class FileExplorerPage(
       tint = Grey,
       contentDescription = null
     )
-  }
-
-  @Composable
-  override fun PageContent() {
-    FileExploreScreen(viewModel)
   }
 }
 
