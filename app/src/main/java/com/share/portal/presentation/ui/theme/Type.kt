@@ -1,6 +1,10 @@
 package com.share.portal.presentation.ui.theme
 
+import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -39,3 +43,17 @@ val Typography = Typography(
     )
     */
 )
+
+@Composable
+fun DefaultText(
+  modifier: Modifier = Modifier,
+  text: String
+) {
+  Text(
+    modifier = modifier,
+    text = text,
+    color = Color.Black,
+    fontSize = 30.sp,
+    fontFamily = Somatic
+  )
+}

@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import com.share.portal.presentation.filemanager.fileexplorer.FileExplorerPage
 import com.share.portal.presentation.filemanager.fileexplorer.FileViewModel
 import com.share.portal.presentation.filemanager.wifisharing.PeerFinderPage
+import com.share.portal.presentation.filemanager.wifisharing.WifiSharingViewmodel
 import com.share.portal.presentation.filemanager.wifisharing.broadcastreceiver.WifiBroadcastReceiver
 import com.share.portal.presentation.ui.theme.Portal_BlueTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +20,8 @@ class MainActivity : ComponentActivity(), WifiPerantara {
   private val viewModel: MainViewModel by viewModels()
 
   private val fileViewModel: FileViewModel by viewModels()
+
+  private val wifiViewModel: WifiSharingViewmodel by viewModels()
 
   override val wifiIntentFilter: IntentFilter
     get() = IntentFilter().apply {
@@ -45,7 +48,10 @@ class MainActivity : ComponentActivity(), WifiPerantara {
     setContent {
       Portal_BlueTheme {
         PagerScreen(
-          pageFactory = listOf(FileExplorerPage(fileViewModel), PeerFinderPage())
+          pageFactory = listOf(
+            FileExplorerPage(fileViewModel),
+            PeerFinderPage(wifiViewModel)
+          )
         )
       }
     }

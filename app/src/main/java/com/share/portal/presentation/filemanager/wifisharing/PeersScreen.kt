@@ -5,16 +5,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.share.portal.R.drawable
 import com.share.portal.presentation.filemanager.Page
-import com.share.portal.presentation.filemanager.PageFactory
 import com.share.portal.presentation.ui.theme.Grey
 import com.share.portal.presentation.ui.theme.GreyAlpha
+import com.share.portal.presentation.utils.PageFactory
 
-class PeerFinderPage : PageFactory {
+class PeerFinderPage(
+  private val viewModel: WifiSharingViewmodel
+) : PageFactory {
 
   override val pageId: Page = Page.FileSharing
 
@@ -34,11 +38,18 @@ class PeerFinderPage : PageFactory {
 
   @Composable
   override fun PageContent() {
-    PeersScreen()
+    PeersScreen(viewModel)
   }
 }
 
 
 @Composable
-fun PeersScreen() {
+fun PeersScreen(viewModel: WifiSharingViewmodel) {
+  val uiState by viewModel.uiState.collectAsState()
+  when (uiState) {
+    is PeerUiState.Loading -> {}
+    is PeerUiState.Loaded -> {}
+    is PeerUiState.EmptyPeer ->
+      EmptyPeerScreen()
+  }
 }

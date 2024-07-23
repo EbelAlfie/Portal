@@ -21,11 +21,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.share.portal.R
 import com.share.portal.presentation.filemanager.Page
-import com.share.portal.presentation.filemanager.PageFactory
 import com.share.portal.presentation.filemanager.fileexplorer.model.FileData
 import com.share.portal.presentation.filemanager.fileexplorer.model.ParentData
 import com.share.portal.presentation.ui.theme.Grey
 import com.share.portal.presentation.ui.theme.GreyAlpha
+import com.share.portal.presentation.utils.PageFactory
 
 class FileExplorerPage(
   private val viewModel: FileViewModel

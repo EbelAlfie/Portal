@@ -9,4 +9,6 @@
     <string name="warning.general.content">Some permission are needed to be able to use wifi sharing on this device</string>
     <string name="warning.wifi_sharing.title">Oops!</string>
     <string name="warning.wifi_sharing.content">Some actions are not granted by the user</string>
+
+    <string name="empty_peer_message">No peer discovered at the moment</string>
 </resources>

@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.share.portal.presentation.utils.PageFactory
 import kotlinx.coroutines.launch
 
 enum class Page(val index: Int) {
@@ -51,21 +52,8 @@ fun PagerScreen(
         .fillMaxSize(),
       state = pagerState
     ) {
-      pageFactory.forEach {
-        it.PageContent()
-      }
+      pageFactory[it]
+        .PageContent()
     }
   }
-}
-
-interface PageFactory {
-
-  val pageId: Page
-
-  @Composable
-  fun TabIcon(modifier: Modifier, isSelected: Boolean)
-
-  @Composable
-  fun PageContent()
-
 }
