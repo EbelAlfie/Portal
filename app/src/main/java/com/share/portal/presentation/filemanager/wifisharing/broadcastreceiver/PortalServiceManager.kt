@@ -52,7 +52,7 @@ class PortalServiceManager(
     }
 
     val servListener = WifiP2pManager.DnsSdServiceResponseListener { instanceName, registrationType, resourceType ->
-
+      Log.d("DnsSdTxtRecord", "DnsSdTxtRecord available -$registrationType")
     }
     wifiP2pManager.setDnsSdResponseListeners(channel, servListener, txtListener)
 
@@ -62,24 +62,24 @@ class PortalServiceManager(
       serviceRequest,
       object : WifiP2pManager.ActionListener {
         override fun onSuccess() {
-          // Success!
+          Log.d("SUCCESS", ".")
         }
 
         override fun onFailure(code: Int) {
-          // Command failed.  Check for P2P_UNSUPPORTED, ERROR, or BUSY
+          Log.d("Error", code.toString())
         }
       }
     )
-
     wifiP2pManager.discoverServices(
       channel,
       object : WifiP2pManager.ActionListener {
         override fun onSuccess() {
-          // Success!
+          Log.d("SUCCESS", ".")
         }
 
         override fun onFailure(code: Int) {
           // Command failed. Check for P2P_UNSUPPORTED, ERROR, or BUSY
+          Log.d("Error", code.toString())
           when (code) {
             WifiP2pManager.P2P_UNSUPPORTED -> {
               Log.d("Error", "Wi-Fi Direct isn't supported on this device.")

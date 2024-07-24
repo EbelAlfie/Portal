@@ -18,9 +18,11 @@ import com.share.portal.presentation.filemanager.fileexplorer.FileExplorerPage
 import com.share.portal.presentation.filemanager.fileexplorer.FileViewModel
 import com.share.portal.presentation.filemanager.wifisharing.PeerFinderPage
 import com.share.portal.presentation.filemanager.wifisharing.PeersScreen
+import com.share.portal.presentation.filemanager.wifisharing.PermissionChecker
 import com.share.portal.presentation.filemanager.wifisharing.WifiSharingViewmodel
 import com.share.portal.presentation.filemanager.wifisharing.broadcastreceiver.WifiBroadcastReceiver
 import com.share.portal.presentation.ui.theme.Portal_BlueTheme
+import com.share.portal.presentation.utils.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,9 +58,14 @@ class MainActivity : ComponentActivity(), WifiPerantara {
   @OptIn(ExperimentalFoundationApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    registerWifi()
     setContent {
       Portal_BlueTheme {
+        PermissionChecker(
+          permissions = PermissionUtils.getWifiSharingPermission(),
+          onPermissionGranted = ::registerWifi,
+          onPermissionDenied = {}
+        )
+
         PagerScreen(
           pageFactory = listOf(FileExplorerPage(), PeerFinderPage())
         ) { page ->
@@ -100,9 +107,6 @@ class MainActivity : ComponentActivity(), WifiPerantara {
     if (ActivityCompat.checkSelfPermission(
         this,
         permission.ACCESS_FINE_LOCATION
-      ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-        this,
-        permission.NEARBY_WIFI_DEVICES
       ) != PackageManager.PERMISSION_GRANTED
     ) {
       return

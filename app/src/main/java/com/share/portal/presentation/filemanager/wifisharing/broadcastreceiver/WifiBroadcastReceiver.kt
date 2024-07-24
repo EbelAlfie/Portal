@@ -36,11 +36,11 @@ class WifiBroadcastReceiver(
     peerListListener = listener
   }
 
-  @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
+  @RequiresPermission(allOf = [permission.ACCESS_FINE_LOCATION], conditional = true)
   fun initiatePeerDiscovery(onPeerDiscovered: (WifiP2pDevice) -> Unit) =
     portalServiceManager.discoverService(onPeerDiscovered)
 
-  @RequiresPermission(allOf = [permission.NEARBY_WIFI_DEVICES, permission.ACCESS_FINE_LOCATION], conditional = true)
+  @RequiresPermission(allOf = [permission.ACCESS_FINE_LOCATION], conditional = true)
   fun openPortal() = portalServiceManager.openPortal()
 
   fun requestConnection(peer: WifiP2pDevice) {
