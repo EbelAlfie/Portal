@@ -12,16 +12,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.runtime.remember
 import androidx.core.app.ActivityCompat
 import com.share.portal.presentation.filemanager.fileexplorer.FileExploreScreen
 import com.share.portal.presentation.filemanager.fileexplorer.FileExplorerPage
 import com.share.portal.presentation.filemanager.fileexplorer.FileViewModel
 import com.share.portal.presentation.filemanager.wifisharing.PeerFinderPage
 import com.share.portal.presentation.filemanager.wifisharing.PeersScreen
-import com.share.portal.presentation.filemanager.wifisharing.PermissionChecker
 import com.share.portal.presentation.filemanager.wifisharing.WifiSharingViewmodel
 import com.share.portal.presentation.filemanager.wifisharing.broadcastreceiver.WifiBroadcastReceiver
 import com.share.portal.presentation.ui.theme.Portal_BlueTheme
+import com.share.portal.presentation.utils.PermissionChecker
+import com.share.portal.presentation.utils.PermissionState
 import com.share.portal.presentation.utils.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -60,11 +62,7 @@ class MainActivity : ComponentActivity(), WifiPerantara {
     super.onCreate(savedInstanceState)
     setContent {
       Portal_BlueTheme {
-        PermissionChecker(
-          permissions = PermissionUtils.getWifiSharingPermission(),
-          onPermissionGranted = ::registerWifi,
-          onPermissionDenied = {}
-        )
+        var permissionState = remember { PermissionState() }
 
         PagerScreen(
           pageFactory = listOf(FileExplorerPage(), PeerFinderPage())
@@ -78,10 +76,22 @@ class MainActivity : ComponentActivity(), WifiPerantara {
             Page.FileSharing ->
               PeersScreen(
                 viewModel = wifiViewModel,
-                discoverPeers = ::initiateDiscovery
+                discoverPeers = {
+                  permissionState = PermissionState(
+                    permissions = PermissionUtils.getWifiSharingPermission(),
+                    onPermissionGranted = ::initiateDiscovery
+                  )
+                }
               )
           }
         }
+
+        PermissionChecker(permissionState)
+
+        permissionState = PermissionState(
+          permissions = listOf(PermissionUtils.FINE_LOCATION),
+          onPermissionGranted = ::registerWifi
+        )
       }
     }
   }

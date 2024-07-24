@@ -1,6 +1,7 @@
 package com.share.portal.presentation.filemanager.wifisharing
 
 import android.net.wifi.p2p.WifiP2pDevice
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.PermissionChecker
 import com.share.portal.R.drawable
 import com.share.portal.presentation.filemanager.Page
 import com.share.portal.presentation.filemanager.wifisharing.PeerUiState.Loaded
@@ -54,11 +56,6 @@ fun PeersScreen(
   viewModel: WifiSharingViewmodel,
   discoverPeers: () -> Unit
 ) {
-  PermissionChecker(
-    permissions = PermissionUtils.getWifiSharingPermission(),
-    onPermissionGranted = discoverPeers,
-    onPermissionDenied = {}
-  )
   discoverPeers.invoke()
 
   val uiState by viewModel.uiState.collectAsState()
@@ -99,24 +96,5 @@ fun PeerItem(
     DefaultText(text = peer.deviceName)
     DefaultText(text = peer.deviceAddress)
     DefaultText(text = peer.status.toString())
-  }
-}
-
-@Composable
-fun PermissionChecker(
-  permissions: List<String> = listOf(),
-  onPermissionGranted: () -> Unit = {},
-  onPermissionDenied: () -> Unit = {}
-) {
-  val permissionLauncher = rememberLauncherForActivityResult(
-    contract = ActivityResultContracts.RequestMultiplePermissions()
-  ) {
-    val revokedPermission = it.map { permissions -> !permissions.value }
-    if (revokedPermission.isEmpty()) onPermissionGranted.invoke()
-    else onPermissionDenied.invoke()
-  }
-
-  LaunchedEffect(permissions) {
-    permissionLauncher.launch(permissions.toTypedArray())
   }
 }

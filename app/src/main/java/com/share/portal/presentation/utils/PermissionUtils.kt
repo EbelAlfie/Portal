@@ -5,6 +5,9 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 
 object PermissionUtils {
+
+  const val FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION
+  const val COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION
   fun getWifiSharingPermission(): List<String> {
     return if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
       listOf(Manifest.permission.NEARBY_WIFI_DEVICES) + getLocationPermission()
@@ -15,8 +18,5 @@ object PermissionUtils {
   }
 
   private fun getLocationPermission(): List<String> =
-    listOf(
-      Manifest.permission.ACCESS_FINE_LOCATION,
-      Manifest.permission.ACCESS_COARSE_LOCATION
-    )
+    listOf(FINE_LOCATION, COARSE_LOCATION)
 }
